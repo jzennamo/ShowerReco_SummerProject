@@ -393,11 +393,11 @@ anatree::anatree(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("prod_bnblike_gamma_standard_reco_hist.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("gamma/prod_bnblike_gamma_standard_reco_hist.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("prod_bnblike_gamma_standard_reco_hist.root");
+         f = new TFile("gamma/prod_bnblike_gamma_standard_reco_hist.root");
       }
-      TDirectory * dir = (TDirectory*)f->Get("prod_bnblike_gamma_standard_reco_hist.root:/analysistree");
+      TDirectory * dir = (TDirectory*)f->Get("gamma/prod_bnblike_gamma_standard_reco_hist.root:/analysistree");
       dir->GetObject("anatree",tree);
 
    }
