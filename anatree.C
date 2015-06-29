@@ -9,9 +9,11 @@ void anatree::Loop()
 //   To execute this code you will do this:
 //      > root -l
 //      Root > .L anatree.C
+//  (or to compile :  Root > .L anatree.C+)
 //      Root > anatree t
 //      Root > t.Loop();       // Loop on all entries
 
+  TH1F* StartPointOffset = new TH1F("startpointoffset",";X-aXis title; Y-Axis title", 50, 0, 1000);
 
    if (fChain == 0) return;
 
@@ -30,6 +32,8 @@ void anatree::Loop()
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
    /// End
+      
+      std::cout << "\n ########################### \n Looking at Event == " << jentry << std::endl; 
 
       /* List of useful variables that you might want to look at:
 
@@ -72,20 +76,39 @@ void anatree::Loop()
       
 
       //// EXAMPLE loop through all reco showers in event
-      double max_eng = 0;
-      int max_N = 0;
 
-      for(int n = 0; n < nshowers; n++){
-	double temp_eng = shwr_totEng[n][2]; 
+      if(nshowers == 1){	
 
-	if(max_eng < temp_eng) {max = temp; max_N = n;}
- 
+	// look it up, this is wrong.
+	double dist = sqrt( pow((shwr_startx[0] - StartPointx[0]),2) + pow((shwr_starty[0] - StartPointx[0]),2) + pow((shwr_startz[0] -StartPointx[0]),2));
+	
+	// Histogram (TH1F)  -> Fill(var) [function, var] 
+	StartPointOffset->Fill(dist);
+	
+	std::cout << "Start Point Reco : " <<  shwr_startx[0]  << std::endl;
+	std::cout << "Start Point MC : " <<  StartPointx[0]  << std::endl;
+
       }
+
+      /*
+	double max_eng = 0;
+	int max_N = 0;
+	
+	for(int n = 0; n < nshowers; n++){
+	double temp_eng = shwr_totEng[n][2]; 
+	
+	if(max_eng < temp_eng) {max_eng = temp_eng; max_N = n;}
+	
+	}
+      */
       ////// END
 
    /// Here is the end of the loop
    /// Start
    }
    /// End
+
+   StartPointOffset->Draw();
+
 
 }
