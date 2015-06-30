@@ -19,6 +19,8 @@
 
 class anatree {
 public :
+ 
+   TFile          *infile;
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
 
@@ -374,33 +376,43 @@ public :
    TBranch        *b_trkpidpida_trackkalmanhit;   //!
    TBranch        *b_trkpidbestplane_trackkalmanhit;   //!
 
-   anatree(TTree *tree=0);
+   anatree(TString file = "");
    virtual ~anatree();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Loop();
+   virtual void     Loop(Long64_t max_entry = -1);
    virtual Bool_t   Notify();
+   virtual TString  InFile();
    virtual void     Show(Long64_t entry = -1);
 };
 
 #endif
 
 #ifdef anatree_cxx
-anatree::anatree(TTree *tree) : fChain(0) 
+anatree::anatree(TString file) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
-   if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("gamma/prod_bnblike_gamma_standard_reco_hist.root");
-      if (!f || !f->IsOpen()) {
-         f = new TFile("gamma/prod_bnblike_gamma_standard_reco_hist.root");
-      }
-      TDirectory * dir = (TDirectory*)f->Get("gamma/prod_bnblike_gamma_standard_reco_hist.root:/analysistree");
+  TTree* tree;
+  
+  if (file.Length() == 0) {
+    std::cout << "You didn't set a file so I am just opening: gamma/prod_bnblike_gamma_standard_reco_hist.root" << std::endl;
+      infile = new TFile("gamma/prod_bnblike_gamma_standard_reco_hist.root");      
+      TDirectory * dir = (TDirectory*)infile->Get("gamma/prod_bnblike_gamma_standard_reco_hist.root:/analysistree");
       dir->GetObject("anatree",tree);
-
    }
+  else{ 
+    std::cout << "Opening requested file " << file << std::endl;
+    infile = new TFile( file );
+    infile->GetObject("anatree",tree);
+  }
+  
+  if (!infile || !infile->IsOpen()) {
+    std::cout << "Could not find specified file!!" << std::endl;
+    exit(1);
+  }
    Init(tree);
 }
 

@@ -4,14 +4,17 @@
 #include <TStyle.h>
 #include <TCanvas.h>
 
-void anatree::Loop()
+void anatree::Loop(Long64_t max_entry)
 {
 //   To execute this code you will do this:
 //      > root -l
 //      Root > .L anatree.C
 //  (or to compile :  Root > .L anatree.C+)
 //      Root > anatree t
+// (or add a file: Root > anatree t("eminus/blahblah.root")  )
 //      Root > t.Loop();       // Loop on all entries
+// (or small number of events: Root > t.Loop(500)  )
+
 
   TH1F* StartPointOffset = new TH1F("startpointoffset","; Start Point Offset (cm); Number", 50, 0, 1000);
 
@@ -21,19 +24,20 @@ void anatree::Loop()
    /// Start
    Long64_t nentries = fChain->GetEntriesFast();
    Long64_t nbytes = 0, nb = 0;
+   if( max_entry == -1 ) max_entry = nentries;
    ///End 
 
 
    /// Here we START to loop over all entries in the TTree
    /// these are events, so be careful how you think of these events
    /// Start
-   for (Long64_t jentry=0; jentry<nentries;jentry++) {
+   for (Long64_t jentry=0; jentry<nentries && jentry < max_entry;jentry++) {
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
    /// End
-      
-      std::cout << "\n ########################### \n Looking at Event == " << jentry << std::endl; 
+      if ( (jentry%1000) == 0){ std::cout << "\t\t\t ### "<< int(100*jentry/nentries) << "% done !"  << std::endl;}
+     
 
       /* List of useful variables that you might want to look at:
 
@@ -103,11 +107,11 @@ void anatree::Loop()
 
 	// Number of Showers
 
-	TH1F* NumShowers= new TH1F("Number of Showers", "; Shower Number; Number of Events", 1, 0, 10);
+      //	TH1F* NumShowers= new TH1F("Number of Showers", "; Shower Number; Number of Events", 1, 0, 10);
 
-	NumShowers->Fill(nshowers);
+      //	NumShowers->Fill(nshowers);
 
-	std::cout << "Number of Showers: " << nshowers << std::endl;
+      std::cout << "Number of Showers: " << nshowers << std::endl;
 
 
 
