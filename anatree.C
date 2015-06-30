@@ -96,15 +96,18 @@ void anatree::Loop()
 
       }
 
-	e max_eng = 0;
+	/* e max_eng = 0;
 	int max_N = 0;
 
+	*/
+
 	// Number of Showers
-	
 
+	TH1F* NumShowers= new TH1F("Number of Showers", "; Shower Number; Number of Events", 1, 0, 10);
 
+	NumShowers->Fill(nshowers);
 
-
+	std::cout << "Number of Showers: " << nshowers << std::endl;
 
 
 
