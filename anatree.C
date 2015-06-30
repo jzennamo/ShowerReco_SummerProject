@@ -161,7 +161,7 @@ void anatree::Loop()
 
    TFile *f = new TFile("Awesome_Shower_Reco_Vetting_Booyah.root", "RECREATE");
    
-   StartPointOffset->Draw();
+   StartPointOffset->Write();
    f->Write();
    f->Close();
   
