@@ -72,11 +72,10 @@ void anatree::Loop()
 
       //Here you will build your code, build whatever you want! MUHAHAHAHAHAHAHAHAHAHAHAHA@
 
-      
-      
-
       //// EXAMPLE loop through all reco showers in event
 
+	  
+	  // This is to calculate the distance between the starting point of the shower and the MC
       if(nshowers == 1){	
 		  
 		  if (pdg == 22){
@@ -97,10 +96,55 @@ void anatree::Loop()
 
       }
 
-      /*
-	double max_eng = 0;
+	e max_eng = 0;
 	int max_N = 0;
+
+	// Number of Showers
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*
+	  // This is to find showers that are not fully reconstructed
+
+
+		double distfromstart = 0;
+		double particledist = 0;
+		double particlenum = 0;
+		
+		for (int i = 1; i <= N; i++)
+		  {
+				 if (pdg[i] == 13 || pdg[i] == -13)
+				  {
+					  if (pdg[0] == 22)
+					  {
+						  particledist = sqrt(pow(EndPointx[0] - EndPointx[i], 2) + pow(EndPointy[0] - EndPointy[i], 2) + pow(EndPointz[0] - EndPointz[i], 2));
+					  }
+					  else (pdg[0] == 13)
+					  {
+						  particledist = sqrt(pow(StartPointx[0] - EndPointx[i], 2) + pow(StartPointy[0] - EndPointy[i], 2) + pow(StartPointz[0] - EndPointz[i], 2));
+					  }
+				  }
+
+				  if (distfromstart < particledist)
+				  {
+					  distfromstart = particledist;
+				  }
+				 
+		  }
+		  
+	doubl
 	for(int n = 0; n < nshowers; n++){
 	double temp_eng = shwr_totEng[n][2]; 
 	
