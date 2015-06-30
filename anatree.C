@@ -13,7 +13,7 @@ void anatree::Loop()
 //      Root > anatree t
 //      Root > t.Loop();       // Loop on all entries
 
-  TH1F* StartPointOffset = new TH1F("startpointoffset",";X-aXis title; Y-Axis title", 50, 0, 1000);
+  TH1F* StartPointOffset = new TH1F("startpointoffset","; Start Point Offset (cm); Number", 50, 0, 1000);
 
    if (fChain == 0) return;
 
@@ -78,16 +78,22 @@ void anatree::Loop()
       //// EXAMPLE loop through all reco showers in event
 
       if(nshowers == 1){	
+		  
+		  if (pdg == 22){
 
-	// look it up, this is wrong.
-	double dist = sqrt( pow((shwr_startx[0] - StartPointx[0]),2) + pow((shwr_starty[0] - StartPointx[0]),2) + pow((shwr_startz[0] -StartPointx[0]),2));
-	
+			  // distance formula
+			  double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+		  }
+		  else
+		  {
+			  double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+		  }
 	// Histogram (TH1F)  -> Fill(var) [function, var] 
-	StartPointOffset->Fill(dist);
+		StartPointOffset->Fill(dist);
 	
-	std::cout << "Start Point Reco : " <<  shwr_startx[0]  << std::endl;
-	std::cout << "Start Point MC : " <<  StartPointx[0]  << std::endl;
-
+		std::cout << "X difference: " << fabs(shwr_startx[0] - EndPointx[0])  << std::endl;
+		std::cout << "Y difference: " <<  fabs(StartPointy[0] - EndPointy[0]) << std::endl;
+		std::cout << "Z difference: " << fabs(StartPointz[0] - EndPointz[0]) << std::endl;
 
       }
 
