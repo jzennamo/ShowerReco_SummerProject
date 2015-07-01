@@ -6,136 +6,155 @@
 
 void anatree::Loop(Long64_t max_entry)
 {
-//   To execute this code you will do this:
-//      > root -l
-//      Root > .L anatree.C
-//  (or to compile :  Root > .L anatree.C+)
-//      Root > anatree t
-// (or add a file: Root > anatree t("eminus/blahblah.root")  )
-//      Root > t.Loop();       // Loop on all entries
-// (or small number of events: Root > t.Loop(500)  )
+	//   To execute this code you will do this:
+	//      > root -l
+	//      Root > .L anatree.C
+	//  (or to compile :  Root > .L anatree.C+)
+	//      Root > anatree t
+	// (or add a file: Root > anatree t("eminus/blahblah.root")  )
+	//      Root > t.Loop();       // Loop on all entries
+	// (or small number of events: Root > t.Loop(500)  )
 
 
-  TH1F* StartPointOffset = new TH1F("startpointoffset","; Start Point Offset (cm); Number", 50, 0, 1000);
-  TH1F* NumShowers = new TH1F("Number of Showers", "; Shower Number; Number of Events", 1, 0.5, 10.5);
-  TH1F* ParticleDist = new TH1F(" Particle Distance ", "; Particle Distance; Number of Particles", 50, 50, 1650);
-
-   if (fChain == 0) return;
-
-   /// Define how many entries are in the tree:
-   /// Start
-   Long64_t nentries = fChain->GetEntriesFast();
-   Long64_t nbytes = 0, nb = 0;
-   if( max_entry == -1 ) max_entry = nentries;
-   ///End 
+	TH1F* StartPointOffset = new TH1F("startpointoffset", "; Start Point Offset (cm); Number", 50, 0, 1000);
+	TH1F* NumShowers = new TH1F("Number of Showers", "; Shower Number; Number of Events", 1, 0.5, 10.5);
+	TH1F* ParticleDist = new TH1F(" Particle Distance ", "; Particle Distance; Number of Particles", 50, 50, 1650);
+	TH1F* xAngleOffset = new TH1F(" X angle Offset ", "; Angle; Number of Particles", 20, 0, 360);
+	TH1F* yAngleOffset = new TH1F(" Y angle Offset ", "; Angle; Number of Particles", 20, 0, 360);
+	TH1F* zAngleOffset = new TH1F(" Z angle Offset ", "; Angle; Number of Particles", 20, 0, 360);
 
 
-   /// Here we START to loop over all entries in the TTree
-   /// these are events, so be careful how you think of these events
-   /// Start
-   for (Long64_t jentry = 0; jentry < nentries && jentry < max_entry; jentry++) {
-	   Long64_t ientry = LoadTree(jentry);
-	   if (ientry < 0) break;
-	   nb = fChain->GetEntry(jentry);   nbytes += nb;
-	   /// End
-	   if ((jentry % 1000) == 0){ std::cout << "\t\t\t ### " << int(100 * jentry / nentries) << "% done !" << std::endl; }
+	if (fChain == 0) return;
+
+	/// Define how many entries are in the tree:
+	/// Start
+	Long64_t nentries = fChain->GetEntriesFast();
+	Long64_t nbytes = 0, nb = 0;
+	if (max_entry == -1) max_entry = nentries;
+	///End 
 
 
-	   /* List of useful variables that you might want to look at:
-
-	  event -- this is what you call event number
-	  subrun -- this is what you call subrun
-
-	  RECONSTRUCTION INFORMATION:
-	  nshowers -- The number of reconstruted showers (N)
-	  showerID[N] -- A unique shower ID, just a number (int)
-	  shwr_bestplane[N] -- The plane that has the largest (spatial) projection of hits, this is the P you should use typically
-	  shwr_length[N] -- The length of the shower in blah dimensions
-	  shwr_startdcosx[N] -- the "i" component of the unit vector describing the direction
-	  shwr_startdcosy[N] -- the "j" component of the unit vector describing the direction
-	  shwr_startdcosz[N] -- the "k" component of the unit vector describing the direction
-	  shwr_startx[N] -- the "x" posistion start point
-	  shwr_starty[N] -- the "y" posistion start point
-	  shwr_startz[N] -- the "z" posistion start point
-	  shwr_totEng[N][P] -- The total energy of the shower in plane P (focus on P == 2 for now)
-	  shwr_mipEng[N][P] -- The total energy of the shower in plane P (focus on P == 2 for now)
-	  shwr_dedx[N][P] -- The total energy deposited at the start of the shower
-
-	  MC TRUTH INFORMATION:
-	  geant_list_size -- The number of particles (N), you will usually only be intrested in the first particle
-	  pdg[N] -- The pdg of the n-th particle in the list
-	  Eng[N] -- The TRUE energy of the n-th particle
-	  Px[N] -- X-projection of the n-th particle momentum
-	  Py[N] -- Y-projection of the n-th particle momentum
-	  Pz[N] -- Z-projection of the n-th particle momentum
-	  P[N] -- n-th particle momentum
-	  StartPointx[N] -- X-projection of the n-th start point
-	  StartPointy[N] -- Y-projection of the n-th start point
-	  StartPointz[N] -- X-projection of the n-th start point
-	  theta[N] -- The theta of the n-th particle
-	  phi[N] -- the phi of the n-th paritlce
-	  */
-
-	   //Here you will build your code, build whatever you want! MUHAHAHAHAHAHAHAHAHAHAHAHA@
-
-	   //// EXAMPLE loop through all reco showers in event
+	/// Here we START to loop over all entries in the TTree
+	/// these are events, so be careful how you think of these events
+	/// Start
+	for (Long64_t jentry = 0; jentry < nentries && jentry < max_entry; jentry++) {
+		Long64_t ientry = LoadTree(jentry);
+		if (ientry < 0) break;
+		nb = fChain->GetEntry(jentry);   nbytes += nb;
+		/// End
+		if ((jentry % 1000) == 0){ std::cout << "\t\t\t ### " << int(100 * jentry / nentries) << "% done !" << std::endl; }
 
 
-	   // This is to calculate the distance between the starting point of the shower and the MC
-	   if (nshowers == 1)
-	   {
-		   if (pdg == 22)
-		   {
-			   // distance formula
-			   double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-		   }
-		   else
-		   {
-			   double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-		   }
-		   // Histogram (TH1F)  -> Fill(var) [function, var] 
-		   StartPointOffset->Fill(dist);
+		/* List of useful variables that you might want to look at:
 
-		 // std::cout << "X difference: " << fabs(shwr_startx[0] - EndPointx[0]) << std::endl;
-		 //  std::cout << "Y difference: " << fabs(StartPointy[0] - EndPointy[0]) << std::endl;
-		 //  std::cout << "Z difference: " << fabs(StartPointz[0] - EndPointz[0]) << std::endl;
-	   }
+	   event -- this is what you call event number
+	   subrun -- this is what you call subrun
+
+	   RECONSTRUCTION INFORMATION:
+	   nshowers -- The number of reconstruted showers (N)
+	   showerID[N] -- A unique shower ID, just a number (int)
+	   shwr_bestplane[N] -- The plane that has the largest (spatial) projection of hits, this is the P you should use typically
+	   shwr_length[N] -- The length of the shower in blah dimensions
+	   shwr_startdcosx[N] -- the "i" component of the unit vector describing the direction
+	   shwr_startdcosy[N] -- the "j" component of the unit vector describing the direction
+	   shwr_startdcosz[N] -- the "k" component of the unit vector describing the direction
+	   shwr_startx[N] -- the "x" posistion start point
+	   shwr_starty[N] -- the "y" posistion start point
+	   shwr_startz[N] -- the "z" posistion start point
+	   shwr_totEng[N][P] -- The total energy of the shower in plane P (focus on P == 2 for now)
+	   shwr_mipEng[N][P] -- The total energy of the shower in plane P (focus on P == 2 for now)
+	   shwr_dedx[N][P] -- The total energy deposited at the start of the shower
+
+	   MC TRUTH INFORMATION:
+	   geant_list_size -- The number of particles (N), you will usually only be intrested in the first particle
+	   pdg[N] -- The pdg of the n-th particle in the list
+	   Eng[N] -- The TRUE energy of the n-th particle
+	   Px[N] -- X-projection of the n-th particle momentum
+	   Py[N] -- Y-projection of the n-th particle momentum
+	   Pz[N] -- Z-projection of the n-th particle momentum
+	   P[N] -- n-th particle momentum
+	   StartPointx[N] -- X-projection of the n-th start point
+	   StartPointy[N] -- Y-projection of the n-th start point
+	   StartPointz[N] -- X-projection of the n-th start point
+	   theta[N] -- The theta of the n-th particle
+	   phi[N] -- the phi of the n-th paritlce
+	   */
+
+		//Here you will build your code, build whatever you want! MUHAHAHAHAHAHAHAHAHAHAHAHA@
+
+		//// EXAMPLE loop through all reco showers in event
 
 
-	   // Number of Showers
+		// This is to calculate the distance between the starting point of the shower and the MC
+		if (nshowers == 1)
+		{
+			if (pdg == 22)
+			{
+				// distance formula
+				double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+			}
+			else
+			{
+				double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+			}
+			// Histogram (TH1F)  -> Fill(var) [function, var] 
+			StartPointOffset->Fill(dist);
 
-	   NumShowers->Fill(nshowers);
-	   // std::cout << "Number of Showers: " << nshowers << std::endl << std::endl;
-
-	   //use momentum to calculate the mc angle and then compare it to the other shwr angle
-	   // go through every particle in the shower and find its energy relative to the total energy and find out how far it travels
-
+			// std::cout << "X difference: " << fabs(shwr_startx[0] - EndPointx[0]) << std::endl;
+			//  std::cout << "Y difference: " << fabs(StartPointy[0] - EndPointy[0]) << std::endl;
+			//  std::cout << "Z difference: " << fabs(StartPointz[0] - EndPointz[0]) << std::endl;
+		}
 
 
-	   // find photons with large energy in the shower
-	   for (int i = 1; i < geant_list_size; i++)
-	   {
-		   if (Eng[i] >= Eng[0] * 0.05 && pdg[i] == 22)
-		   {
-			   double particledist = sqrt(pow((StartPointx[i] - StartPointx[0]), 2) + pow((StartPointy[i] - StartPointy[0]), 2) + pow((StartPointz[i] - StartPointz[0]), 2));
-		   }
+		// Number of Showers
 
-		   ParticleDist->Fill(particledist);
-	   }
+		NumShowers->Fill(nshowers);
+		// std::cout << "Number of Showers: " << nshowers << std::endl << std::endl;
+
+		// go through every particle in the shower and find its energy relative to the total energy and find out how far it travels
+
+
+
+		// find photons with large energy in the shower
+		for (int i = 1; i < geant_list_size; i++)
+		{
+			if (Eng[i] >= Eng[0] * 0.05 && pdg[i] == 22)
+			{
+				double particledist = sqrt(pow((StartPointx[i] - StartPointx[0]), 2) + pow((StartPointy[i] - StartPointy[0]), 2) + pow((StartPointz[i] - StartPointz[0]), 2));
+			}
+
+			ParticleDist->Fill(particledist);
+		}
+
+
+		//use momentum to calculate the mc angle and then compare it to the other shwr angle
+		
+				double x_angle = P[0] / Px[0];
+				double y_angle = P[0] / Py[0];
+				double z_angle = P[0] / Pz[0];
+
+				float xdiff = fabs(shwr_startdcosx[0] - cos(x_angle));
+				float ydiff = fabs(shwr_startdcosy[0] - cos(y_angle));
+				float zdiff = fabs(shwr_startdcosz[0] - cos(z_angle));
+
+				if (xdiff > cos(10) || ydiff > cos(10) || zdiff > cos(10))
+				{
+					xAngleOffset->Fill(xdiff);
+					yAngleOffset->Fill(ydiff);
+					zAngleOffset->Fill(zdiff);
+
+				}
+
+
+
+
+			
+		
+	
 
 	   
+	   
 	   /*
-	   for (int i = 0; i < nshowers, i++)
-	   {
-
-	   if ()
-	   {
-	   xangle = fabs(shwr_startcosx[0]-
-	   yangle =
-	   zangle =
-	   }
-
-	   }
 	   // figure out distance between showers but i need a shower end variable...
 
 	    
@@ -198,6 +217,10 @@ void anatree::Loop(Long64_t max_entry)
    StartPointOffset->Draw();
    NumShowers->Draw();
    ParticleDist->Draw();
+   xAngleOffset->Draw();
+   yAngleOffset->Draw();
+   zAngleOffset->Draw();
+
 
    TFile *f = new TFile("Awesome_Shower_Reco_Vetting_Booyah.root", "RECREATE");
    
