@@ -17,11 +17,11 @@ void anatree::Loop(Long64_t max_entry)
 
 
 	TH1F* StartPointOffset = new TH1F("startpointoffset", "; Start Point Offset (cm); Number", 50, 0, 1000);
-	TH1F* NumShowers = new TH1F("Number of Showers", "; Shower Number; Number of Events", 1, 0.5, 10.5);
+	TH1F* NumShowers = new TH1F("Number of Showers", "; Shower Number; Number of Events", 5, 0, 5);
 	TH1F* ParticleDist = new TH1F(" Particle Distance ", "; Particle Distance; Number of Particles", 50, 50, 1650);
-	TH1F* xAngleOffset = new TH1F(" X angle Offset ", "; Angle; Number of Particles", 20, 0, 360);
-	TH1F* yAngleOffset = new TH1F(" Y angle Offset ", "; Angle; Number of Particles", 20, 0, 360);
-	TH1F* zAngleOffset = new TH1F(" Z angle Offset ", "; Angle; Number of Particles", 20, 0, 360);
+	TH1F* xAngleOffset = new TH1F(" X angle Offset ", "; Angle; Number of Particles", 50, -7, 7);
+	TH1F* yAngleOffset = new TH1F(" Y angle Offset ", "; Angle; Number of Particles", 50, -7, 7);
+	TH1F* zAngleOffset = new TH1F(" Z angle Offset ", "; Angle; Number of Particles", 50, -7, 7);
 
 
 	if (fChain == 0) return;
@@ -108,7 +108,7 @@ void anatree::Loop(Long64_t max_entry)
 
 		// Number of Showers
 
-		NumShowers->Fill(nshowers);
+		// NumShowers->Fill(nshowers);
 		// std::cout << "Number of Showers: " << nshowers << std::endl << std::endl;
 
 		// go through every particle in the shower and find its energy relative to the total energy and find out how far it travels
@@ -125,34 +125,26 @@ void anatree::Loop(Long64_t max_entry)
 
 			ParticleDist->Fill(particledist);
 		}
-
+		
 
 		//use momentum to calculate the mc angle and then compare it to the other shwr angle
 		
-				double x_angle = P[0] / Px[0];
-				double y_angle = P[0] / Py[0];
-				double z_angle = P[0] / Pz[0];
+				float cx_angle = Px[0] / P[0];		// in radians!
+				float cy_angle = Py[0] / P[0];
+				float cz_angle = Pz[0] / P[0];
 
-				float xdiff = fabs(shwr_startdcosx[0] - cos(x_angle));
-				float ydiff = fabs(shwr_startdcosy[0] - cos(y_angle));
-				float zdiff = fabs(shwr_startdcosz[0] - cos(z_angle));
+				//shwr_startdscosx is also in radians
 
-				if (xdiff > cos(10) || ydiff > cos(10) || zdiff > cos(10))
+				float xdiff = fabs(shwr_startdcosx[0] - cx_angle);
+				float ydiff = fabs(shwr_startdcosy[0] - cy_angle);
+				float zdiff = fabs(shwr_startdcosz[0] - cz_angle);
+
+				if (xdiff > 1 / sqrt(2.0) || ydiff > 1 / sqrt(2.0) || zdiff > 1 / sqrt(2.0))
 				{
 					xAngleOffset->Fill(xdiff);
 					yAngleOffset->Fill(ydiff);
 					zAngleOffset->Fill(zdiff);
-
 				}
-
-
-
-
-			
-		
-	
-
-	   
 	   
 	   /*
 	   // figure out distance between showers but i need a shower end variable...
@@ -215,7 +207,7 @@ void anatree::Loop(Long64_t max_entry)
    /// End
 
    StartPointOffset->Draw();
-   NumShowers->Draw();
+  // NumShowers->Draw();
    ParticleDist->Draw();
    xAngleOffset->Draw();
    yAngleOffset->Draw();
