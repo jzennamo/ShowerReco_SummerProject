@@ -18,11 +18,11 @@ void anatree::Loop(Long64_t max_entry)
 
 
 	TH1F* StartPointOffset = new TH1F("startpointoffset", "; Start Point Offset (cm); Number", 50, 0, 1000);
-	TH1F* NumShowers = new TH1F("Number of Showers", "; Shower Number; Number of Events", 5, 0, 5);
-	TH1F* ParticleDist = new TH1F(" Particle Distance ", "; Particle Distance; Number of Particles", 50, 50, 1650);
-	TH1F* xAngleOffset = new TH1F(" X angle Offset ", "; Angle; Number of Particles", 20, 0, 360);
-	TH1F* yAngleOffset = new TH1F(" Y angle Offset ", "; Angle; Number of Particles", 20, 0, 360);
-	TH1F* zAngleOffset = new TH1F(" Z angle Offset ", "; Angle; Number of Particles", 20, 0, 360);
+	TH1F* NumShowers = new TH1F("Number_of_Showers", "; Shower Number; Number of Events", 5, 0, 5);
+	TH1F* ParticleDist = new TH1F("Particle_Distance ", "; Particle Distance; Number of Particles", 50, 50, 1650);
+	TH1F* xAngleOffset = new TH1F("X_angle_Offset ", "; Angle; Number of Particles", 20, 0, 360);
+	TH1F* yAngleOffset = new TH1F("Y_angle_Offset ", "; Angle; Number of Particles", 20, 0, 360);
+	TH1F* zAngleOffset = new TH1F("Z_angle_Offset ", "; Angle; Number of Particles", 20, 0, 360);
 
 
 	if (fChain == 0) return;
