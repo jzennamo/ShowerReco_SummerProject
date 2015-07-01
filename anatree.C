@@ -17,6 +17,7 @@ void anatree::Loop(Long64_t max_entry)
 
 
   TH1F* StartPointOffset = new TH1F("startpointoffset","; Start Point Offset (cm); Number", 50, 0, 1000);
+  TH1F* NumShowers = new TH1F("Number of Showers", "; Shower Number; Number of Events", 1, 0.5, 10.5);
 
    if (fChain == 0) return;
 
@@ -106,12 +107,8 @@ void anatree::Loop(Long64_t max_entry)
 	*/
 
 	// Number of Showers
-
-      //	TH1F* NumShowers= new TH1F("Number of Showers", "; Shower Number; Number of Events", 1, 0, 10);
-
-      //	NumShowers->Fill(nshowers);
-
-      std::cout << "Number of Showers: " << nshowers << std::endl;
+      NumShowers->Fill(nshowers);
+	  std::cout << "Number of Showers: " << nshowers << std::endl << std::endl;
 
 
 
@@ -147,8 +144,7 @@ void anatree::Loop(Long64_t max_entry)
 				  if (distfromstart < particledist)
 				  {
 					  distfromstart = particledist;
-				  }
-				 
+				  } 
 		  }
 		  
 	doubl
@@ -166,11 +162,12 @@ void anatree::Loop(Long64_t max_entry)
    }
    /// End
 
+   StartPointOffset->Draw();
+   NumShowers->Draw();
+
    TFile *f = new TFile("Awesome_Shower_Reco_Vetting_Booyah.root", "RECREATE");
    
    StartPointOffset->Write();
    f->Write();
    f->Close();
-  
-
 }
