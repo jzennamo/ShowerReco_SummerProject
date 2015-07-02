@@ -23,6 +23,7 @@ void anatree::Loop(Long64_t max_entry)
 	TH1F* xAngleOffset = new TH1F("X_angle_Offset ", "; Angle; Number of Particles", 20, 0, 360);
 	TH1F* yAngleOffset = new TH1F("Y_angle_Offset ", "; Angle; Number of Particles", 20, 0, 360);
 	TH1F* zAngleOffset = new TH1F("Z_angle_Offset ", "; Angle; Number of Particles", 20, 0, 360);
+	TH1F* GoodReco = new TH1F("Good Reco ", "; Angle; Number of Particles", 20, 0, 360);
 
 
 	if (fChain == 0) return;
@@ -155,6 +156,24 @@ void anatree::Loop(Long64_t max_entry)
 					zAngleOffset->Fill(zdiff*180/3.14);
 				}
 	   
+		// good reconstructed showers
+		// must have correct shower direction and shower starting position
+
+				if (nshowers == 1)
+				{
+					if (pdg == 22)
+					{
+						// distance formula
+						double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+					}
+					else if (pdg == -13 || pdg == 13)
+					{
+						double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+					}
+
+					// Histogram (TH1F)  -> Fill(var) [function, var] 
+					Goodreco->Fill(dist);
+				}
 	   /*
 
 	   // figure out distance between showers but i need a shower end variable...
