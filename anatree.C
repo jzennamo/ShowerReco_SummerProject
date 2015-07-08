@@ -25,9 +25,9 @@ void anatree::Loop(Long64_t max_entry)
 	TH1F* zAngleOffset = new TH1F("Z_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
 
 	TH1F* StartPointOffsetGoodReco = new TH1F("startpointoffset", "; Start Point Offset (cm); Number", 50, 0, 20);
-	TH1F* xAngleOffsetGoodReco = new TH1F("X_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 10);
-	TH1F* yAngleOffsetGoodReco = new TH1F("Y_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 10);
-	TH1F* zAngleOffsetGoodReco = new TH1F("Z_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 10);
+	TH1F* xAngleOffsetGoodReco = new TH1F("X_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 5);
+	TH1F* yAngleOffsetGoodReco = new TH1F("Y_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 5);
+	TH1F* zAngleOffsetGoodReco = new TH1F("Z_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 5);
 
 	if (fChain == 0) return;
 
@@ -139,19 +139,18 @@ void anatree::Loop(Long64_t max_entry)
 		float cz_angle = Pz[0] / P[0];
 
 		// difference in angle between the shower start and the MC start
-		float xdiff = fabs(shwr_startdcosx[0] - cx_angle);
-		float ydiff = fabs(shwr_startdcosy[0] - cy_angle);
-		float zdiff = fabs(shwr_startdcosz[0] - cz_angle);
+		float xdiff = fabs(TMath::ACos(shwr_startdcosx[0]) - TMath::ACos(cx_angle));
+		float ydiff = fabs(TMath::ACos(shwr_startdcosy[0]) - TMath::ACos(cy_angle));
+		float zdiff = fabs(TMath::ACos(shwr_startdcosz[0]) - TMath::ACos(cz_angle));
 
 		// minumum angle that is considered not too far off from actual
-		const double minangle = TMath::Cos(5 * 3.14 / 180);
+		const double minangle = 5.0
 	
 		
-			xAngleOffset->Fill(xdiff * 180 / 3.14);
-			yAngleOffset->Fill(ydiff * 180 / 3.14);
-			zAngleOffset->Fill(zdiff * 180 / 3.14);
+			xAngleOffset->Fill(xdiff);
+			yAngleOffset->Fill(ydiff);
+			zAngleOffset->Fill(zdiff);
 
-			std::cout << xdiff * 180 / 3.14 << std::endl;
 		// good reconstructed showers
 		// must have correct shower direction and shower starting position and only one shower
 
@@ -172,21 +171,21 @@ void anatree::Loop(Long64_t max_entry)
 			// Histogram (TH1F)  -> Fill(var) [function, var]
 			//Goodreco->Fill(dist);
 
-			// if any of the angles are within the minimum angle then we want to add it to the histrogram
+			// if any of the angles are within the minimum angle then we want to add it to the histogram
 
 			if (xdiff <= minangle)
 			{
-				xAngleOffsetGoodReco->Fill(xdiff * 180 / 3.14);
+				xAngleOffsetGoodReco->Fill(xdiff);
 			}
 
 			if (ydiff <= minangle)
 			{
-				yAngleOffsetGoodReco->Fill(ydiff * 180 / 3.14);
+				yAngleOffsetGoodReco->Fill(ydiff);
 			}
 
 			if (zdiff <= minangle)
 			{
-				zAngleOffsetGoodReco->Fill(zdiff * 180 / 3.14);
+				zAngleOffsetGoodReco->Fill(zdiff);
 			}
 
 			if (pdg == 22)			// photon
