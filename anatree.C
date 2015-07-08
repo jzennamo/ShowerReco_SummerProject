@@ -17,17 +17,17 @@ void anatree::Loop(Long64_t max_entry)
 	// (or small number of events: Root > t.Loop(500)  )
 
 
-	TH1F* StartPointOffset = new TH1F("startpointoffset", "; Start Point Offset (cm); Number", 50, 0, 1000);
+	TH1F* StartPointOffset = new TH1F("startpointoffset", "; Start Point Offset (cm); Number", 50, 0, 2000);
 	TH1F* NumShowers = new TH1F("Number_of_Showers", "; Shower Number; Number of Events", 5, 0, 5);
-	TH1F* ParticleDist = new TH1F("Particle_Distance ", "; Particle Distance; Number of Particles", 50, 50, 1650);
+	TH1F* PhotonDist = new TH1F("Particle_Distance ", "; Particle Distance; Number of Particles", 50, 50, 1650);
 	TH1F* xAngleOffset = new TH1F("X_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
 	TH1F* yAngleOffset = new TH1F("Y_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
 	TH1F* zAngleOffset = new TH1F("Z_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
 
-	TH1F* StartPointOffsetGoodReco = new TH1F("startpointoffset", "; Start Point Offset (cm); Number", 50, 0, 20);
-	TH1F* xAngleOffsetGoodReco = new TH1F("X_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 5);
-	TH1F* yAngleOffsetGoodReco = new TH1F("Y_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 5);
-	TH1F* zAngleOffsetGoodReco = new TH1F("Z_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 5);
+	TH1F* StartPointOffsetGoodReco = new TH1F("start_Point_offset_Good_Reco", "; Start Point Offset (cm); Number", 50, 0, 275);
+	TH1F* xAngleOffsetGoodReco = new TH1F("X_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 6);
+	TH1F* yAngleOffsetGoodReco = new TH1F("Y_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 6);
+	TH1F* zAngleOffsetGoodReco = new TH1F("Z_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 6);
 
 	if (fChain == 0) return;
 
@@ -82,7 +82,7 @@ void anatree::Loop(Long64_t max_entry)
 	   StartPointy[N] -- Y-projection of the n-th start point
 	   StartPointz[N] -- X-projection of the n-th start point
 	   theta[N] -- The theta of the n-th particle
-	   phi[N] -- the phi of the n-th paritlce
+	   phi[N] -- the phi of the n-th particle
 	   */
 
 		//Here you will build your code, build whatever you want! MUHAHAHAHAHAHAHAHAHAHAHAHA@
@@ -99,20 +99,22 @@ void anatree::Loop(Long64_t max_entry)
 				// distance formula
 				double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 			}
-			else if (pdg == -13 || pdg == 13)		// electron or positron
+			else	// electron or positron
 			{
 				// distance formula
 				double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 			}
 			
 			// Histogram (TH1F)  -> Fill(var) [function, var] 
-			//StartPointOffset->Fill(dist);
-
-			// std::cout << "X difference: " << fabs(shwr_startx[0] - EndPointx[0]) << std::endl;
-			// std::cout << "Y difference: " << fabs(StartPointy[0] - EndPointy[0]) << std::endl;
-			// std::cout << "Z difference: " << fabs(StartPointz[0] - EndPointz[0]) << std::endl;
+			StartPointOffset->Fill(dist);
+		
+			/*
+			std::cout << "X difference: " << fabs(shwr_startx[0] - EndPointx[0]) << std::endl;
+			std::cout << "Y difference: " << fabs(StartPointy[0] - EndPointy[0]) << std::endl;
+			std::cout << "Z difference: " << fabs(StartPointz[0] - EndPointz[0]) << std::endl;
+			
+			*/
 		}
-
 
 		// Number of Showers
 		NumShowers->Fill(nshowers);
@@ -120,40 +122,36 @@ void anatree::Loop(Long64_t max_entry)
 		// go through every particle in the shower and find its energy relative to the total energy and find out how far it travels
 		// find photons with large energy in the shower
 		// catastrophic brem
-
 		for (int i = 1; i < geant_list_size; i++)	// checks every particle in the event
 		{
 			if (Eng[i] >= Eng[0] * 0.05 && pdg[i] == 22)	// if photon has 5% or more of the total energy
 			{
 				// calculate distance
-				double particledist = sqrt(pow((StartPointx[i] - StartPointx[0]), 2) + pow((StartPointy[i] - StartPointy[0]), 2) + pow((StartPointz[i] - StartPointz[0]), 2));
+				double photondist = sqrt(pow((StartPointx[i] - StartPointx[0]), 2) + pow((StartPointy[i] - StartPointy[0]), 2) + pow((StartPointz[i] - StartPointz[0]), 2));
 			}
 
-			ParticleDist->Fill(particledist);
+			PhotonDist->Fill(photondist);
 		}
 
-		//use momentum to calculate the mc angle and then compare it to the other shwr angle and create three plots (one for each plane)
-		
-		float cx_angle = Px[0] / P[0];
-		float cy_angle = Py[0] / P[0];
-		float cz_angle = Pz[0] / P[0];
+		//use momentum to calculate the MC angle and then compare it to the other shower angle and create three plots (one for each plane)
+		double cx_angle = Px[0] / P[0];
+		double cy_angle = Py[0] / P[0];
+		double cz_angle = Pz[0] / P[0];
 
 		// difference in angle between the shower start and the MC start
-		float xdiff = fabs(TMath::ACos(shwr_startdcosx[0]) - TMath::ACos(cx_angle));
-		float ydiff = fabs(TMath::ACos(shwr_startdcosy[0]) - TMath::ACos(cy_angle));
-		float zdiff = fabs(TMath::ACos(shwr_startdcosz[0]) - TMath::ACos(cz_angle));
+		double xdiff = TMath::ACos(shwr_startdcosx[0]) - TMath::ACos(cx_angle);
+		double ydiff = TMath::ACos(shwr_startdcosy[0]) - TMath::ACos(cy_angle);
+		double zdiff = TMath::ACos(shwr_startdcosz[0]) - TMath::ACos(cz_angle);
 
-		// minumum angle that is considered not too far off from actual
-		const double minangle = 5.0
-	
-		
-			xAngleOffset->Fill(xdiff);
-			yAngleOffset->Fill(ydiff);
-			zAngleOffset->Fill(zdiff);
+			// minumum angle that is considered not too far off from actual
+		double minangle = 5.0;
+
+		xAngleOffset->Fill(fabs(xdiff * 180 / 3.14));
+		yAngleOffset->Fill(fabs(ydiff * 180 / 3.14));
+		zAngleOffset->Fill(fabs(zdiff * 180 / 3.14));
 
 		// good reconstructed showers
 		// must have correct shower direction and shower starting position and only one shower
-
 		if (nshowers == 1)	// only want one shower
 		{
 			if (pdg == 22) // checks if it is a photon
@@ -162,30 +160,33 @@ void anatree::Loop(Long64_t max_entry)
 				double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 			}
 
-			else if (pdg == -13 || pdg == 13) // checks if it is an electron or positron
+			else // checks if it is an electron or positron
 			{
 				// distance formula
 				double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 			}
 
-			// Histogram (TH1F)  -> Fill(var) [function, var]
-			//Goodreco->Fill(dist);
-
-			// if any of the angles are within the minimum angle then we want to add it to the histogram
-
-			if (xdiff <= minangle)
+			if (dist <= 250.0)
 			{
-				xAngleOffsetGoodReco->Fill(xdiff);
+				// Histogram (TH1F)  -> Fill(var) [function, var]
+				StartPointOffsetGoodReco->Fill(dist);
 			}
 
-			if (ydiff <= minangle)
+			// if any of the angles is within the minimum angle then we want to add it to the histogram
+			
+			if (fabs(xdiff * 180 / 3.14) <= minangle)
 			{
-				yAngleOffsetGoodReco->Fill(ydiff);
+				xAngleOffsetGoodReco->Fill(xdiff * 180 / 3.14);
 			}
 
-			if (zdiff <= minangle)
+			if (fabs(ydiff * 180 / 3.14) <= minangle)
 			{
-				zAngleOffsetGoodReco->Fill(zdiff);
+				yAngleOffsetGoodReco->Fill(ydiff * 180 / 3.14);
+			}
+
+			if (fabs(zdiff * 180 / 3.14) <= minangle)
+			{
+				zAngleOffsetGoodReco->Fill(zdiff * 180 / 3.14);
 			}
 
 			if (pdg == 22)			// photon
@@ -198,11 +199,18 @@ void anatree::Loop(Long64_t max_entry)
 				// distance formula
 				double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 			}
+		}
 
-			if (dist <= 20.0)
-			{
-				StartPointOffsetGoodReco->Fill(dist);
-			}
+
+
+	// misses at least have the shower
+	
+		for (int i = 0; i < nshowers; i++)
+		{
+
+
+
+
 
 		}
 	 
@@ -216,8 +224,7 @@ void anatree::Loop(Long64_t max_entry)
    TFile *f = new TFile("Awesome_Shower_Reco_Vetting_Booyah.root", "RECREATE");
    
    StartPointOffset->Write();
-   NumShowers->Write();
-   ParticleDist->Write();
+   PhotonDist->Write();
    xAngleOffset->Write();
    yAngleOffset->Write();
    zAngleOffset->Write();
@@ -230,7 +237,6 @@ void anatree::Loop(Long64_t max_entry)
    f->Write();
    f->Close();
 }
-
 
 
 
