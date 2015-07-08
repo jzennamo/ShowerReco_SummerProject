@@ -20,11 +20,14 @@ void anatree::Loop(Long64_t max_entry)
 	TH1F* StartPointOffset = new TH1F("startpointoffset", "; Start Point Offset (cm); Number", 50, 0, 1000);
 	TH1F* NumShowers = new TH1F("Number_of_Showers", "; Shower Number; Number of Events", 5, 0, 5);
 	TH1F* ParticleDist = new TH1F("Particle_Distance ", "; Particle Distance; Number of Particles", 50, 50, 1650);
-	TH1F* xAngleOffset = new TH1F("X_angle_Offset ", "; Angle; Number of Particles", 20, 0, 360);
-	TH1F* yAngleOffset = new TH1F("Y_angle_Offset ", "; Angle; Number of Particles", 20, 0, 360);
-	TH1F* zAngleOffset = new TH1F("Z_angle_Offset ", "; Angle; Number of Particles", 20, 0, 360);
-	TH1F* GoodReco = new TH1F("Good Reco ", "; Angle; Number of Particles", 20, 0, 360);
+	TH1F* xAngleOffset = new TH1F("X_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
+	TH1F* yAngleOffset = new TH1F("Y_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
+	TH1F* zAngleOffset = new TH1F("Z_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
 
+	TH1F* StartPointOffsetGoodReco = new TH1F("startpointoffset", "; Start Point Offset (cm); Number", 50, 0, 20);
+	TH1F* xAngleOffsetGoodReco = new TH1F("X_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 10);
+	TH1F* yAngleOffsetGoodReco = new TH1F("Y_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 10);
+	TH1F* zAngleOffsetGoodReco = new TH1F("Z_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 10);
 
 	if (fChain == 0) return;
 
@@ -88,20 +91,22 @@ void anatree::Loop(Long64_t max_entry)
 
 
 		// This is to calculate the distance between the starting point of the shower and the MC
-		if (nshowers == 1)
+
+		if (nshowers == 1)			// we want to check events that have only one shower
 		{
-			if (pdg == 22)
+			if (pdg == 22)			// photon
 			{
 				// distance formula
 				double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 			}
-			else if (pdg == -13 || pdg == 13)
+			else if (pdg == -13 || pdg == 13)		// electron or positron
 			{
+				// distance formula
 				double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 			}
 			
 			// Histogram (TH1F)  -> Fill(var) [function, var] 
-			StartPointOffset->Fill(dist);
+			//StartPointOffset->Fill(dist);
 
 			// std::cout << "X difference: " << fabs(shwr_startx[0] - EndPointx[0]) << std::endl;
 			// std::cout << "Y difference: " << fabs(StartPointy[0] - EndPointy[0]) << std::endl;
@@ -110,20 +115,17 @@ void anatree::Loop(Long64_t max_entry)
 
 
 		// Number of Showers
-
 		NumShowers->Fill(nshowers);
-		// std::cout << "Number of Showers: " << nshowers << std::endl << std::endl;
 
 		// go through every particle in the shower and find its energy relative to the total energy and find out how far it travels
-
-
-
 		// find photons with large energy in the shower
+		// catastrophic brem
 
-		for (int i = 1; i < geant_list_size; i++)
+		for (int i = 1; i < geant_list_size; i++)	// checks every particle in the event
 		{
-			if (Eng[i] >= Eng[0] * 0.05 && pdg[i] == 22)
+			if (Eng[i] >= Eng[0] * 0.05 && pdg[i] == 22)	// if photon has 5% or more of the total energy
 			{
+				// calculate distance
 				double particledist = sqrt(pow((StartPointx[i] - StartPointx[0]), 2) + pow((StartPointy[i] - StartPointy[0]), 2) + pow((StartPointz[i] - StartPointz[0]), 2));
 			}
 
@@ -132,109 +134,86 @@ void anatree::Loop(Long64_t max_entry)
 
 		//use momentum to calculate the mc angle and then compare it to the other shwr angle and create three plots (one for each plane)
 		
-				float cx_angle = Px[0] / P[0];
-				float cy_angle = Py[0] / P[0];
-				float cz_angle = Pz[0] / P[0];
+		float cx_angle = Px[0] / P[0];
+		float cy_angle = Py[0] / P[0];
+		float cz_angle = Pz[0] / P[0];
 
-				float xdiff = fabs(shwr_startdcosx[0] - cx_angle);
-				float ydiff = fabs(shwr_startdcosy[0] - cy_angle);
-				float zdiff = fabs(shwr_startdcosz[0] - cz_angle);
+		// difference in angle between the shower start and the MC start
+		float xdiff = fabs(shwr_startdcosx[0] - cx_angle);
+		float ydiff = fabs(shwr_startdcosy[0] - cy_angle);
+		float zdiff = fabs(shwr_startdcosz[0] - cz_angle);
 
-				const double minangle = TMath::Cos(5 * 180 /3.14);
+		// minumum angle that is considered not too far off from actual
+		const double minangle = TMath::Cos(5 * 3.14 / 180);
+	
+		
+			xAngleOffset->Fill(xdiff * 180 / 3.14);
+			yAngleOffset->Fill(ydiff * 180 / 3.14);
+			zAngleOffset->Fill(zdiff * 180 / 3.14);
 
-				if (xdiff > minangle)
-				{
-					xAngleOffset->Fill(xdiff*180/3.14);
-				}
-				
-				if (ydiff > minangle)
-				{
-					yAngleOffset->Fill(ydiff*180/3.14);
-				}
-				if (zdiff > minangle)
-				{
-					zAngleOffset->Fill(zdiff*180/3.14);
-				}
-	   
+			std::cout << xdiff * 180 / 3.14 << std::endl;
 		// good reconstructed showers
-		// must have correct shower direction and shower starting position
+		// must have correct shower direction and shower starting position and only one shower
 
-				if (nshowers == 1)
-				{
-					if (pdg == 22)
-					{
-						// distance formula
-						double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-					}
-					else if (pdg == -13 || pdg == 13)
-					{
-						double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-					}
+		if (nshowers == 1)	// only want one shower
+		{
+			if (pdg == 22) // checks if it is a photon
+			{
+				// distance formula
+				double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+			}
 
-					// Histogram (TH1F)  -> Fill(var) [function, var] 
-					Goodreco->Fill(dist);
-				}
-	   /*
+			else if (pdg == -13 || pdg == 13) // checks if it is an electron or positron
+			{
+				// distance formula
+				double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+			}
 
-	   // figure out distance between showers but i need a shower end variable...
+			// Histogram (TH1F)  -> Fill(var) [function, var]
+			//Goodreco->Fill(dist);
 
-	    
-	   if (nshowers > 1)
-	   {
-	   for (int i = 0; i < nshowers; i++)
-	   {
-	   for (int j = i+1; j < i; j++)
-	   {
-	   // distance between the end of the first shower and the beginning of the second shower
-	   shwrdistdiff = shwrendx
-	   shwrdist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-	   }
-	   }
-	   }
+			// if any of the angles are within the minimum angle then we want to add it to the histrogram
 
-	   // This is to find showers that are not fully reconstructed
+			if (xdiff <= minangle)
+			{
+				xAngleOffsetGoodReco->Fill(xdiff * 180 / 3.14);
+			}
 
+			if (ydiff <= minangle)
+			{
+				yAngleOffsetGoodReco->Fill(ydiff * 180 / 3.14);
+			}
 
-	   double distfromstart = 0;
-	   double particledist = 0;
-	   double particlenum = 0;
+			if (zdiff <= minangle)
+			{
+				zAngleOffsetGoodReco->Fill(zdiff * 180 / 3.14);
+			}
 
-	   // calculating length of MC
-	   for (int i = 1; i <= N; i++)
-	   {
-	   if (pdg[i] == 13 || pdg[i] == -13)
-	   {
-	   if (pdg[0] == 22)
-	   {
-	   particledist = sqrt(pow(EndPointx[0] - EndPointx[i], 2) + pow(EndPointy[0] - EndPointy[i], 2) + pow(EndPointz[0] - EndPointz[i], 2));
-	   }
-	   else (pdg[0] == 13)
-	   {
-	   particledist = sqrt(pow(StartPointx[0] - EndPointx[i], 2) + pow(StartPointy[0] - EndPointy[i], 2) + pow(StartPointz[0] - EndPointz[i], 2));
-	   }
-	   }
+			if (pdg == 22)			// photon
+			{
+				// distance formula
+				double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+			}
+			else if (pdg == -13 || pdg == 13)		// electron or positron
+			{
+				// distance formula
+				double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+			}
 
-	   if (distfromstart < particledist)
-	   {
-	   distfromstart = particledist;
-	   }
-	   }
+			if (dist <= 20.0)
+			{
+				StartPointOffsetGoodReco->Fill(dist);
+			}
 
-	   double
-	   for(int n = 0; n < nshowers; n++){
-	   double temp_eng = shwr_totEng[n][2];
-
-	   if(max_eng < temp_eng) {max_eng = temp_eng; max_N = n;}
-
-	   }
-	   */
+		}
+	 
 	   ////// END
 
 	   /// Here is the end of the loop
 	   /// Start
-   }
+}
    /// End
-
+ 
    TFile *f = new TFile("Awesome_Shower_Reco_Vetting_Booyah.root", "RECREATE");
    
    StartPointOffset->Write();
@@ -244,6 +223,78 @@ void anatree::Loop(Long64_t max_entry)
    yAngleOffset->Write();
    zAngleOffset->Write();
 
+   StartPointOffsetGoodReco->Write();
+   xAngleOffsetGoodReco->Write();
+   yAngleOffsetGoodReco->Write();
+   zAngleOffsetGoodReco->Write();
+
    f->Write();
    f->Close();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+// figure out distance between showers but i need a shower end variable...
+
+
+if (nshowers > 1)
+{
+for (int i = 0; i < nshowers; i++)
+{
+for (int j = i+1; j < i; j++)
+{
+// distance between the end of the first shower and the beginning of the second shower
+shwrdistdiff = shwrendx
+shwrdist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+}
+}
+}
+
+// This is to find showers that are not fully reconstructed
+
+
+double distfromstart = 0;
+double particledist = 0;
+double particlenum = 0;
+
+// calculating length of MC
+for (int i = 1; i <= N; i++)
+{
+if (pdg[i] == 13 || pdg[i] == -13)
+{
+if (pdg[0] == 22)
+{
+particledist = sqrt(pow(EndPointx[0] - EndPointx[i], 2) + pow(EndPointy[0] - EndPointy[i], 2) + pow(EndPointz[0] - EndPointz[i], 2));
+}
+else (pdg[0] == 13)
+{
+particledist = sqrt(pow(StartPointx[0] - EndPointx[i], 2) + pow(StartPointy[0] - EndPointy[i], 2) + pow(StartPointz[0] - EndPointz[i], 2));
+}
+}
+
+if (distfromstart < particledist)
+{
+distfromstart = particledist;
+}
+}
+
+double
+for(int n = 0; n < nshowers; n++){
+double temp_eng = shwr_totEng[n][2];
+
+if(max_eng < temp_eng) {max_eng = temp_eng; max_N = n;}
+
+}
+*/
