@@ -28,10 +28,12 @@ void anatree::Loop(Long64_t max_entry)
 	TH1F* yAngleOffsetGoodReco = new TH1F("Y_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 50, 0, 360);
 	TH1F* zAngleOffsetGoodReco = new TH1F("Z_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 50, 0, 360);
 
-	TH1F* NumShowersGoodRecoEng = new TH1F("Energy_One_Shower", "; Energy; Number of Events", 50, 0, 1000);
-	TH1F* XAngleGoodRecoEng = new TH1F("X_angle_Good_Reco_Energy ", "; Energy; Number of Events", 50, 0, 1000);
-	TH1F* YAngleGoodRecoEng = new TH1F("Y_angle_Good_Reco_Energy ", "; Energy; Number of Events", 50, 0, 1000);
-	TH1F* ZAngleGoodRecoEng = new TH1F("Z_angle_Good_Reco_Energy ", "; Energy; Number of Events", 50, 0, 1000);
+	TH1F* NumShowersGoodRecoEng = new TH1F("Energy_One_Shower", "; Energy; Number of Events", 100, 0, 1.2);
+	TH1F* XAngleGoodRecoEng = new TH1F("X_angle_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1.2);
+	TH1F* YAngleGoodRecoEng = new TH1F("Y_angle_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1.2);
+	TH1F* ZAngleGoodRecoEng = new TH1F("Z_angle_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1.2);
+	TH1F* DistGoodRecoEng = new TH1F("Distance_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1.2);
+
 
 
 	if (fChain == 0) return;
@@ -103,7 +105,7 @@ void anatree::Loop(Long64_t max_entry)
 	bool Zangle = false;		// true if the z angle is within 5 degrees
 	bool Bremphoton = false;	// true if the photon has at least 5% of the total shower energy
 
-
+	double dist = 0;
 
 		// This is to calculate the distance between the starting point of the shower and the MC
 		if (nshowers == 1)			// we want to check events that have only one shower
@@ -111,13 +113,13 @@ void anatree::Loop(Long64_t max_entry)
 		    if (pdg == 22)			// photon
 		      {
 			// distance formula
-				double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+				dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 		      }
 
 		    else	// electron or positron
 		      {
 				// distance formula
-				double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+				dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 		      }
 		    
 		    // Histogram (TH1F)  -> Fill(var) [function, var] 
@@ -168,7 +170,7 @@ void anatree::Loop(Long64_t max_entry)
 		
 		// good reconstructed showers
 		// must have correct shower direction and shower starting position and only one shower
-		double dist = 0;
+		
 		
 		if (nshowers == 1)	// only want one shower
 		{
@@ -211,7 +213,6 @@ void anatree::Loop(Long64_t max_entry)
 		// checks if the angle is within 5 degrees in all three planes
 		if (Xangle == true)
 		{
-			std::cout << Eng[0] << std::endl;
 			XAngleGoodRecoEng->Fill(Eng[0]);
 		}
 		    
@@ -223,6 +224,12 @@ void anatree::Loop(Long64_t max_entry)
 		if (Zangle == true)
 		{
 			ZAngleGoodRecoEng->Fill(Eng[0]);
+		}
+
+		if (Dist == true)
+		{
+
+			DistGoodRecoEng->Fill(Eng[0]);
 		}
 		    ////// END
 		    
@@ -296,13 +303,36 @@ void anatree::Loop(Long64_t max_entry)
 	c3->SetRightMargin(.15);
 	c3->cd();
 
-	XAngleGoodRecoEng->SetLineColor(kBlack);
-	XAngleGoodRecoEng->SetLineWidth(3);
-	XAngleGoodRecoEng->Draw();
+	DistGoodRecoEng->SetLineColor(kTeal+9);
+	DistGoodRecoEng->SetLineWidth(3);
+	DistGoodRecoEng->Draw();
 
 	NumShowersGoodRecoEng->SetLineColor(kRed);
 	NumShowersGoodRecoEng->SetLineWidth(3);
 	NumShowersGoodRecoEng->Draw("same");
+
+	XAngleGoodRecoEng->SetLineColor(kBlue);
+	XAngleGoodRecoEng->SetLineWidth(3);
+	XAngleGoodRecoEng->Draw("same");
+
+	YAngleGoodRecoEng->SetLineColor(kViolet);
+	YAngleGoodRecoEng->SetLineWidth(3);
+	YAngleGoodRecoEng->Draw("same");
+
+	ZAngleGoodRecoEng->SetLineColor(kGray);
+	ZAngleGoodRecoEng->SetLineWidth(3);
+	ZAngleGoodRecoEng->Draw("same");
+
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.05);
+	leg->AddEntry(DistGoodRecoEng, "Dist", "l");
+	leg->AddEntry(NumShowersGoodRecoEng, "One Shower", "l");
+	leg->AddEntry(XAngleGoodRecoEng, "X angle", "l");
+	leg->AddEntry(YAngleGoodRecoEng, "Y angle", "l");
+	leg->AddEntry(ZAngleGoodRecoEng, "Z angle", "l");
+	leg->Draw();
 }
 
 
