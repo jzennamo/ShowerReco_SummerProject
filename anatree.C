@@ -17,14 +17,14 @@ void anatree::Loop(Long64_t max_entry)
 	// (or small number of events: Root > t.Loop(500)  )
 
 
-	TH1F* StartPointOffset = new TH1F("startpointoffset", "; Start Point Offset (cm); Number", 50, 0, 2000);
+	TH1F* StartPointOffset = new TH1F("startpointoffset", "; Start Point Offset(cm); Number", 55, 0, 1100);
 	TH1F* NumShowers = new TH1F("Number_of_Showers", "; Shower Number; Number of Events", 5, 0, 5);
-	TH1F* PhotonDist = new TH1F("Particle_Distance ", "; Particle Distance; Number of Particles", 50, 50, 1650);
+	TH1F* PhotonDist = new TH1F("Photon_Distance", "; Photon Distance(cm); Number of Particles", 50, 50, 1500);
 	TH1F* xAngleOffset = new TH1F("X_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
 	TH1F* yAngleOffset = new TH1F("Y_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
 	TH1F* zAngleOffset = new TH1F("Z_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
 
-	TH1F* StartPointOffsetGoodReco = new TH1F("start_Point_offset_Good_Reco", "; Start Point Offset (cm); Number", 50, 0, 275);
+	TH1F* StartPointOffsetGoodReco = new TH1F("start_Point_offset_Good_Reco", "; Start Point Offset; Number", 50, 0, 275);
 	TH1F* xAngleOffsetGoodReco = new TH1F("X_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 6);
 	TH1F* yAngleOffsetGoodReco = new TH1F("Y_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 6);
 	TH1F* zAngleOffsetGoodReco = new TH1F("Z_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 6);
@@ -47,7 +47,7 @@ void anatree::Loop(Long64_t max_entry)
 		if (ientry < 0) break;
 		nb = fChain->GetEntry(jentry);   nbytes += nb;
 		/// End
-		if ((jentry % 1000) == 0){ std::cout << "\t\t\t ### " << int(100 * jentry / nentries) << "% done !" << std::endl; }
+		if ((jentry % 1000) == 0){ std::cout << "\t\t\t ### " << int(100 * jentry / nentries) << "% done!" << std::endl; }
 
 
 		/* List of useful variables that you might want to look at:
@@ -152,18 +152,21 @@ void anatree::Loop(Long64_t max_entry)
 
 		// good reconstructed showers
 		// must have correct shower direction and shower starting position and only one shower
+
+		double dist = 0;
+
 		if (nshowers == 1)	// only want one shower
 		{
 			if (pdg == 22) // checks if it is a photon
 			{
 				// distance formula
-				double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+				dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 			}
 
 			else // checks if it is an electron or positron
 			{
 				// distance formula
-				double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+				dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 			}
 
 			if (dist <= 250.0)
@@ -189,29 +192,12 @@ void anatree::Loop(Long64_t max_entry)
 				zAngleOffsetGoodReco->Fill(zdiff * 180 / 3.14);
 			}
 
-			if (pdg == 22)			// photon
-			{
-				// distance formula
-				double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-			}
-			else if (pdg == -13 || pdg == 13)		// electron or positron
-			{
-				// distance formula
-				double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-			}
-		}
-
-
-
-	// misses at least have the shower
-	
-		for (int i = 0; i < nshowers; i++)
+	// two or more showers; at least one in the wrong direction/start
+		/*if (nshowers == 0)
 		{
 
-
-
-
-
+			NoShowerTotEng->Fill(Eng[0]);
+			
 		}
 	 
 	   ////// END
@@ -224,6 +210,7 @@ void anatree::Loop(Long64_t max_entry)
    TFile *f = new TFile("Awesome_Shower_Reco_Vetting_Booyah.root", "RECREATE");
    
    StartPointOffset->Write();
+   NumShowers->Write();
    PhotonDist->Write();
    xAngleOffset->Write();
    yAngleOffset->Write();
