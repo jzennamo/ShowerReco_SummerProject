@@ -25,9 +25,9 @@ void anatree::Loop(Long64_t max_entry)
 	TH1F* zAngleOffset = new TH1F("Z_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
 
 	TH1F* StartPointOffsetGoodReco = new TH1F("start_Point_offset_Good_Reco", "; Start Point Offset; Number", 50, 0, 275);
-	TH1F* xAngleOffsetGoodReco = new TH1F("X_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 6);
-	TH1F* yAngleOffsetGoodReco = new TH1F("Y_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 6);
-	TH1F* zAngleOffsetGoodReco = new TH1F("Z_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 25, 0, 6);
+	TH1F* xAngleOffsetGoodReco = new TH1F("X_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 50, 0, 360);
+	TH1F* yAngleOffsetGoodReco = new TH1F("Y_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 50, 0, 360);
+	TH1F* zAngleOffsetGoodReco = new TH1F("Z_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 50, 0, 360);
 
 	if (fChain == 0) return;
 
@@ -205,7 +205,8 @@ void anatree::Loop(Long64_t max_entry)
 
 	   /// Here is the end of the loop
 	   /// Start
-}
+		}
+	}
    /// End
  
    TFile *f = new TFile("Awesome_Shower_Reco_Vetting_Booyah.root", "RECREATE");
@@ -224,7 +225,42 @@ void anatree::Loop(Long64_t max_entry)
 
    f->Write();
    f->Close();
-}
+
+
+   gStyle->SetOptStat(0000);
+   gStyle->SetPadBorderMode(0);
+
+   TCanvas* c1 = new TCanvas("c1","",700,700);
+   c1->SetLeftMargin(.1);
+   c1->SetBottomMargin(.1);
+   c1->SetTopMargin(.075);
+   c1->SetRightMargin(.15);
+   c1->cd();
+
+   //Line attributes: https://root.cern.ch/root/html/TAttLine.html
+   //Color Choices: https://root.cern.ch/root/html/TColor.html
+   NumShowers->SetLineColor(kPink+8);
+   NumShowers->SetLineWidth(3);
+   NumShowers->Draw();
+
+   TCanvas* c2 = new TCanvas("c2","",700,700);
+   c2->SetLeftMargin(.1);
+   c2->SetBottomMargin(.1);
+   c2->SetTopMargin(.075);
+   c2->SetRightMargin(.15);
+   c2->cd();
+
+   xAngleOffset->SetLineColor(kBlack);
+   xAngleOffset->SetLineWidth(3);
+   xAngleOffset->Draw();
+   
+   xAngleOffsetGoodReco->SetLineColor(kRed);
+   xAngleOffsetGoodReco->SetLineWidth(3);
+   xAngleOffsetGoodReco->Draw("same");
+   
+   
+
+	}
 
 
 
