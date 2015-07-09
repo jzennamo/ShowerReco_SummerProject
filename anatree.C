@@ -16,7 +16,6 @@ void anatree::Loop(Long64_t max_entry)
 	//      Root > t.Loop();       // Loop on all entries
 	// (or small number of events: Root > t.Loop(500)  )
 
-
 	TH1F* StartPointOffset = new TH1F("startpointoffset", "; Start Point Offset(cm); Number", 55, 0, 1100);
 	TH1F* NumShowers = new TH1F("Number_of_Showers", "; Shower Number; Number of Events", 5, -0.5, 5.5);
 	TH1F* PhotonDist = new TH1F("Photon_Distance", "; Photon Distance(cm); Number of Particles", 50, 50, 1500);
@@ -28,6 +27,12 @@ void anatree::Loop(Long64_t max_entry)
 	TH1F* xAngleOffsetGoodReco = new TH1F("X_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 50, 0, 360);
 	TH1F* yAngleOffsetGoodReco = new TH1F("Y_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 50, 0, 360);
 	TH1F* zAngleOffsetGoodReco = new TH1F("Z_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 50, 0, 360);
+
+	TH1F* NumShowersGoodRecoEng = new TH1F("Energy_One_Shower", "; Energy; Number of Events", 50, 0, 1000);
+	TH1F* XAngleGoodRecoEng = new TH1F("X_angle_Good_Reco_Energy ", "; Energy; Number of Events", 50, 0, 1000);
+	TH1F* YAngleGoodRecoEng = new TH1F("Y_angle_Good_Reco_Energy ", "; Energy; Number of Events", 50, 0, 1000);
+	TH1F* ZAngleGoodRecoEng = new TH1F("Z_angle_Good_Reco_Energy ", "; Energy; Number of Events", 50, 0, 1000);
+
 
 	if (fChain == 0) return;
 
@@ -89,20 +94,30 @@ void anatree::Loop(Long64_t max_entry)
 		
 		//// EXAMPLE loop through all reco showers in event
 		
-		
+
+	// define boolean variables
+	bool Nshowers = false;		// true if the number of showers is 1 
+	bool Dist = false;			// true if the shower start is within 2.5 cm of MC start
+	bool Xangle = false;		// true if the x angle is within 5 degrees
+	bool Yangle = false;		// true if the y angle is within 5 degrees
+	bool Zangle = false;		// true if the z angle is within 5 degrees
+	bool Bremphoton = false;	// true if the photon has at least 5% of the total shower energy
+
+
+
 		// This is to calculate the distance between the starting point of the shower and the MC
-		
 		if (nshowers == 1)			// we want to check events that have only one shower
 		  {
 		    if (pdg == 22)			// photon
 		      {
 			// distance formula
-			double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+				double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 		      }
+
 		    else	// electron or positron
 		      {
-			// distance formula
-			double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+				// distance formula
+				double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
 		      }
 		    
 		    // Histogram (TH1F)  -> Fill(var) [function, var] 
@@ -126,10 +141,11 @@ void anatree::Loop(Long64_t max_entry)
 		  {
 		    if (Eng[i] >= Eng[0] * 0.05 && pdg[i] == 22)	// if photon has 5% or more of the total energy
 		      {
-			// calculate distance
-			double photondist = sqrt(pow((StartPointx[i] - StartPointx[0]), 2) + pow((StartPointy[i] - StartPointy[0]), 2) + pow((StartPointz[i] - StartPointz[0]), 2));
+				  // calculate distance
+				  Bremphoton = true;
+				  double photondist = sqrt(pow((StartPointx[i] - StartPointx[0]), 2) + pow((StartPointy[i] - StartPointy[0]), 2) + pow((StartPointz[i] - StartPointz[0]), 2));
 		      }
-		    
+
 		    PhotonDist->Fill(photondist);
 		  }
 		
@@ -143,70 +159,77 @@ void anatree::Loop(Long64_t max_entry)
 		double ydiff = TMath::ACos(shwr_startdcosy[0]) - TMath::ACos(cy_angle);
 		double zdiff = TMath::ACos(shwr_startdcosz[0]) - TMath::ACos(cz_angle);
 		
-			// minumum angle that is considered not too far off from actual
+		// minumum angle that is considered not too far off from actual
 		double minangle = 5.0;
-		
+
 		xAngleOffset->Fill(fabs(xdiff * 180 / 3.14));
 		yAngleOffset->Fill(fabs(ydiff * 180 / 3.14));
 		zAngleOffset->Fill(fabs(zdiff * 180 / 3.14));
 		
 		// good reconstructed showers
 		// must have correct shower direction and shower starting position and only one shower
-		
 		double dist = 0;
 		
 		if (nshowers == 1)	// only want one shower
-		  {
-		    if (pdg == 22) // checks if it is a photon
-		      {
-			// distance formula
-			dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-		      }
-		    
-		    else // checks if it is an electron or positron
-		      {
-			// distance formula
-			dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-		      }
-		    
-		    if (dist <= 250.0)
-		      {
+		{
+			Nshowers = true;
+		}
+		
+		if (dist <= 250.0)
+		{
 			// Histogram (TH1F)  -> Fill(var) [function, var]
+			Dist = true;
 			StartPointOffsetGoodReco->Fill(dist);
-		      }
+		}
 		    
 		    // if any of the angles is within the minimum angle then we want to add it to the histogram
 		    
-		    if (fabs(xdiff * 180 / 3.14) <= minangle)
-		      {
+		if (fabs(xdiff * 180 / 3.14) <= minangle)
+		{
+			Xangle = true;
 			xAngleOffsetGoodReco->Fill(xdiff * 180 / 3.14);
-		      }
+		}
 		    
-		    if (fabs(ydiff * 180 / 3.14) <= minangle)
-		      {
+		if (fabs(ydiff * 180 / 3.14) <= minangle)
+		{
+			Yangle = true;
 			yAngleOffsetGoodReco->Fill(ydiff * 180 / 3.14);
-		      }
+		}
 		    
-		    if (fabs(zdiff * 180 / 3.14) <= minangle)
-		      {
+		if (fabs(zdiff * 180 / 3.14) <= minangle)
+		{
+			Zangle = true;
 			zAngleOffsetGoodReco->Fill(zdiff * 180 / 3.14);
-		      }
+		}
+
+		// if there is only one shower then plot the energy of that shower
+		if (Nshowers == true)
+		{
+			NumShowersGoodRecoEng->Fill(Eng[0]);
+		}
+		
+		// checks if the angle is within 5 degrees in all three planes
+		if (Xangle == true)
+		{
+			XAngleGoodRecoEng->Fill(Eng[0]);
+		}
 		    
-		    // two or more showers; at least one in the wrong direction/start
-		    /*if (nshowers == 0)
-		      {
-		      
-		      NoShowerTotEng->Fill(Eng[0]);
-		      
-		      }
-		    */
-		    
+		if (Yangle == true)
+		{
+			YAngleGoodRecoEng->Fill(Eng[0]);
+		}
+
+		if (Zangle == true)
+		{
+			ZAngleGoodRecoEng->Fill(Eng[0]);
+		}
 		    ////// END
 		    
 		    /// Here is the end of the loop
 		    /// Start
-		  }
+
 	}
+
 	/// End
 	
 	TFile *f = new TFile("Awesome_Shower_Reco_Vetting_Booyah.root", "RECREATE");
@@ -265,10 +288,20 @@ void anatree::Loop(Long64_t max_entry)
 	leg->AddEntry(xAngleOffsetGoodReco,"Good Showers","l");
 	leg->Draw();
 
+	TCanvas* c3 = new TCanvas("c3", "", 700, 700);
+	c2->SetLeftMargin(.1);
+	c2->SetBottomMargin(.1);
+	c2->SetTopMargin(.075);
+	c2->SetRightMargin(.15);
+	c2->cd();
 
-	
-	
+	xAngleGoodRecoEng->SetLineColor(kBlack);
+	xAngleGoodRecoEng->SetLineWidth(3);
+	xAngleGoodRecoEng->Draw();
 
+	NumShowersGoodRecoEng->SetLineColor(kRed);
+	NumShowersGoodRecoEng->SetLineWidth(3);
+	NumShowersGoodRecoEngo->Draw("same");
 }
 
 
@@ -280,9 +313,17 @@ void anatree::Loop(Long64_t max_entry)
 
 
 
-
-
 /*
+
+
+// two or more showers; at least one in the wrong direction/start
+if (nshowers == 0)
+{
+
+NoShowerTotEng->Fill(Eng[0]);
+
+}
+
 
 // figure out distance between showers but i need a shower end variable...
 
