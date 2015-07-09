@@ -211,6 +211,7 @@ void anatree::Loop(Long64_t max_entry)
 		// checks if the angle is within 5 degrees in all three planes
 		if (Xangle == true)
 		{
+			std::cout << Eng[0] << std::endl;
 			XAngleGoodRecoEng->Fill(Eng[0]);
 		}
 		    
@@ -289,19 +290,19 @@ void anatree::Loop(Long64_t max_entry)
 	leg->Draw();
 
 	TCanvas* c3 = new TCanvas("c3", "", 700, 700);
-	c2->SetLeftMargin(.1);
-	c2->SetBottomMargin(.1);
-	c2->SetTopMargin(.075);
-	c2->SetRightMargin(.15);
-	c2->cd();
+	c3->SetLeftMargin(.1);
+	c3->SetBottomMargin(.1);
+	c3->SetTopMargin(.075);
+	c3->SetRightMargin(.15);
+	c3->cd();
 
-	xAngleGoodRecoEng->SetLineColor(kBlack);
-	xAngleGoodRecoEng->SetLineWidth(3);
-	xAngleGoodRecoEng->Draw();
+	XAngleGoodRecoEng->SetLineColor(kBlack);
+	XAngleGoodRecoEng->SetLineWidth(3);
+	XAngleGoodRecoEng->Draw();
 
 	NumShowersGoodRecoEng->SetLineColor(kRed);
 	NumShowersGoodRecoEng->SetLineWidth(3);
-	NumShowersGoodRecoEngo->Draw("same");
+	NumShowersGoodRecoEng->Draw("same");
 }
 
 
