@@ -18,7 +18,7 @@ void anatree::Loop(Long64_t max_entry)
 
 
 	TH1F* StartPointOffset = new TH1F("startpointoffset", "; Start Point Offset(cm); Number", 55, 0, 1100);
-	TH1F* NumShowers = new TH1F("Number_of_Showers", "; Shower Number; Number of Events", 5, 0, 5);
+	TH1F* NumShowers = new TH1F("Number_of_Showers", "; Shower Number; Number of Events", 5, -0.5, 5.5);
 	TH1F* PhotonDist = new TH1F("Photon_Distance", "; Photon Distance(cm); Number of Particles", 50, 50, 1500);
 	TH1F* xAngleOffset = new TH1F("X_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
 	TH1F* yAngleOffset = new TH1F("Y_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
@@ -51,216 +51,225 @@ void anatree::Loop(Long64_t max_entry)
 
 
 		/* List of useful variables that you might want to look at:
-
-	   event -- this is what you call event number
-	   subrun -- this is what you call subrun
-
-	   RECONSTRUCTION INFORMATION:
-	   nshowers -- The number of reconstruted showers (N)
-	   showerID[N] -- A unique shower ID, just a number (int)
-	   shwr_bestplane[N] -- The plane that has the largest (spatial) projection of hits, this is the P you should use typically
-	   shwr_length[N] -- The length of the shower in blah dimensions
-	   shwr_startdcosx[N] -- the "i" component of the unit vector describing the direction
-	   shwr_startdcosy[N] -- the "j" component of the unit vector describing the direction
-	   shwr_startdcosz[N] -- the "k" component of the unit vector describing the direction
-	   shwr_startx[N] -- the "x" posistion start point
-	   shwr_starty[N] -- the "y" posistion start point
-	   shwr_startz[N] -- the "z" posistion start point
-	   shwr_totEng[N][P] -- The total energy of the shower in plane P (focus on P == 2 for now)
-	   shwr_mipEng[N][P] -- The total energy of the shower in plane P (focus on P == 2 for now)
-	   shwr_dedx[N][P] -- The total energy deposited at the start of the shower
-
-	   MC TRUTH INFORMATION:
-	   geant_list_size -- The number of particles (N), you will usually only be intrested in the first particle
-	   pdg[N] -- The pdg of the n-th particle in the list
-	   Eng[N] -- The TRUE energy of the n-th particle
-	   Px[N] -- X-projection of the n-th particle momentum
-	   Py[N] -- Y-projection of the n-th particle momentum
-	   Pz[N] -- Z-projection of the n-th particle momentum
-	   P[N] -- n-th particle momentum
-	   StartPointx[N] -- X-projection of the n-th start point
-	   StartPointy[N] -- Y-projection of the n-th start point
-	   StartPointz[N] -- X-projection of the n-th start point
-	   theta[N] -- The theta of the n-th particle
-	   phi[N] -- the phi of the n-th particle
-	   */
-
-		//Here you will build your code, build whatever you want! MUHAHAHAHAHAHAHAHAHAHAHAHA@
-
-		//// EXAMPLE loop through all reco showers in event
-
-
-		// This is to calculate the distance between the starting point of the shower and the MC
-
-		if (nshowers == 1)			// we want to check events that have only one shower
-		{
-			if (pdg == 22)			// photon
-			{
-				// distance formula
-				double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-			}
-			else	// electron or positron
-			{
-				// distance formula
-				double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-			}
-			
-			// Histogram (TH1F)  -> Fill(var) [function, var] 
-			StartPointOffset->Fill(dist);
+		   
+		   event -- this is what you call event number
+		   subrun -- this is what you call subrun
+		   
+		   RECONSTRUCTION INFORMATION:
+		   nshowers -- The number of reconstruted showers (N)
+		   showerID[N] -- A unique shower ID, just a number (int)
+		   shwr_bestplane[N] -- The plane that has the largest (spatial) projection of hits, this is the P you should use typically
+		   shwr_length[N] -- The length of the shower in blah dimensions
+		   shwr_startdcosx[N] -- the "i" component of the unit vector describing the direction
+		   shwr_startdcosy[N] -- the "j" component of the unit vector describing the direction
+		   shwr_startdcosz[N] -- the "k" component of the unit vector describing the direction
+		   shwr_startx[N] -- the "x" posistion start point
+		   shwr_starty[N] -- the "y" posistion start point
+		   shwr_startz[N] -- the "z" posistion start point
+		   shwr_totEng[N][P] -- The total energy of the shower in plane P (focus on P == 2 for now)
+		   shwr_mipEng[N][P] -- The total energy of the shower in plane P (focus on P == 2 for now)
+		   shwr_dedx[N][P] -- The total energy deposited at the start of the shower
+		   
+		   MC TRUTH INFORMATION:
+		   geant_list_size -- The number of particles (N), you will usually only be intrested in the first particle
+		   pdg[N] -- The pdg of the n-th particle in the list
+		   Eng[N] -- The TRUE energy of the n-th particle
+		   Px[N] -- X-projection of the n-th particle momentum
+		   Py[N] -- Y-projection of the n-th particle momentum
+		   Pz[N] -- Z-projection of the n-th particle momentum
+		   P[N] -- n-th particle momentum
+		   StartPointx[N] -- X-projection of the n-th start point
+		   StartPointy[N] -- Y-projection of the n-th start point
+		   StartPointz[N] -- X-projection of the n-th start point
+		   theta[N] -- The theta of the n-th particle
+		   phi[N] -- the phi of the n-th particle
+		*/
 		
-			/*
-			std::cout << "X difference: " << fabs(shwr_startx[0] - EndPointx[0]) << std::endl;
-			std::cout << "Y difference: " << fabs(StartPointy[0] - EndPointy[0]) << std::endl;
-			std::cout << "Z difference: " << fabs(StartPointz[0] - EndPointz[0]) << std::endl;
-			
-			*/
-		}
+		//Here you will build your code, build whatever you want! MUHAHAHAHAHAHAHAHAHAHAHAHA@
+		
+		//// EXAMPLE loop through all reco showers in event
+		
+		
+		// This is to calculate the distance between the starting point of the shower and the MC
+		
+		if (nshowers == 1)			// we want to check events that have only one shower
+		  {
+		    if (pdg == 22)			// photon
+		      {
+			// distance formula
+			double dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+		      }
+		    else	// electron or positron
+		      {
+			// distance formula
+			double dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+		      }
+		    
+		    // Histogram (TH1F)  -> Fill(var) [function, var] 
+		    StartPointOffset->Fill(dist);
+		    
+		    /*
+		      std::cout << "X difference: " << fabs(shwr_startx[0] - EndPointx[0]) << std::endl;
+		      std::cout << "Y difference: " << fabs(StartPointy[0] - EndPointy[0]) << std::endl;
+		      std::cout << "Z difference: " << fabs(StartPointz[0] - EndPointz[0]) << std::endl;
+		      
+		    */
+		  }
 
 		// Number of Showers
 		NumShowers->Fill(nshowers);
-
+		
 		// go through every particle in the shower and find its energy relative to the total energy and find out how far it travels
 		// find photons with large energy in the shower
 		// catastrophic brem
 		for (int i = 1; i < geant_list_size; i++)	// checks every particle in the event
-		{
-			if (Eng[i] >= Eng[0] * 0.05 && pdg[i] == 22)	// if photon has 5% or more of the total energy
-			{
-				// calculate distance
-				double photondist = sqrt(pow((StartPointx[i] - StartPointx[0]), 2) + pow((StartPointy[i] - StartPointy[0]), 2) + pow((StartPointz[i] - StartPointz[0]), 2));
-			}
-
-			PhotonDist->Fill(photondist);
-		}
-
+		  {
+		    if (Eng[i] >= Eng[0] * 0.05 && pdg[i] == 22)	// if photon has 5% or more of the total energy
+		      {
+			// calculate distance
+			double photondist = sqrt(pow((StartPointx[i] - StartPointx[0]), 2) + pow((StartPointy[i] - StartPointy[0]), 2) + pow((StartPointz[i] - StartPointz[0]), 2));
+		      }
+		    
+		    PhotonDist->Fill(photondist);
+		  }
+		
 		//use momentum to calculate the MC angle and then compare it to the other shower angle and create three plots (one for each plane)
 		double cx_angle = Px[0] / P[0];
 		double cy_angle = Py[0] / P[0];
 		double cz_angle = Pz[0] / P[0];
-
+		
 		// difference in angle between the shower start and the MC start
 		double xdiff = TMath::ACos(shwr_startdcosx[0]) - TMath::ACos(cx_angle);
 		double ydiff = TMath::ACos(shwr_startdcosy[0]) - TMath::ACos(cy_angle);
 		double zdiff = TMath::ACos(shwr_startdcosz[0]) - TMath::ACos(cz_angle);
-
+		
 			// minumum angle that is considered not too far off from actual
 		double minangle = 5.0;
-
+		
 		xAngleOffset->Fill(fabs(xdiff * 180 / 3.14));
 		yAngleOffset->Fill(fabs(ydiff * 180 / 3.14));
 		zAngleOffset->Fill(fabs(zdiff * 180 / 3.14));
-
+		
 		// good reconstructed showers
 		// must have correct shower direction and shower starting position and only one shower
-
+		
 		double dist = 0;
-
+		
 		if (nshowers == 1)	// only want one shower
-		{
-			if (pdg == 22) // checks if it is a photon
-			{
-				// distance formula
-				dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-			}
-
-			else // checks if it is an electron or positron
-			{
-				// distance formula
-				dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
-			}
-
-			if (dist <= 250.0)
-			{
-				// Histogram (TH1F)  -> Fill(var) [function, var]
-				StartPointOffsetGoodReco->Fill(dist);
-			}
-
-			// if any of the angles is within the minimum angle then we want to add it to the histogram
-			
-			if (fabs(xdiff * 180 / 3.14) <= minangle)
-			{
-				xAngleOffsetGoodReco->Fill(xdiff * 180 / 3.14);
-			}
-
-			if (fabs(ydiff * 180 / 3.14) <= minangle)
-			{
-				yAngleOffsetGoodReco->Fill(ydiff * 180 / 3.14);
-			}
-
-			if (fabs(zdiff * 180 / 3.14) <= minangle)
-			{
-				zAngleOffsetGoodReco->Fill(zdiff * 180 / 3.14);
-			}
-
-	// two or more showers; at least one in the wrong direction/start
-		/*if (nshowers == 0)
-		{
-
-			NoShowerTotEng->Fill(Eng[0]);
-			
-		}
-		*/
-	 
-	   ////// END
-
-	   /// Here is the end of the loop
-	   /// Start
-		}
+		  {
+		    if (pdg == 22) // checks if it is a photon
+		      {
+			// distance formula
+			dist = sqrt(pow((shwr_startx[0] - EndPointx[0]), 2) + pow((shwr_starty[0] - EndPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+		      }
+		    
+		    else // checks if it is an electron or positron
+		      {
+			// distance formula
+			dist = sqrt(pow((shwr_startx[0] - StartPointx[0]), 2) + pow((shwr_starty[0] - StartPointy[0]), 2) + pow((shwr_startz[0] - EndPointz[0]), 2));
+		      }
+		    
+		    if (dist <= 250.0)
+		      {
+			// Histogram (TH1F)  -> Fill(var) [function, var]
+			StartPointOffsetGoodReco->Fill(dist);
+		      }
+		    
+		    // if any of the angles is within the minimum angle then we want to add it to the histogram
+		    
+		    if (fabs(xdiff * 180 / 3.14) <= minangle)
+		      {
+			xAngleOffsetGoodReco->Fill(xdiff * 180 / 3.14);
+		      }
+		    
+		    if (fabs(ydiff * 180 / 3.14) <= minangle)
+		      {
+			yAngleOffsetGoodReco->Fill(ydiff * 180 / 3.14);
+		      }
+		    
+		    if (fabs(zdiff * 180 / 3.14) <= minangle)
+		      {
+			zAngleOffsetGoodReco->Fill(zdiff * 180 / 3.14);
+		      }
+		    
+		    // two or more showers; at least one in the wrong direction/start
+		    /*if (nshowers == 0)
+		      {
+		      
+		      NoShowerTotEng->Fill(Eng[0]);
+		      
+		      }
+		    */
+		    
+		    ////// END
+		    
+		    /// Here is the end of the loop
+		    /// Start
+		  }
 	}
-   /// End
- 
-   TFile *f = new TFile("Awesome_Shower_Reco_Vetting_Booyah.root", "RECREATE");
+	/// End
+	
+	TFile *f = new TFile("Awesome_Shower_Reco_Vetting_Booyah.root", "RECREATE");
    
-   StartPointOffset->Write();
-   NumShowers->Write();
-   PhotonDist->Write();
-   xAngleOffset->Write();
-   yAngleOffset->Write();
-   zAngleOffset->Write();
-
-   StartPointOffsetGoodReco->Write();
-   xAngleOffsetGoodReco->Write();
-   yAngleOffsetGoodReco->Write();
-   zAngleOffsetGoodReco->Write();
-
-   f->Write();
-   f->Close();
-
-
-   gStyle->SetOptStat(0000);
-   gStyle->SetPadBorderMode(0);
-
-   TCanvas* c1 = new TCanvas("c1","",700,700);
-   c1->SetLeftMargin(.1);
-   c1->SetBottomMargin(.1);
-   c1->SetTopMargin(.075);
-   c1->SetRightMargin(.15);
-   c1->cd();
-
+	StartPointOffset->Write();
+	NumShowers->Write();
+	PhotonDist->Write();
+	xAngleOffset->Write();
+	yAngleOffset->Write();
+	zAngleOffset->Write();
+	
+	StartPointOffsetGoodReco->Write();
+	xAngleOffsetGoodReco->Write();
+	yAngleOffsetGoodReco->Write();
+	zAngleOffsetGoodReco->Write();
+	
+	f->Write();
+	f->Close();
+	
+	
+	gStyle->SetOptStat(0000);
+	gStyle->SetPadBorderMode(0);
+	
+	TCanvas* c1 = new TCanvas("c1","",700,700);
+	c1->SetLeftMargin(.1);
+	c1->SetBottomMargin(.1);
+	c1->SetTopMargin(.075);
+	c1->SetRightMargin(.15);
+	c1->cd();
+	
    //Line attributes: https://root.cern.ch/root/html/TAttLine.html
    //Color Choices: https://root.cern.ch/root/html/TColor.html
-   NumShowers->SetLineColor(kPink+8);
-   NumShowers->SetLineWidth(3);
-   NumShowers->Draw();
+	NumShowers->SetLineColor(kPink+8);
+	NumShowers->SetLineWidth(3);
+	NumShowers->Draw();
+	
+	TCanvas* c2 = new TCanvas("c2","",700,700);
+	c2->SetLeftMargin(.1);
+	c2->SetBottomMargin(.1);
+	c2->SetTopMargin(.075);
+	c2->SetRightMargin(.15);
+	c2->cd();
+	
+	xAngleOffset->SetLineColor(kBlack);
+	xAngleOffset->SetLineWidth(3);
+	xAngleOffset->Draw();
+	
+	xAngleOffsetGoodReco->SetLineColor(kRed);
+	xAngleOffsetGoodReco->SetLineWidth(3);
+	xAngleOffsetGoodReco->Draw("same");
+	
+	TLegend* leg=new TLegend(0.5,0.82,0.92,0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.05);
+	leg->AddEntry(xAngleOffset,"All Showers","l");
+	leg->AddEntry(xAngleOffsetGoodReco,"Good Showers","l");
+	leg->Draw();
 
-   TCanvas* c2 = new TCanvas("c2","",700,700);
-   c2->SetLeftMargin(.1);
-   c2->SetBottomMargin(.1);
-   c2->SetTopMargin(.075);
-   c2->SetRightMargin(.15);
-   c2->cd();
 
-   xAngleOffset->SetLineColor(kBlack);
-   xAngleOffset->SetLineWidth(3);
-   xAngleOffset->Draw();
-   
-   xAngleOffsetGoodReco->SetLineColor(kRed);
-   xAngleOffsetGoodReco->SetLineWidth(3);
-   xAngleOffsetGoodReco->Draw("same");
-   
-   
+	
+	
 
-	}
+}
 
 
 
