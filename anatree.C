@@ -38,6 +38,7 @@ void anatree::Loop(Long64_t max_entry)
 	TH1F* NoShowerEng = new TH1F("No_Shower_Energy ", "; Energy; Number of Events", 100, 0, 1200);
 
 	
+
 	if (fChain == 0) return;
 
 	/// Define how many entries are in the tree:
@@ -168,16 +169,22 @@ void anatree::Loop(Long64_t max_entry)
 		double cz_angle = Pz[0] / P[0];
 		
 		// difference in angle between the shower start and the MC start
-		double xdiff = TMath::ACos(shwr_startdcosx[0]) - TMath::ACos(cx_angle);
-		double ydiff = TMath::ACos(shwr_startdcosy[0]) - TMath::ACos(cy_angle);
-		double zdiff = TMath::ACos(shwr_startdcosz[0]) - TMath::ACos(cz_angle);
+		double xdiff = fabs(TMath::ACos(shwr_startdcosx[0]) - TMath::ACos(cx_angle));
+		double ydiff = fabs(TMath::ACos(shwr_startdcosy[0]) - TMath::ACos(cy_angle));
+		double zdiff = fabs(TMath::ACos(shwr_startdcosz[0]) - TMath::ACos(cz_angle));
+
+		double radtodegrees = 180 / 3.14;
+
+		xdiff = xdiff * radtodegrees;
+		ydiff = ydiff * radtodegrees;
+		zdiff = zdiff * radtodegrees;
 		
 		// minumum angle that is considered not too far off from actual
 		double minangle = 5.0;
 
-		xAngleOffset->Fill(fabs(xdiff * 180 / 3.14));
-		yAngleOffset->Fill(fabs(ydiff * 180 / 3.14));
-		zAngleOffset->Fill(fabs(zdiff * 180 / 3.14));
+		xAngleOffset->Fill(xdiff);
+		yAngleOffset->Fill(ydiff);
+		zAngleOffset->Fill(zdiff);
 
 		// good reconstructed showers
 		// must have correct shower direction and shower starting position and only one shower
@@ -195,22 +202,22 @@ void anatree::Loop(Long64_t max_entry)
 		    
 		    // if any of the angles is within the minimum angle then we want to add it to the histogram
 		    
-		if (fabs(xdiff * 180 / 3.14) <= minangle)
+		if (xdiff <= minangle)
 		{
 			Xangle = true;
-			xAngleOffsetGoodReco->Fill(xdiff * 180 / 3.14);
+			xAngleOffsetGoodReco->Fill(xdiff);
 		}
 		    
-		if (fabs(ydiff * 180 / 3.14) <= minangle)
+		if (ydiff <= minangle)
 		{
 			Yangle = true;
-			yAngleOffsetGoodReco->Fill(ydiff * 180 / 3.14);
+			yAngleOffsetGoodReco->Fill(ydiff);
 		}
 		    
-		if (fabs(zdiff * 180 / 3.14) <= minangle)
+		if (zdiff <= minangle)
 		{
 			Zangle = true;
-			zAngleOffsetGoodReco->Fill(zdiff * 180 / 3.14);
+			zAngleOffsetGoodReco->Fill(zdiff);
 		}
 
 		// if there is only one shower then plot the energy of that shower
@@ -293,7 +300,14 @@ void anatree::Loop(Long64_t max_entry)
 	NumShowers->SetLineColor(kPink+8);
 	NumShowers->SetLineWidth(3);
 	NumShowers->Draw();
-	
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.04);
+	leg->AddEntry(NumShowers, "Number of Showers", "l");
+	leg->Draw();
+
+
 	TCanvas* c2 = new TCanvas("c2","",700,700);
 	c2->SetLeftMargin(.1);
 	c2->SetBottomMargin(.1);
@@ -301,19 +315,20 @@ void anatree::Loop(Long64_t max_entry)
 	c2->SetRightMargin(.15);
 	c2->cd();
 	
-	zAngleOffset->SetLineColor(kBlack);
-	zAngleOffset->SetLineWidth(3);
-	zAngleOffset->Draw();
+	xAngleOffset->SetLineColor(kBlack);
+	xAngleOffset->SetLineWidth(3);
+	xAngleOffset->Draw();
 	
-	zAngleOffsetGoodReco->SetLineColor(kRed);
-	zAngleOffsetGoodReco->SetLineWidth(3);
-	zAngleOffsetGoodReco->Draw("same");
+	xAngleOffsetGoodReco->SetLineColor(kRed);
+	xAngleOffsetGoodReco->SetLineWidth(3);
+	xAngleOffsetGoodReco->SetLineStyle(4);
+	xAngleOffsetGoodReco->Draw("same");
 	
 	TLegend* leg=new TLegend(0.5,0.82,0.92,0.98);
 	leg->SetFillColor(kWhite);
-	leg->SetTextSize(0.05);
+	leg->SetTextSize(0.025);
 	leg->AddEntry(xAngleOffset,"All Showers","l");
-	leg->AddEntry(xAngleOffsetGoodReco,"Good Showers","l");
+	leg->AddEntry(xAngleOffsetGoodReco,"Good Showers (x angle within 5 degrees)","l");
 	leg->Draw();
 
 	TCanvas* c3 = new TCanvas("c3", "", 700, 700);
@@ -346,7 +361,7 @@ void anatree::Loop(Long64_t max_entry)
 
 	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
 	leg->SetFillColor(kWhite);
-	leg->SetTextSize(0.05);
+	leg->SetTextSize(0.04);
 	leg->AddEntry(DistGoodRecoEng, "Dist", "l");
 	leg->AddEntry(NumShowersGoodRecoEng, "One Shower", "l");
 	leg->AddEntry(XAngleGoodRecoEng, "X angle", "l");
@@ -365,7 +380,7 @@ void anatree::Loop(Long64_t max_entry)
 	NumShowersEng->SetLineWidth(3);
 	NumShowersEng->Draw();
 
-	NumShowersGoodRecoEng->SetLineColor(kRed);
+	NumShowersGoodRecoEng->SetLineColor(kMagenta);
 	NumShowersGoodRecoEng->SetLineWidth(3);
 	NumShowersGoodRecoEng->Draw("same");
 
@@ -390,7 +405,7 @@ void anatree::Loop(Long64_t max_entry)
 
 	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
 	leg->SetFillColor(kWhite);
-	leg->SetTextSize(0.05);
+	leg->SetTextSize(0.04);
 	leg->AddEntry(BremphotonEng, "Brem Photon Eng", "l");
 	leg->Draw();
 
@@ -404,6 +419,75 @@ void anatree::Loop(Long64_t max_entry)
 	NoShowerEng->SetLineColor(kRed);
 	NoShowerEng->SetLineWidth(3);
 	NoShowerEng->Draw();
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.04);
+	leg->AddEntry(NoShowerEng, "No Shower Energy", "l");
+	leg->Draw();
+
+	TCanvas* c7 = new TCanvas("c7", "", 700, 700);
+	c7->SetLeftMargin(.1);
+	c7->SetBottomMargin(.1);
+	c7->SetTopMargin(.075);
+	c7->SetRightMargin(.15);
+	c7->cd();
+
+	yAngleOffset->SetLineColor(kBlack);
+	yAngleOffset->SetLineWidth(3);
+	yAngleOffset->Draw();
+
+	yAngleOffsetGoodReco->SetLineColor(kRed);
+	yAngleOffsetGoodReco->SetLineWidth(3);
+	yAngleOffsetGoodReco->SetLineStyle(4);
+	yAngleOffsetGoodReco->Draw("same");
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.04);
+	leg->AddEntry(yAngleOffset, "All Showers", "l");
+	leg->AddEntry(yAngleOffsetGoodReco, "Good Showers (y angle within 5 degrees)", "l");
+	leg->Draw();
+
+	TCanvas* c8 = new TCanvas("c8", "", 700, 700);
+	c8->SetLeftMargin(.1);
+	c8->SetBottomMargin(.1);
+	c8->SetTopMargin(.075);
+	c8->SetRightMargin(.15);
+	c8->cd();
+
+	zAngleOffset->SetLineColor(kBlack);
+	zAngleOffset->SetLineWidth(3);
+	zAngleOffset->Draw();
+
+	zAngleOffsetGoodReco->SetLineColor(kRed);
+	zAngleOffsetGoodReco->SetLineWidth(3);
+	zAngleOffsetGoodReco->SetLineStyle(4);
+	zAngleOffsetGoodReco->Draw("same");
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.04);
+	leg->AddEntry(zAngleOffset, "All Showers", "l");
+	leg->AddEntry(zAngleOffsetGoodReco, "Good Showers (z angle within 5 degrees)", "l");
+	leg->Draw();
+	
+
+	TCanvas* c9 = new TCanvas("c9", "", 700, 700);
+	c9->SetLeftMargin(.1);
+	c9->SetBottomMargin(.1);
+	c9->SetTopMargin(.075);
+	c9->SetRightMargin(.15);
+	c9->cd();
+
+	NumShowersGoodRecoEng->Divide(NumShowersEng);
+
+	
+
+
+
+
+
 }
 
 
