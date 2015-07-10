@@ -19,23 +19,24 @@ void anatree::Loop(Long64_t max_entry)
 	TH1F* StartPointOffset = new TH1F("startpointoffset", "; Start Point Offset(cm); Number", 55, 0, 1100);
 	TH1F* NumShowers = new TH1F("Number_of_Showers", "; Shower Number; Number of Events", 5, -0.5, 5.5);
 	TH1F* PhotonDist = new TH1F("Photon_Distance", "; Photon Distance(cm); Number of Particles", 50, 50, 1500);
-	TH1F* xAngleOffset = new TH1F("X_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
-	TH1F* yAngleOffset = new TH1F("Y_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
-	TH1F* zAngleOffset = new TH1F("Z_angle_Offset ", "; Angle; Number of Particles", 50, 0, 360);
+	TH1F* xAngleOffset = new TH1F("X_angle_Offset ", "; Angle; Number of Particles", 360, 0, 360);
+	TH1F* yAngleOffset = new TH1F("Y_angle_Offset ", "; Angle; Number of Particles", 360, 0, 360);
+	TH1F* zAngleOffset = new TH1F("Z_angle_Offset ", "; Angle; Number of Particles", 360, 0, 360);
 
 	TH1F* StartPointOffsetGoodReco = new TH1F("start_Point_offset_Good_Reco", "; Start Point Offset; Number", 50, 0, 275);
-	TH1F* xAngleOffsetGoodReco = new TH1F("X_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 50, 0, 360);
-	TH1F* yAngleOffsetGoodReco = new TH1F("Y_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 50, 0, 360);
-	TH1F* zAngleOffsetGoodReco = new TH1F("Z_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 50, 0, 360);
+	TH1F* xAngleOffsetGoodReco = new TH1F("X_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 360, 0, 360);
+	TH1F* yAngleOffsetGoodReco = new TH1F("Y_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 360, 0, 360);
+	TH1F* zAngleOffsetGoodReco = new TH1F("Z_angle_Offset_Good_Reco ", "; Angle; Number of Particles", 360, 0, 360);
 
-	TH1F* NumShowersGoodRecoEng = new TH1F("Energy_One_Shower", "; Energy; Number of Events", 100, 0, 1.2);
-	TH1F* XAngleGoodRecoEng = new TH1F("X_angle_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1.2);
-	TH1F* YAngleGoodRecoEng = new TH1F("Y_angle_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1.2);
-	TH1F* ZAngleGoodRecoEng = new TH1F("Z_angle_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1.2);
-	TH1F* DistGoodRecoEng = new TH1F("Distance_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1.2);
+	TH1F* NumShowersGoodRecoEng = new TH1F("Energy_One_Shower", "; Energy; Number of Events", 100, 0, 1200);
+	TH1F* NumShowersEng = new TH1F("Energy", "; Energy; Number of Events", 100, 0, 1200);
+	TH1F* XAngleGoodRecoEng = new TH1F("X_angle_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1200);
+	TH1F* YAngleGoodRecoEng = new TH1F("Y_angle_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1200);
+	TH1F* ZAngleGoodRecoEng = new TH1F("Z_angle_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1200);
+	TH1F* DistGoodRecoEng = new TH1F("Distance_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1200);
+	TH1F* BremphotonEng = new TH1F("Brem_Energy ", "; Energy; Number of Events", 100, 0, 1200);
 
-
-
+	
 	if (fChain == 0) return;
 
 	/// Define how many entries are in the tree:
@@ -106,6 +107,7 @@ void anatree::Loop(Long64_t max_entry)
 	bool Bremphoton = false;	// true if the photon has at least 5% of the total shower energy
 
 	double dist = 0;
+	double EngMeV = Eng[0] * 1000;
 
 		// This is to calculate the distance between the starting point of the shower and the MC
 		if (nshowers == 1)			// we want to check events that have only one shower
@@ -139,19 +141,28 @@ void anatree::Loop(Long64_t max_entry)
 		// go through every particle in the shower and find its energy relative to the total energy and find out how far it travels
 		// find photons with large energy in the shower
 		// catastrophic brem
+
 		for (int i = 1; i < geant_list_size; i++)	// checks every particle in the event
 		  {
 		    if (Eng[i] >= Eng[0] * 0.05 && pdg[i] == 22)	// if photon has 5% or more of the total energy
-		      {
+			{
 				  // calculate distance
 				  Bremphoton = true;
 				  double photondist = sqrt(pow((StartPointx[i] - StartPointx[0]), 2) + pow((StartPointy[i] - StartPointy[0]), 2) + pow((StartPointz[i] - StartPointz[0]), 2));
-		      }
+				 
+				  PhotonDist->Fill(photondist);
+			}
+			
+			if (Bremphoton)
+			{
+				BremphotonEng->Fill(EngMeV);
+				Bremphoton = false;
+			}
 
-		    PhotonDist->Fill(photondist);
 		  }
 		
 		//use momentum to calculate the MC angle and then compare it to the other shower angle and create three plots (one for each plane)
+		// cosine of the angle
 		double cx_angle = Px[0] / P[0];
 		double cy_angle = Py[0] / P[0];
 		double cz_angle = Pz[0] / P[0];
@@ -167,11 +178,12 @@ void anatree::Loop(Long64_t max_entry)
 		xAngleOffset->Fill(fabs(xdiff * 180 / 3.14));
 		yAngleOffset->Fill(fabs(ydiff * 180 / 3.14));
 		zAngleOffset->Fill(fabs(zdiff * 180 / 3.14));
-		
+
 		// good reconstructed showers
 		// must have correct shower direction and shower starting position and only one shower
 		
 		
+
 		if (nshowers == 1)	// only want one shower
 		{
 			Nshowers = true;
@@ -189,7 +201,7 @@ void anatree::Loop(Long64_t max_entry)
 		if (fabs(xdiff * 180 / 3.14) <= minangle)
 		{
 			Xangle = true;
-			xAngleOffsetGoodReco->Fill(xdiff * 180 / 3.14);
+			xAngleOffsetGoodReco->Fill(xdiff * 180/3.14);
 		}
 		    
 		if (fabs(ydiff * 180 / 3.14) <= minangle)
@@ -207,30 +219,37 @@ void anatree::Loop(Long64_t max_entry)
 		// if there is only one shower then plot the energy of that shower
 		if (Nshowers == true)
 		{
-			NumShowersGoodRecoEng->Fill(Eng[0]);
+			NumShowersGoodRecoEng->Fill(EngMeV);
 		}
 		
+		NumShowersEng->Fill(EngMeV);
+
 		// checks if the angle is within 5 degrees in all three planes
 		if (Xangle == true)
 		{
-			XAngleGoodRecoEng->Fill(Eng[0]);
+			XAngleGoodRecoEng->Fill(EngMeV);
+			Xangle = false;
 		}
 		    
 		if (Yangle == true)
 		{
-			YAngleGoodRecoEng->Fill(Eng[0]);
+			YAngleGoodRecoEng->Fill(EngMeV);
+			Yangle = false;
 		}
 
 		if (Zangle == true)
 		{
-			ZAngleGoodRecoEng->Fill(Eng[0]);
+			ZAngleGoodRecoEng->Fill(EngMeV);
+			Zangle = false;
 		}
 
 		if (Dist == true)
 		{
 
-			DistGoodRecoEng->Fill(Eng[0]);
+			DistGoodRecoEng->Fill(EngMeV);
+			Dist = false;
 		}
+
 		    ////// END
 		    
 		    /// Here is the end of the loop
@@ -281,13 +300,13 @@ void anatree::Loop(Long64_t max_entry)
 	c2->SetRightMargin(.15);
 	c2->cd();
 	
-	xAngleOffset->SetLineColor(kBlack);
-	xAngleOffset->SetLineWidth(3);
-	xAngleOffset->Draw();
+	zAngleOffset->SetLineColor(kBlack);
+	zAngleOffset->SetLineWidth(3);
+	zAngleOffset->Draw();
 	
-	xAngleOffsetGoodReco->SetLineColor(kRed);
-	xAngleOffsetGoodReco->SetLineWidth(3);
-	xAngleOffsetGoodReco->Draw("same");
+	zAngleOffsetGoodReco->SetLineColor(kRed);
+	zAngleOffsetGoodReco->SetLineWidth(3);
+	zAngleOffsetGoodReco->Draw("same");
 	
 	TLegend* leg=new TLegend(0.5,0.82,0.92,0.98);
 	leg->SetFillColor(kWhite);
@@ -311,6 +330,7 @@ void anatree::Loop(Long64_t max_entry)
 	NumShowersGoodRecoEng->SetLineWidth(3);
 	NumShowersGoodRecoEng->Draw("same");
 
+	
 	XAngleGoodRecoEng->SetLineColor(kBlue);
 	XAngleGoodRecoEng->SetLineWidth(3);
 	XAngleGoodRecoEng->Draw("same");
@@ -322,7 +342,7 @@ void anatree::Loop(Long64_t max_entry)
 	ZAngleGoodRecoEng->SetLineColor(kGray);
 	ZAngleGoodRecoEng->SetLineWidth(3);
 	ZAngleGoodRecoEng->Draw("same");
-
+	
 
 	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
 	leg->SetFillColor(kWhite);
@@ -333,14 +353,40 @@ void anatree::Loop(Long64_t max_entry)
 	leg->AddEntry(YAngleGoodRecoEng, "Y angle", "l");
 	leg->AddEntry(ZAngleGoodRecoEng, "Z angle", "l");
 	leg->Draw();
+
+	TCanvas* c4 = new TCanvas("c4", "", 700, 700);
+	c4->SetLeftMargin(.1);
+	c4->SetBottomMargin(.1);
+	c4->SetTopMargin(.075);
+	c4->SetRightMargin(.15);
+	c4->cd();
+
+	NumShowersEng->SetLineColor(kYellow);
+	NumShowersEng->SetLineWidth(3);
+	NumShowersEng->Draw();
+
+	NumShowersGoodRecoEng->SetLineColor(kRed);
+	NumShowersGoodRecoEng->SetLineWidth(3);
+	NumShowersGoodRecoEng->Draw("same");
+
+	TCanvas* c5 = new TCanvas("c5", "", 700, 700);
+	c5->SetLeftMargin(.1);
+	c5->SetBottomMargin(.1);
+	c5->SetTopMargin(.075);
+	c5->SetRightMargin(.15);
+	c5->cd();
+
+	BremphotonEng->SetLineColor(kYellow);
+	BremphotonEng->SetLineWidth(3);
+	BremphotonEng->Draw();
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.05);
+	leg->AddEntry(BremphotonEng, "Brem Photon Eng", "l");
+	leg->Draw();
+
 }
-
-
-
-
-
-
-
 
 
 
