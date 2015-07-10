@@ -35,6 +35,7 @@ void anatree::Loop(Long64_t max_entry)
 	TH1F* ZAngleGoodRecoEng = new TH1F("Z_angle_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1200);
 	TH1F* DistGoodRecoEng = new TH1F("Distance_Good_Reco_Energy ", "; Energy; Number of Events", 100, 0, 1200);
 	TH1F* BremphotonEng = new TH1F("Brem_Energy ", "; Energy; Number of Events", 100, 0, 1200);
+	TH1F* NoShowerEng = new TH1F("No_Shower_Energy ", "; Energy; Number of Events", 100, 0, 1200);
 
 	
 	if (fChain == 0) return;
@@ -107,7 +108,7 @@ void anatree::Loop(Long64_t max_entry)
 	bool Bremphoton = false;	// true if the photon has at least 5% of the total shower energy
 
 	double dist = 0;
-	double EngMeV = Eng[0] * 1000;
+	double EngMeV = Eng[0] * 1000;	// Energy of the first particle in MeV
 
 		// This is to calculate the distance between the starting point of the shower and the MC
 		if (nshowers == 1)			// we want to check events that have only one shower
@@ -141,7 +142,6 @@ void anatree::Loop(Long64_t max_entry)
 		// go through every particle in the shower and find its energy relative to the total energy and find out how far it travels
 		// find photons with large energy in the shower
 		// catastrophic brem
-
 		for (int i = 1; i < geant_list_size; i++)	// checks every particle in the event
 		  {
 		    if (Eng[i] >= Eng[0] * 0.05 && pdg[i] == 22)	// if photon has 5% or more of the total energy
@@ -181,9 +181,6 @@ void anatree::Loop(Long64_t max_entry)
 
 		// good reconstructed showers
 		// must have correct shower direction and shower starting position and only one shower
-		
-		
-
 		if (nshowers == 1)	// only want one shower
 		{
 			Nshowers = true;
@@ -201,7 +198,7 @@ void anatree::Loop(Long64_t max_entry)
 		if (fabs(xdiff * 180 / 3.14) <= minangle)
 		{
 			Xangle = true;
-			xAngleOffsetGoodReco->Fill(xdiff * 180/3.14);
+			xAngleOffsetGoodReco->Fill(xdiff * 180 / 3.14);
 		}
 		    
 		if (fabs(ydiff * 180 / 3.14) <= minangle)
@@ -217,7 +214,7 @@ void anatree::Loop(Long64_t max_entry)
 		}
 
 		// if there is only one shower then plot the energy of that shower
-		if (Nshowers == true)
+		if (Nshowers)
 		{
 			NumShowersGoodRecoEng->Fill(EngMeV);
 		}
@@ -225,29 +222,33 @@ void anatree::Loop(Long64_t max_entry)
 		NumShowersEng->Fill(EngMeV);
 
 		// checks if the angle is within 5 degrees in all three planes
-		if (Xangle == true)
+		if (Xangle)
 		{
 			XAngleGoodRecoEng->Fill(EngMeV);
 			Xangle = false;
 		}
 		    
-		if (Yangle == true)
+		if (Yangle)
 		{
 			YAngleGoodRecoEng->Fill(EngMeV);
 			Yangle = false;
 		}
 
-		if (Zangle == true)
+		if (Zangle)
 		{
 			ZAngleGoodRecoEng->Fill(EngMeV);
 			Zangle = false;
 		}
 
-		if (Dist == true)
+		if (Dist)
 		{
-
 			DistGoodRecoEng->Fill(EngMeV);
 			Dist = false;
+		}
+
+		if (nshowers == 0)
+		{
+			NoShowerEng->Fill(EngMeV);
 		}
 
 		    ////// END
@@ -330,7 +331,6 @@ void anatree::Loop(Long64_t max_entry)
 	NumShowersGoodRecoEng->SetLineWidth(3);
 	NumShowersGoodRecoEng->Draw("same");
 
-	
 	XAngleGoodRecoEng->SetLineColor(kBlue);
 	XAngleGoodRecoEng->SetLineWidth(3);
 	XAngleGoodRecoEng->Draw("same");
@@ -369,6 +369,14 @@ void anatree::Loop(Long64_t max_entry)
 	NumShowersGoodRecoEng->SetLineWidth(3);
 	NumShowersGoodRecoEng->Draw("same");
 
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.05);
+	leg->AddEntry(NumShowersEng, "Any Shower", "l");
+	leg->AddEntry(NumShowersGoodRecoEng, "One Shower", "l");
+	leg->Draw();
+
 	TCanvas* c5 = new TCanvas("c5", "", 700, 700);
 	c5->SetLeftMargin(.1);
 	c5->SetBottomMargin(.1);
@@ -386,6 +394,16 @@ void anatree::Loop(Long64_t max_entry)
 	leg->AddEntry(BremphotonEng, "Brem Photon Eng", "l");
 	leg->Draw();
 
+	TCanvas* c6 = new TCanvas("c6", "", 700, 700);
+	c6->SetLeftMargin(.1);
+	c6->SetBottomMargin(.1);
+	c6->SetTopMargin(.075);
+	c6->SetRightMargin(.15);
+	c6->cd();
+
+	NoShowerEng->SetLineColor(kRed);
+	NoShowerEng->SetLineWidth(3);
+	NoShowerEng->Draw();
 }
 
 
