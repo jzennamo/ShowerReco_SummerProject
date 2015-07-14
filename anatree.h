@@ -406,7 +406,9 @@ anatree::anatree(TString file) : fChain(0)
   else{ 
     std::cout << "Opening requested file " << file << std::endl;
     infile = new TFile( file );
-    infile->GetObject("anatree",tree);
+    TDirectory * dir = (TDirectory*)infile->Get(file+":/analysistree");
+    dir->GetObject("anatree",tree);
+
   }
   
   if (!infile || !infile->IsOpen()) {
