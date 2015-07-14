@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Mon Jun 29 11:27:00 2015 by ROOT version 5.34/22
+// Tue Jul 14 12:12:22 2015 by ROOT version 5.34/22
 // from TTree anatree/analysis tree
-// found on file: prod_bnblike_gamma_standard_reco_hist.root
+// found on file: flat_eminus_ana_hist.root
 //////////////////////////////////////////////////////////
 
 #ifndef anatree_h
@@ -19,10 +19,10 @@
 
 class anatree {
 public :
- 
-   TFile          *infile;
-   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
-   Int_t           fCurrent; //!current Tree number in a TChain
+
+  TFile          *infile;
+  TTree          *fChain;   //!pointer to the analyzed TTree or TChain
+  Int_t           fCurrent; //!current Tree number in a TChain
 
    // Declaration of leaf types
    Int_t           run;
@@ -34,27 +34,27 @@ public :
    Char_t          isdata;
    Double_t        taulife;
    Int_t           no_hits;
-   Short_t         hit_plane[2053];   //[no_hits]
-   Short_t         hit_wire[2053];   //[no_hits]
-   Short_t         hit_channel[2053];   //[no_hits]
-   Float_t         hit_peakT[2053];   //[no_hits]
-   Float_t         hit_charge[2053];   //[no_hits]
-   Float_t         hit_ph[2053];   //[no_hits]
-   Float_t         hit_startT[2053];   //[no_hits]
-   Float_t         hit_endT[2053];   //[no_hits]
-   Float_t         hit_trueX[2053];   //[no_hits]
-   Float_t         hit_goodnessOfFit[2053];   //[no_hits]
-   Short_t         hit_multiplicity[2053];   //[no_hits]
-   Short_t         hit_trkid[2053];   //[no_hits]
-   Float_t         hit_nelec[2053];   //[no_hits]
-   Float_t         hit_energy[2053];   //[no_hits]
+   Short_t         hit_plane[3648];   //[no_hits]
+   Short_t         hit_wire[3648];   //[no_hits]
+   Short_t         hit_channel[3648];   //[no_hits]
+   Float_t         hit_peakT[3648];   //[no_hits]
+   Float_t         hit_charge[3648];   //[no_hits]
+   Float_t         hit_ph[3648];   //[no_hits]
+   Float_t         hit_startT[3648];   //[no_hits]
+   Float_t         hit_endT[3648];   //[no_hits]
+   Float_t         hit_trueX[3648];   //[no_hits]
+   Float_t         hit_goodnessOfFit[3648];   //[no_hits]
+   Short_t         hit_multiplicity[3648];   //[no_hits]
+   Short_t         hit_trkid[3648];   //[no_hits]
+   Float_t         hit_nelec[3648];   //[no_hits]
+   Float_t         hit_energy[3648];   //[no_hits]
    Short_t         nvtx;
    Float_t         vtx[1][3];   //[nvtx]
    Int_t           no_flashes;
-   Float_t         flash_time[65];   //[no_flashes]
-   Float_t         flash_pe[65];   //[no_flashes]
-   Float_t         flash_ycenter[65];   //[no_flashes]
-   Float_t         flash_zcenter[65];   //[no_flashes]
+   Float_t         flash_time[68];   //[no_flashes]
+   Float_t         flash_pe[68];   //[no_flashes]
+   Float_t         flash_ycenter[68];   //[no_flashes]
+   Float_t         flash_zcenter[68];   //[no_flashes]
    Short_t         nshowers;
    Int_t           showerID[4];   //[nshowers]
    Int_t           shwr_bestplane[4];   //[nshowers]
@@ -108,97 +108,97 @@ public :
    Int_t           no_primaries;
    Int_t           geant_list_size;
    Int_t           geant_list_size_in_tpcAV;
-   Int_t           pdg[145];   //[geant_list_size]
-   Int_t           status[145];   //[geant_list_size]
-   Float_t         Mass[145];   //[geant_list_size]
-   Float_t         Eng[145];   //[geant_list_size]
-   Float_t         EndE[145];   //[geant_list_size]
-   Float_t         Px[145];   //[geant_list_size]
-   Float_t         Py[145];   //[geant_list_size]
-   Float_t         Pz[145];   //[geant_list_size]
-   Float_t         P[145];   //[geant_list_size]
-   Float_t         StartPointx[145];   //[geant_list_size]
-   Float_t         StartPointy[145];   //[geant_list_size]
-   Float_t         StartPointz[145];   //[geant_list_size]
-   Float_t         StartT[145];   //[geant_list_size]
-   Float_t         EndPointx[145];   //[geant_list_size]
-   Float_t         EndPointy[145];   //[geant_list_size]
-   Float_t         EndPointz[145];   //[geant_list_size]
-   Float_t         EndT[145];   //[geant_list_size]
-   Float_t         theta[145];   //[geant_list_size]
-   Float_t         phi[145];   //[geant_list_size]
-   Float_t         theta_xz[145];   //[geant_list_size]
-   Float_t         theta_yz[145];   //[geant_list_size]
-   Float_t         pathlen[145];   //[geant_list_size]
-   Int_t           inTPCActive[145];   //[geant_list_size]
-   Float_t         StartPointx_tpcAV[145];   //[geant_list_size]
-   Float_t         StartPointy_tpcAV[145];   //[geant_list_size]
-   Float_t         StartPointz_tpcAV[145];   //[geant_list_size]
-   Float_t         EndPointx_tpcAV[145];   //[geant_list_size]
-   Float_t         EndPointy_tpcAV[145];   //[geant_list_size]
-   Float_t         EndPointz_tpcAV[145];   //[geant_list_size]
-   Int_t           NumberDaughters[145];   //[geant_list_size]
-   Int_t           Mother[145];   //[geant_list_size]
-   Int_t           TrackId[145];   //[geant_list_size]
-   Int_t           MergedId[145];   //[geant_list_size]
-   Int_t           origin[145];   //[geant_list_size]
-   Int_t           MCTruthIndex[145];   //[geant_list_size]
-   Int_t           process_primary[145];   //[geant_list_size]
+   Int_t           pdg[222];   //[geant_list_size]
+   Int_t           status[222];   //[geant_list_size]
+   Float_t         Mass[222];   //[geant_list_size]
+   Float_t         Eng[222];   //[geant_list_size]
+   Float_t         EndE[222];   //[geant_list_size]
+   Float_t         Px[222];   //[geant_list_size]
+   Float_t         Py[222];   //[geant_list_size]
+   Float_t         Pz[222];   //[geant_list_size]
+   Float_t         P[222];   //[geant_list_size]
+   Float_t         StartPointx[222];   //[geant_list_size]
+   Float_t         StartPointy[222];   //[geant_list_size]
+   Float_t         StartPointz[222];   //[geant_list_size]
+   Float_t         StartT[222];   //[geant_list_size]
+   Float_t         EndPointx[222];   //[geant_list_size]
+   Float_t         EndPointy[222];   //[geant_list_size]
+   Float_t         EndPointz[222];   //[geant_list_size]
+   Float_t         EndT[222];   //[geant_list_size]
+   Float_t         theta[222];   //[geant_list_size]
+   Float_t         phi[222];   //[geant_list_size]
+   Float_t         theta_xz[222];   //[geant_list_size]
+   Float_t         theta_yz[222];   //[geant_list_size]
+   Float_t         pathlen[222];   //[geant_list_size]
+   Int_t           inTPCActive[222];   //[geant_list_size]
+   Float_t         StartPointx_tpcAV[222];   //[geant_list_size]
+   Float_t         StartPointy_tpcAV[222];   //[geant_list_size]
+   Float_t         StartPointz_tpcAV[222];   //[geant_list_size]
+   Float_t         EndPointx_tpcAV[222];   //[geant_list_size]
+   Float_t         EndPointy_tpcAV[222];   //[geant_list_size]
+   Float_t         EndPointz_tpcAV[222];   //[geant_list_size]
+   Int_t           NumberDaughters[222];   //[geant_list_size]
+   Int_t           Mother[222];   //[geant_list_size]
+   Int_t           TrackId[222];   //[geant_list_size]
+   Int_t           MergedId[222];   //[geant_list_size]
+   Int_t           origin[222];   //[geant_list_size]
+   Int_t           MCTruthIndex[222];   //[geant_list_size]
+   Int_t           process_primary[222];   //[geant_list_size]
    vector<string>  *processname;
    Short_t         ntracks_trackkalmanhit;
-   Short_t         trkId_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Short_t         trkncosmictags_tagger_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkcosmicscore_tagger_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Short_t         trkcosmictype_tagger_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Short_t         trkncosmictags_flashmatch_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkcosmicscore_flashmatch_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Short_t         trkcosmictype_flashmatch_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkke_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Float_t         trkrange_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Int_t           trkidtruth_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Short_t         trkorigin_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Int_t           trkpdgtruth_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Float_t         trkefftruth_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Float_t         trkpurtruth_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Float_t         trkpitchc_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Short_t         ntrkhits_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Float_t         trkdedx_trackkalmanhit[14][3][2000];   //[ntracks_trackkalmanhit]
-   Float_t         trkdqdx_trackkalmanhit[14][3][2000];   //[ntracks_trackkalmanhit]
-   Float_t         trkresrg_trackkalmanhit[14][3][2000];   //[ntracks_trackkalmanhit]
-   Float_t         trkxyz_trackkalmanhit[14][3][2000][3];   //[ntracks_trackkalmanhit]
-   Float_t         trkstartx_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkstarty_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkstartz_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkstartd_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkendx_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkendy_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkendz_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkendd_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trktheta_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkphi_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkstartdcosx_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkstartdcosy_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkstartdcosz_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkenddcosx_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkenddcosy_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkenddcosz_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkthetaxz_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkthetayz_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkmom_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkmomrange_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkmommschi2_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trkmommsllhd_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Float_t         trklen_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Short_t         trksvtxid_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Short_t         trkevtxid_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
-   Int_t           trkpidpdg_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Float_t         trkpidchi_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Float_t         trkpidchipr_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Float_t         trkpidchika_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Float_t         trkpidchipi_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Float_t         trkpidchimu_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Float_t         trkpidpida_trackkalmanhit[14][3];   //[ntracks_trackkalmanhit]
-   Short_t         trkpidbestplane_trackkalmanhit[14];   //[ntracks_trackkalmanhit]
+   Short_t         trkId_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Short_t         trkncosmictags_tagger_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkcosmicscore_tagger_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Short_t         trkcosmictype_tagger_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Short_t         trkncosmictags_flashmatch_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkcosmicscore_flashmatch_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Short_t         trkcosmictype_flashmatch_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkke_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Float_t         trkrange_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Int_t           trkidtruth_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Short_t         trkorigin_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Int_t           trkpdgtruth_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Float_t         trkefftruth_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Float_t         trkpurtruth_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Float_t         trkpitchc_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Short_t         ntrkhits_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Float_t         trkdedx_trackkalmanhit[18][3][2000];   //[ntracks_trackkalmanhit]
+   Float_t         trkdqdx_trackkalmanhit[18][3][2000];   //[ntracks_trackkalmanhit]
+   Float_t         trkresrg_trackkalmanhit[18][3][2000];   //[ntracks_trackkalmanhit]
+   Float_t         trkxyz_trackkalmanhit[18][3][2000][3];   //[ntracks_trackkalmanhit]
+   Float_t         trkstartx_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkstarty_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkstartz_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkstartd_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkendx_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkendy_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkendz_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkendd_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trktheta_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkphi_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkstartdcosx_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkstartdcosy_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkstartdcosz_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkenddcosx_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkenddcosy_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkenddcosz_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkthetaxz_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkthetayz_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkmom_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkmomrange_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkmommschi2_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trkmommsllhd_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Float_t         trklen_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Short_t         trksvtxid_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Short_t         trkevtxid_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
+   Int_t           trkpidpdg_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Float_t         trkpidchi_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Float_t         trkpidchipr_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Float_t         trkpidchika_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Float_t         trkpidchipi_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Float_t         trkpidchimu_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Float_t         trkpidpida_trackkalmanhit[18][3];   //[ntracks_trackkalmanhit]
+   Short_t         trkpidbestplane_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
 
    // List of branches
    TBranch        *b_run;   //!
@@ -406,7 +406,9 @@ anatree::anatree(TString file) : fChain(0)
   else{ 
     std::cout << "Opening requested file " << file << std::endl;
     infile = new TFile( file );
-    infile->GetObject("anatree",tree);
+    TDirectory * dir = (TDirectory*)infile->Get(file+":/analysistree");
+    dir->GetObject("anatree",tree);
+
   }
   
   if (!infile || !infile->IsOpen()) {
@@ -421,6 +423,7 @@ anatree::~anatree()
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
+
 
 Int_t anatree::GetEntry(Long64_t entry)
 {
