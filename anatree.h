@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Tue Jul 14 12:12:22 2015 by ROOT version 5.34/22
+// Thu Jul 23 15:18:30 2015 by ROOT version 5.34/22
 // from TTree anatree/analysis tree
-// found on file: flat_eminus_ana_hist.root
+// found on file: gamm_flat_with_MCShower.root
 //////////////////////////////////////////////////////////
 
 #ifndef anatree_h
@@ -20,9 +20,9 @@
 class anatree {
 public :
 
-  TFile          *infile;
-  TTree          *fChain;   //!pointer to the analyzed TTree or TChain
-  Int_t           fCurrent; //!current Tree number in a TChain
+   TFile          *infile;
+   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
+   Int_t           fCurrent; //!current Tree number in a TChain
 
    // Declaration of leaf types
    Int_t           run;
@@ -34,20 +34,20 @@ public :
    Char_t          isdata;
    Double_t        taulife;
    Int_t           no_hits;
-   Short_t         hit_plane[3710];   //[no_hits]
-   Short_t         hit_wire[3710];   //[no_hits]
-   Short_t         hit_channel[3710];   //[no_hits]
-   Float_t         hit_peakT[3710];   //[no_hits]
-   Float_t         hit_charge[3710];   //[no_hits]
-   Float_t         hit_ph[3710];   //[no_hits]
-   Float_t         hit_startT[3710];   //[no_hits]
-   Float_t         hit_endT[3710];   //[no_hits]
-   Float_t         hit_trueX[3710];   //[no_hits]
-   Float_t         hit_goodnessOfFit[3710];   //[no_hits]
-   Short_t         hit_multiplicity[3710];   //[no_hits]
-   Short_t         hit_trkid[3710];   //[no_hits]
-   Float_t         hit_nelec[3710];   //[no_hits]
-   Float_t         hit_energy[3710];   //[no_hits]
+   Short_t         hit_plane[3778];   //[no_hits]
+   Short_t         hit_wire[3778];   //[no_hits]
+   Short_t         hit_channel[3778];   //[no_hits]
+   Float_t         hit_peakT[3778];   //[no_hits]
+   Float_t         hit_charge[3778];   //[no_hits]
+   Float_t         hit_ph[3778];   //[no_hits]
+   Float_t         hit_startT[3778];   //[no_hits]
+   Float_t         hit_endT[3778];   //[no_hits]
+   Float_t         hit_trueX[3778];   //[no_hits]
+   Float_t         hit_goodnessOfFit[3778];   //[no_hits]
+   Short_t         hit_multiplicity[3778];   //[no_hits]
+   Short_t         hit_trkid[3778];   //[no_hits]
+   Float_t         hit_nelec[3778];   //[no_hits]
+   Float_t         hit_energy[3778];   //[no_hits]
    Short_t         nvtx;
    Float_t         vtx[1][3];   //[nvtx]
    Int_t           no_flashes;
@@ -89,6 +89,33 @@ public :
    Float_t         lep_dcosx_truth[1];   //[mcevts_truth]
    Float_t         lep_dcosy_truth[1];   //[mcevts_truth]
    Float_t         lep_dcosz_truth[1];   //[mcevts_truth]
+   Float_t         vx_flux[1];   //[mcevts_truth]
+   Float_t         vy_flux[1];   //[mcevts_truth]
+   Float_t         vz_flux[1];   //[mcevts_truth]
+   Float_t         pdpx_flux[1];   //[mcevts_truth]
+   Float_t         pdpy_flux[1];   //[mcevts_truth]
+   Float_t         pdpz_flux[1];   //[mcevts_truth]
+   Float_t         ppdxdz_flux[1];   //[mcevts_truth]
+   Float_t         ppdydz_flux[1];   //[mcevts_truth]
+   Float_t         pppz_flux[1];   //[mcevts_truth]
+   Int_t           ptype_flux[1];   //[mcevts_truth]
+   Float_t         ppvx_flux[1];   //[mcevts_truth]
+   Float_t         ppvy_flux[1];   //[mcevts_truth]
+   Float_t         ppvz_flux[1];   //[mcevts_truth]
+   Float_t         muparpx_flux[1];   //[mcevts_truth]
+   Float_t         muparpy_flux[1];   //[mcevts_truth]
+   Float_t         muparpz_flux[1];   //[mcevts_truth]
+   Float_t         mupare_flux[1];   //[mcevts_truth]
+   Int_t           tgen_flux[1];   //[mcevts_truth]
+   Int_t           tgptype_flux[1];   //[mcevts_truth]
+   Float_t         tgppx_flux[1];   //[mcevts_truth]
+   Float_t         tgppy_flux[1];   //[mcevts_truth]
+   Float_t         tgppz_flux[1];   //[mcevts_truth]
+   Float_t         tprivx_flux[1];   //[mcevts_truth]
+   Float_t         tprivy_flux[1];   //[mcevts_truth]
+   Float_t         tprivz_flux[1];   //[mcevts_truth]
+   Float_t         dk2gen_flux[1];   //[mcevts_truth]
+   Float_t         gen2vtx_flux[1];   //[mcevts_truth]
    Float_t         tpx_flux[1];   //[mcevts_truth]
    Float_t         tpy_flux[1];   //[mcevts_truth]
    Float_t         tpz_flux[1];   //[mcevts_truth]
@@ -145,6 +172,43 @@ public :
    Int_t           MCTruthIndex[359];   //[geant_list_size]
    Int_t           process_primary[359];   //[geant_list_size]
    vector<string>  *processname;
+   Int_t           no_mcshowers;
+   Int_t           mcshwr_origin[1];   //[no_mcshowers]
+   Int_t           mcshwr_pdg[1];   //[no_mcshowers]
+   Int_t           mcshwr_TrackId[1];   //[no_mcshowers]
+   vector<string>  *mcshwr_Process;
+   Float_t         mcshwr_startX[1];   //[no_mcshowers]
+   Float_t         mcshwr_startY[1];   //[no_mcshowers]
+   Float_t         mcshwr_startZ[1];   //[no_mcshowers]
+   Float_t         mcshwr_endX[1];   //[no_mcshowers]
+   Float_t         mcshwr_endY[1];   //[no_mcshowers]
+   Float_t         mcshwr_endZ[1];   //[no_mcshowers]
+   Float_t         mcshwr_CombEngX[1];   //[no_mcshowers]
+   Float_t         mcshwr_CombEngY[1];   //[no_mcshowers]
+   Float_t         mcshwr_CombEngZ[1];   //[no_mcshowers]
+   Float_t         mcshwr_CombEngPx[1];   //[no_mcshowers]
+   Float_t         mcshwr_CombEngPy[1];   //[no_mcshowers]
+   Float_t         mcshwr_CombEngPz[1];   //[no_mcshowers]
+   Float_t         mcshwr_CombEngE[1];   //[no_mcshowers]
+   Int_t           mcshwr_isEngDeposited[1];   //[no_mcshowers]
+   Int_t           mcshwr_Motherpdg[1];   //[no_mcshowers]
+   Int_t           mcshwr_MotherTrkId[1];   //[no_mcshowers]
+   vector<string>  *mcshwr_MotherProcess;
+   Float_t         mcshwr_MotherstartX[1];   //[no_mcshowers]
+   Float_t         mcshwr_MotherstartY[1];   //[no_mcshowers]
+   Float_t         mcshwr_MotherstartZ[1];   //[no_mcshowers]
+   Float_t         mcshwr_MotherendX[1];   //[no_mcshowers]
+   Float_t         mcshwr_MotherendY[1];   //[no_mcshowers]
+   Float_t         mcshwr_MotherendZ[1];   //[no_mcshowers]
+   Int_t           mcshwr_Ancestorpdg[1];   //[no_mcshowers]
+   Int_t           mcshwr_AncesotorTrkId[1];   //[no_mcshowers]
+   vector<string>  *mcshwr_AncesotorProcess;
+   Float_t         mcshwr_AncestorstartX[1];   //[no_mcshowers]
+   Float_t         mcshwr_AncestorstartY[1];   //[no_mcshowers]
+   Float_t         mcshwr_AncestorstartZ[1];   //[no_mcshowers]
+   Float_t         mcshwr_AncestorendX[1];   //[no_mcshowers]
+   Float_t         mcshwr_AncestorendY[1];   //[no_mcshowers]
+   Float_t         mcshwr_AncestorendZ[1];   //[no_mcshowers]
    Short_t         ntracks_trackkalmanhit;
    Short_t         trkId_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
    Short_t         trkncosmictags_tagger_trackkalmanhit[18];   //[ntracks_trackkalmanhit]
@@ -265,6 +329,33 @@ public :
    TBranch        *b_lep_dcosx_truth;   //!
    TBranch        *b_lep_dcosy_truth;   //!
    TBranch        *b_lep_dcosz_truth;   //!
+   TBranch        *b_vx_flux;   //!
+   TBranch        *b_vy_flux;   //!
+   TBranch        *b_vz_flux;   //!
+   TBranch        *b_pdpx_flux;   //!
+   TBranch        *b_pdpy_flux;   //!
+   TBranch        *b_pdpz_flux;   //!
+   TBranch        *b_ppdxdz_flux;   //!
+   TBranch        *b_ppdydz_flux;   //!
+   TBranch        *b_pppz_flux;   //!
+   TBranch        *b_ptype_flux;   //!
+   TBranch        *b_ppvx_flux;   //!
+   TBranch        *b_ppvy_flux;   //!
+   TBranch        *b_ppvz_flux;   //!
+   TBranch        *b_muparpx_flux;   //!
+   TBranch        *b_muparpy_flux;   //!
+   TBranch        *b_muparpz_flux;   //!
+   TBranch        *b_mupare_flux;   //!
+   TBranch        *b_tgen_flux;   //!
+   TBranch        *b_tgptype_flux;   //!
+   TBranch        *b_tgppx_flux;   //!
+   TBranch        *b_tgppy_flux;   //!
+   TBranch        *b_tgppz_flux;   //!
+   TBranch        *b_tprivx_flux;   //!
+   TBranch        *b_tprivy_flux;   //!
+   TBranch        *b_tprivz_flux;   //!
+   TBranch        *b_dk2gen_flux;   //!
+   TBranch        *b_gen2vtx_flux;   //!
    TBranch        *b_tpx_flux;   //!
    TBranch        *b_tpy_flux;   //!
    TBranch        *b_tpz_flux;   //!
@@ -321,6 +412,43 @@ public :
    TBranch        *b_MCTruthIndex;   //!
    TBranch        *b_process_primary;   //!
    TBranch        *b_processname;   //!
+   TBranch        *b_no_mcshowers;   //!
+   TBranch        *b_mcshwr_origin;   //!
+   TBranch        *b_mcshwr_pdg;   //!
+   TBranch        *b_mcshwr_TrackId;   //!
+   TBranch        *b_mcshwr_Process;   //!
+   TBranch        *b_mcshwr_startX;   //!
+   TBranch        *b_mcshwr_startY;   //!
+   TBranch        *b_mcshwr_startZ;   //!
+   TBranch        *b_mcshwr_endX;   //!
+   TBranch        *b_mcshwr_endY;   //!
+   TBranch        *b_mcshwr_endZ;   //!
+   TBranch        *b_mcshwr_CombEngX;   //!
+   TBranch        *b_mcshwr_CombEngY;   //!
+   TBranch        *b_mcshwr_CombEngZ;   //!
+   TBranch        *b_mcshwr_CombEngPx;   //!
+   TBranch        *b_mcshwr_CombEngPy;   //!
+   TBranch        *b_mcshwr_CombEngPz;   //!
+   TBranch        *b_mcshwr_CombEngE;   //!
+   TBranch        *b_mcshwr_isEngDeposited;   //!
+   TBranch        *b_mcshwr_Motherpdg;   //!
+   TBranch        *b_mcshwr_MotherTrkId;   //!
+   TBranch        *b_mcshwr_MotherProcess;   //!
+   TBranch        *b_mcshwr_MotherstartX;   //!
+   TBranch        *b_mcshwr_MotherstartY;   //!
+   TBranch        *b_mcshwr_MotherstartZ;   //!
+   TBranch        *b_mcshwr_MotherendX;   //!
+   TBranch        *b_mcshwr_MotherendY;   //!
+   TBranch        *b_mcshwr_MotherendZ;   //!
+   TBranch        *b_mcshwr_Ancestorpdg;   //!
+   TBranch        *b_mcshwr_AncesotorTrkId;   //!
+   TBranch        *b_mcshwr_AncesotorProcess;   //!
+   TBranch        *b_mcshwr_AncestorstartX;   //!
+   TBranch        *b_mcshwr_AncestorstartY;   //!
+   TBranch        *b_mcshwr_AncestorstartZ;   //!
+   TBranch        *b_mcshwr_AncestorendX;   //!
+   TBranch        *b_mcshwr_AncestorendY;   //!
+   TBranch        *b_mcshwr_AncestorendZ;   //!
    TBranch        *b_ntracks_trackkalmanhit;   //!
    TBranch        *b_trkId_trackkalmanhit;   //!
    TBranch        *b_trkncosmictags_tagger_trackkalmanhit;   //!
@@ -398,9 +526,9 @@ anatree::anatree(TString file) : fChain(0)
   TTree* tree;
   
   if (file.Length() == 0) {
-    std::cout << "You didn't set a file so I am just opening: gamma/prod_bnblike_gamma_standard_reco_hist.root" << std::endl;
-      infile = new TFile("gamma/prod_bnblike_gamma_standard_reco_hist.root");      
-      TDirectory * dir = (TDirectory*)infile->Get("gamma/prod_bnblike_gamma_standard_reco_hist.root:/analysistree");
+    std::cout << "You didn't set a file so I am just opening: gamma/gamm_flat_with_MCShower.root" << std::endl;
+      infile = new TFile("gamma/gamm_flat_with_MCShower.root");      
+      TDirectory * dir = (TDirectory*)infile->Get("gamma/gamm_flat_with_MCShower.root:/analysistree");
       dir->GetObject("anatree",tree);
    }
   else{ 
@@ -456,6 +584,9 @@ void anatree::Init(TTree *tree)
 
    // Set object pointer
    processname = 0;
+   mcshwr_Process = 0;
+   mcshwr_MotherProcess = 0;
+   mcshwr_AncesotorProcess = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -526,6 +657,33 @@ void anatree::Init(TTree *tree)
    fChain->SetBranchAddress("lep_dcosx_truth", lep_dcosx_truth, &b_lep_dcosx_truth);
    fChain->SetBranchAddress("lep_dcosy_truth", lep_dcosy_truth, &b_lep_dcosy_truth);
    fChain->SetBranchAddress("lep_dcosz_truth", lep_dcosz_truth, &b_lep_dcosz_truth);
+   fChain->SetBranchAddress("vx_flux", vx_flux, &b_vx_flux);
+   fChain->SetBranchAddress("vy_flux", vy_flux, &b_vy_flux);
+   fChain->SetBranchAddress("vz_flux", vz_flux, &b_vz_flux);
+   fChain->SetBranchAddress("pdpx_flux", pdpx_flux, &b_pdpx_flux);
+   fChain->SetBranchAddress("pdpy_flux", pdpy_flux, &b_pdpy_flux);
+   fChain->SetBranchAddress("pdpz_flux", pdpz_flux, &b_pdpz_flux);
+   fChain->SetBranchAddress("ppdxdz_flux", ppdxdz_flux, &b_ppdxdz_flux);
+   fChain->SetBranchAddress("ppdydz_flux", ppdydz_flux, &b_ppdydz_flux);
+   fChain->SetBranchAddress("pppz_flux", pppz_flux, &b_pppz_flux);
+   fChain->SetBranchAddress("ptype_flux", ptype_flux, &b_ptype_flux);
+   fChain->SetBranchAddress("ppvx_flux", ppvx_flux, &b_ppvx_flux);
+   fChain->SetBranchAddress("ppvy_flux", ppvy_flux, &b_ppvy_flux);
+   fChain->SetBranchAddress("ppvz_flux", ppvz_flux, &b_ppvz_flux);
+   fChain->SetBranchAddress("muparpx_flux", muparpx_flux, &b_muparpx_flux);
+   fChain->SetBranchAddress("muparpy_flux", muparpy_flux, &b_muparpy_flux);
+   fChain->SetBranchAddress("muparpz_flux", muparpz_flux, &b_muparpz_flux);
+   fChain->SetBranchAddress("mupare_flux", mupare_flux, &b_mupare_flux);
+   fChain->SetBranchAddress("tgen_flux", tgen_flux, &b_tgen_flux);
+   fChain->SetBranchAddress("tgptype_flux", tgptype_flux, &b_tgptype_flux);
+   fChain->SetBranchAddress("tgppx_flux", tgppx_flux, &b_tgppx_flux);
+   fChain->SetBranchAddress("tgppy_flux", tgppy_flux, &b_tgppy_flux);
+   fChain->SetBranchAddress("tgppz_flux", tgppz_flux, &b_tgppz_flux);
+   fChain->SetBranchAddress("tprivx_flux", tprivx_flux, &b_tprivx_flux);
+   fChain->SetBranchAddress("tprivy_flux", tprivy_flux, &b_tprivy_flux);
+   fChain->SetBranchAddress("tprivz_flux", tprivz_flux, &b_tprivz_flux);
+   fChain->SetBranchAddress("dk2gen_flux", dk2gen_flux, &b_dk2gen_flux);
+   fChain->SetBranchAddress("gen2vtx_flux", gen2vtx_flux, &b_gen2vtx_flux);
    fChain->SetBranchAddress("tpx_flux", tpx_flux, &b_tpx_flux);
    fChain->SetBranchAddress("tpy_flux", tpy_flux, &b_tpy_flux);
    fChain->SetBranchAddress("tpz_flux", tpz_flux, &b_tpz_flux);
@@ -582,6 +740,43 @@ void anatree::Init(TTree *tree)
    fChain->SetBranchAddress("MCTruthIndex", MCTruthIndex, &b_MCTruthIndex);
    fChain->SetBranchAddress("process_primary", process_primary, &b_process_primary);
    fChain->SetBranchAddress("processname", &processname, &b_processname);
+   fChain->SetBranchAddress("no_mcshowers", &no_mcshowers, &b_no_mcshowers);
+   fChain->SetBranchAddress("mcshwr_origin", mcshwr_origin, &b_mcshwr_origin);
+   fChain->SetBranchAddress("mcshwr_pdg", mcshwr_pdg, &b_mcshwr_pdg);
+   fChain->SetBranchAddress("mcshwr_TrackId", mcshwr_TrackId, &b_mcshwr_TrackId);
+   fChain->SetBranchAddress("mcshwr_Process", &mcshwr_Process, &b_mcshwr_Process);
+   fChain->SetBranchAddress("mcshwr_startX", mcshwr_startX, &b_mcshwr_startX);
+   fChain->SetBranchAddress("mcshwr_startY", mcshwr_startY, &b_mcshwr_startY);
+   fChain->SetBranchAddress("mcshwr_startZ", mcshwr_startZ, &b_mcshwr_startZ);
+   fChain->SetBranchAddress("mcshwr_endX", mcshwr_endX, &b_mcshwr_endX);
+   fChain->SetBranchAddress("mcshwr_endY", mcshwr_endY, &b_mcshwr_endY);
+   fChain->SetBranchAddress("mcshwr_endZ", mcshwr_endZ, &b_mcshwr_endZ);
+   fChain->SetBranchAddress("mcshwr_CombEngX", mcshwr_CombEngX, &b_mcshwr_CombEngX);
+   fChain->SetBranchAddress("mcshwr_CombEngY", mcshwr_CombEngY, &b_mcshwr_CombEngY);
+   fChain->SetBranchAddress("mcshwr_CombEngZ", mcshwr_CombEngZ, &b_mcshwr_CombEngZ);
+   fChain->SetBranchAddress("mcshwr_CombEngPx", mcshwr_CombEngPx, &b_mcshwr_CombEngPx);
+   fChain->SetBranchAddress("mcshwr_CombEngPy", mcshwr_CombEngPy, &b_mcshwr_CombEngPy);
+   fChain->SetBranchAddress("mcshwr_CombEngPz", mcshwr_CombEngPz, &b_mcshwr_CombEngPz);
+   fChain->SetBranchAddress("mcshwr_CombEngE", mcshwr_CombEngE, &b_mcshwr_CombEngE);
+   fChain->SetBranchAddress("mcshwr_isEngDeposited", mcshwr_isEngDeposited, &b_mcshwr_isEngDeposited);
+   fChain->SetBranchAddress("mcshwr_Motherpdg", mcshwr_Motherpdg, &b_mcshwr_Motherpdg);
+   fChain->SetBranchAddress("mcshwr_MotherTrkId", mcshwr_MotherTrkId, &b_mcshwr_MotherTrkId);
+   fChain->SetBranchAddress("mcshwr_MotherProcess", &mcshwr_MotherProcess, &b_mcshwr_MotherProcess);
+   fChain->SetBranchAddress("mcshwr_MotherstartX", mcshwr_MotherstartX, &b_mcshwr_MotherstartX);
+   fChain->SetBranchAddress("mcshwr_MotherstartY", mcshwr_MotherstartY, &b_mcshwr_MotherstartY);
+   fChain->SetBranchAddress("mcshwr_MotherstartZ", mcshwr_MotherstartZ, &b_mcshwr_MotherstartZ);
+   fChain->SetBranchAddress("mcshwr_MotherendX", mcshwr_MotherendX, &b_mcshwr_MotherendX);
+   fChain->SetBranchAddress("mcshwr_MotherendY", mcshwr_MotherendY, &b_mcshwr_MotherendY);
+   fChain->SetBranchAddress("mcshwr_MotherendZ", mcshwr_MotherendZ, &b_mcshwr_MotherendZ);
+   fChain->SetBranchAddress("mcshwr_Ancestorpdg", mcshwr_Ancestorpdg, &b_mcshwr_Ancestorpdg);
+   fChain->SetBranchAddress("mcshwr_AncesotorTrkId", mcshwr_AncesotorTrkId, &b_mcshwr_AncesotorTrkId);
+   fChain->SetBranchAddress("mcshwr_AncesotorProcess", &mcshwr_AncesotorProcess, &b_mcshwr_AncesotorProcess);
+   fChain->SetBranchAddress("mcshwr_AncestorstartX", mcshwr_AncestorstartX, &b_mcshwr_AncestorstartX);
+   fChain->SetBranchAddress("mcshwr_AncestorstartY", mcshwr_AncestorstartY, &b_mcshwr_AncestorstartY);
+   fChain->SetBranchAddress("mcshwr_AncestorstartZ", mcshwr_AncestorstartZ, &b_mcshwr_AncestorstartZ);
+   fChain->SetBranchAddress("mcshwr_AncestorendX", mcshwr_AncestorendX, &b_mcshwr_AncestorendX);
+   fChain->SetBranchAddress("mcshwr_AncestorendY", mcshwr_AncestorendY, &b_mcshwr_AncestorendY);
+   fChain->SetBranchAddress("mcshwr_AncestorendZ", mcshwr_AncestorendZ, &b_mcshwr_AncestorendZ);
    fChain->SetBranchAddress("ntracks_trackkalmanhit", &ntracks_trackkalmanhit, &b_ntracks_trackkalmanhit);
    fChain->SetBranchAddress("trkId_trackkalmanhit", trkId_trackkalmanhit, &b_trkId_trackkalmanhit);
    fChain->SetBranchAddress("trkncosmictags_tagger_trackkalmanhit", trkncosmictags_tagger_trackkalmanhit, &b_trkncosmictags_tagger_trackkalmanhit);
