@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Thu Jul 23 15:18:30 2015 by ROOT version 5.34/22
+// Tue Jul 28 13:25:55 2015 by ROOT version 5.34/22
 // from TTree anatree/analysis tree
-// found on file: gamm_flat_with_MCShower.root
+// found on file: gamma_uniform_MCShowers_anatree.root
 //////////////////////////////////////////////////////////
 
 #ifndef anatree_h
@@ -19,8 +19,6 @@
 
 class anatree {
 public :
-
-   TFile          *infile;
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
 
@@ -34,20 +32,20 @@ public :
    Char_t          isdata;
    Double_t        taulife;
    Int_t           no_hits;
-   Short_t         hit_plane[3778];   //[no_hits]
-   Short_t         hit_wire[3778];   //[no_hits]
-   Short_t         hit_channel[3778];   //[no_hits]
-   Float_t         hit_peakT[3778];   //[no_hits]
-   Float_t         hit_charge[3778];   //[no_hits]
-   Float_t         hit_ph[3778];   //[no_hits]
-   Float_t         hit_startT[3778];   //[no_hits]
-   Float_t         hit_endT[3778];   //[no_hits]
-   Float_t         hit_trueX[3778];   //[no_hits]
-   Float_t         hit_goodnessOfFit[3778];   //[no_hits]
-   Short_t         hit_multiplicity[3778];   //[no_hits]
-   Short_t         hit_trkid[3778];   //[no_hits]
-   Float_t         hit_nelec[3778];   //[no_hits]
-   Float_t         hit_energy[3778];   //[no_hits]
+   Short_t         hit_plane[3860];   //[no_hits]
+   Short_t         hit_wire[3860];   //[no_hits]
+   Short_t         hit_channel[3860];   //[no_hits]
+   Float_t         hit_peakT[3860];   //[no_hits]
+   Float_t         hit_charge[3860];   //[no_hits]
+   Float_t         hit_ph[3860];   //[no_hits]
+   Float_t         hit_startT[3860];   //[no_hits]
+   Float_t         hit_endT[3860];   //[no_hits]
+   Float_t         hit_trueX[3860];   //[no_hits]
+   Float_t         hit_goodnessOfFit[3860];   //[no_hits]
+   Short_t         hit_multiplicity[3860];   //[no_hits]
+   Short_t         hit_trkid[3860];   //[no_hits]
+   Float_t         hit_nelec[3860];   //[no_hits]
+   Float_t         hit_energy[3860];   //[no_hits]
    Short_t         nvtx;
    Float_t         vtx[1][3];   //[nvtx]
    Int_t           no_flashes;
@@ -190,6 +188,10 @@ public :
    Float_t         mcshwr_CombEngPy[1];   //[no_mcshowers]
    Float_t         mcshwr_CombEngPz[1];   //[no_mcshowers]
    Float_t         mcshwr_CombEngE[1];   //[no_mcshowers]
+   Float_t         mcshwr_dEdx[1];   //[no_mcshowers]
+   Float_t         mcshwr_StartDirX[1];   //[no_mcshowers]
+   Float_t         mcshwr_StartDirY[1];   //[no_mcshowers]
+   Float_t         mcshwr_StartDirZ[1];   //[no_mcshowers]
    Int_t           mcshwr_isEngDeposited[1];   //[no_mcshowers]
    Int_t           mcshwr_Motherpdg[1];   //[no_mcshowers]
    Int_t           mcshwr_MotherTrkId[1];   //[no_mcshowers]
@@ -430,6 +432,10 @@ public :
    TBranch        *b_mcshwr_CombEngPy;   //!
    TBranch        *b_mcshwr_CombEngPz;   //!
    TBranch        *b_mcshwr_CombEngE;   //!
+   TBranch        *b_mcshwr_dEdx;   //!
+   TBranch        *b_mcshwr_StartDirX;   //!
+   TBranch        *b_mcshwr_StartDirY;   //!
+   TBranch        *b_mcshwr_StartDirZ;   //!
    TBranch        *b_mcshwr_isEngDeposited;   //!
    TBranch        *b_mcshwr_Motherpdg;   //!
    TBranch        *b_mcshwr_MotherTrkId;   //!
@@ -514,9 +520,12 @@ public :
    virtual Bool_t   Notify();
    virtual TString  InFile();
    virtual void     Show(Long64_t entry = -1);
+
 };
 
 #endif
+
+//gamma_uniform_MCShowers_anatree.root
 
 #ifdef anatree_cxx
 anatree::anatree(TString file) : fChain(0) 
@@ -526,9 +535,9 @@ anatree::anatree(TString file) : fChain(0)
   TTree* tree;
   
   if (file.Length() == 0) {
-    std::cout << "You didn't set a file so I am just opening: gamma/gamm_flat_with_MCShower.root" << std::endl;
-      infile = new TFile("gamma/gamm_flat_with_MCShower.root");      
-      TDirectory * dir = (TDirectory*)infile->Get("gamma/gamm_flat_with_MCShower.root:/analysistree");
+    std::cout << "You didn't set a file so I am just opening: gamma/gamma_uniform_MCShowers_anatree.root" << std::endl;
+      infile = new TFile("gamma/gamma_uniform_MCShowers_anatree.root");      
+      TDirectory * dir = (TDirectory*)infile->Get("gamma/gamma_uniform_MCShowers_anatree.root:/analysistree");
       dir->GetObject("anatree",tree);
    }
   else{ 
@@ -551,7 +560,6 @@ anatree::~anatree()
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
-
 
 Int_t anatree::GetEntry(Long64_t entry)
 {
@@ -758,6 +766,10 @@ void anatree::Init(TTree *tree)
    fChain->SetBranchAddress("mcshwr_CombEngPy", mcshwr_CombEngPy, &b_mcshwr_CombEngPy);
    fChain->SetBranchAddress("mcshwr_CombEngPz", mcshwr_CombEngPz, &b_mcshwr_CombEngPz);
    fChain->SetBranchAddress("mcshwr_CombEngE", mcshwr_CombEngE, &b_mcshwr_CombEngE);
+   fChain->SetBranchAddress("mcshwr_dEdx", mcshwr_dEdx, &b_mcshwr_dEdx);
+   fChain->SetBranchAddress("mcshwr_StartDirX", mcshwr_StartDirX, &b_mcshwr_StartDirX);
+   fChain->SetBranchAddress("mcshwr_StartDirY", mcshwr_StartDirY, &b_mcshwr_StartDirY);
+   fChain->SetBranchAddress("mcshwr_StartDirZ", mcshwr_StartDirZ, &b_mcshwr_StartDirZ);
    fChain->SetBranchAddress("mcshwr_isEngDeposited", mcshwr_isEngDeposited, &b_mcshwr_isEngDeposited);
    fChain->SetBranchAddress("mcshwr_Motherpdg", mcshwr_Motherpdg, &b_mcshwr_Motherpdg);
    fChain->SetBranchAddress("mcshwr_MotherTrkId", mcshwr_MotherTrkId, &b_mcshwr_MotherTrkId);
