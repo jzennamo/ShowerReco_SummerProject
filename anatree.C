@@ -5,6 +5,10 @@
 #include <TCanvas.h>
 
 
+double Find_Angle(double angle);
+
+
+
 void anatree::Loop(Long64_t max_entry)
 {
 	//   To execute this code you will do this:
@@ -16,11 +20,35 @@ void anatree::Loop(Long64_t max_entry)
 	//      Root > t.Loop();       // Loop on all entries
 	// (or small number of events: Root > t.Loop(500)  )
 
-	TH1F* StartPointOffset = new TH1F("Start_Point_Offset", "Start Point Offset; Distance(cm); Number of Events", 25, 0, 1000);	//how far off is the shower start from the MC start; plot distance in m
+	TH1F* StartPointOffset = new TH1F("Start_Point_Offset", "Start Point Offset; Distance(cm); Number of Events", 250, 0, 10);	//how far off is the shower start from the MC start; plot distance in m
 	
-	TH1F* RatioTotDist = new TH1F("RatioTotDist", "Start Point Offset; Distance(cm); Number of Events", 600, 0, 150);
-	
-	
+	TH1F* Startpointoffsetgreaterthan60dist = new TH1F("Startpointoffsetgreaterthan60dist", "Start Point Offset; Distance(cm); Number of Events", 250, 0, 10);
+	TH1F* Startpointoffsetlessthan60dist = new TH1F("Startpointoffsetlessthan60dist", "Start Point Offset; Distance(cm); Number of Events", 250, 0, 10);
+
+	TH1F* Startpointoffsetgreaterthan50dist = new TH1F("Startpointoffsetgreaterthan50dist", "Start Point Offset; Distance(cm); Number of Events", 250, 0, 10);
+	TH1F* Startpointoffsetgreaterthan70dist = new TH1F("Startpointoffsetgreaterthan70dist", "Start Point Offset; Distance(cm); Number of Events", 250, 0, 10);
+	TH1F* Startpointoffsetgreaterthan80dist = new TH1F("Startpointoffsetgreaterthan80dist", "Start Point Offset; Distance(cm); Number of Events", 250, 0, 10);
+	TH1F* Startpointoffsetgreaterthan90dist = new TH1F("Startpointoffsetgreaterthan90dist", "Start Point Offset; Distance(cm); Number of Events", 250, 0, 10);
+	TH1F* Startpointoffsetgreaterthan100dist = new TH1F("Startpointoffsetgreaterthan100dist", "Start Point Offset; Distance(cm); Number of Events", 250, 0, 10);
+
+	TH1F* Uplanedist = new TH1F("Uplanedist", "Start Point Offset; Distance(cm); Number of Events", 200, 0, 10);
+	TH1F* Vplanedist = new TH1F("Vplanedist", "Start Point Offset; Distance(cm); Number of Events", 200, 0, 10);
+	TH1F* Yplanedist = new TH1F("Yplanedist", "Start Point Offset; Distance(cm); Number of Events", 200, 0, 10);
+
+	TH1F* ParallelAngledist = new TH1F("ParallelAngledist", "Start Point Offset; Distance(cm); Number of Events", 200, 0, 10);
+	TH1F* NotParallelAngledist = new TH1F("NotParallelAngledist", "Start Point Offset; Distance(cm); Number of Events", 200, 0, 10);
+
+
+	TH1F* Unotplanedist = new TH1F("Unotplanedist", "Start Point Offset; Distance(cm); Number of Events", 200, 0, 10);
+	TH1F* Vnotplanedist = new TH1F("Vnotplanedist", "Start Point Offset; Distance(cm); Number of Events", 200, 0, 10);
+	TH1F* Ynotplanedist = new TH1F("Ynotplanedist", "Start Point Offset; Distance(cm); Number of Events", 200, 0, 10);
+
+
+	TH1F* GoodAngledist = new TH1F("GoodAngledist", "Start Point Offset; Distance(cm); Number of Events", 100, 0, 10);
+
+	TH1F* Anglegreaterthan60dist = new TH1F("Anglegreaterthan60", "Start Point Offset; Distance(cm); Number of Events", 100, 0, 10);
+	TH1F* Anglelessthanminus60dist = new TH1F("Anglelessthanminus60", "Start Point Offset; Distance(cm); Number of Events", 100, 0, 10);
+
 	TH1F* NumShowers = new TH1F("Number_of_Showers", "; Number of showers; Number of Events", 6, -0.5, 5.5);		// plot number of showers
 	TH1F* PhotonDist = new TH1F("Photon_Distance", "; Photon Distance(cm); Number of Particles", 50, 50, 2000);	// how far does a brem photon travel
 	//TH1F* xAngleOffset = new TH1F("X_angle_Offset ", "; Angle(degrees); Number of Particles", 360, 0, 360);		// how far off is the direction in the x plane in degrees
@@ -51,13 +79,13 @@ void anatree::Loop(Long64_t max_entry)
 
 	TH1F* ShowersGoodRecoEng = new TH1F("Showers_Good_Reco ", "Energy of Good Reconstructed Showers; Energy(MeV); Number of Events", 25, 100, 2000);
 
-	TH1F* EffShowersGoodRecoEng = new TH1F("ShowersEffGoodRecoEng", ";Energy(MeV); ", 25, 100, 2000); // GoodRecoEng/Energy
+	TH1F* EffShowersGoodRecoEng = new TH1F("ShowersEffGoodRecoEng", ";Energy(MeV);Efficiency ", 25, 100, 2000); // GoodRecoEng/Energy
 
-	TH1F* EffNumShowers = new TH1F("EffNumShowers", "; Energy(MeV);", 25, 100, 2000); // Efficiency of at Least One Reconstructed Shower
+	TH1F* EffNumShowers = new TH1F("EffNumShowers", "; Energy(MeV);Efficiency", 25, 100, 2000); // Efficiency of at Least One Reconstructed Shower
 	TH1F* EffDist = new TH1F("EffDist", ";Energy(MeV);", 25, 100, 2000); // StartPointOffsetGoodRecoEng/Energy
 	TH1F* EffSuperDist = new TH1F("EffSuperDist", ";Energy(MeV);", 25, 100, 2000); // StartPointOffsetGoodRecoEng/Energy
 
-	TH1F* EffGoodRecoEng = new TH1F("EffGoodRecoEng", ";Energy(MeV); ", 25, 100, 2000); // GoodRecoEng/Energy
+	TH1F* EffGoodRecoEng = new TH1F("EffGoodRecoEng", ";Energy(MeV); Efficiency", 25, 100, 2000); // GoodRecoEng/Energy
 	TH1F* EffNoShowerEng = new TH1F("EffNoShowerEng", "; Energy(MeV); ", 25, 100, 2000); // NoShowerEng/Energy
 	// TH1F* EffStartPointEng = new TH1F("EffStartPointEng", " Efficiency of Showers with Good Start Point Offset;Energy(MeV); ", 25, 100, 2000); // StartPointOffsetGoodRecoEng/Energy
 
@@ -75,6 +103,40 @@ void anatree::Loop(Long64_t max_entry)
 	TH1F* Diffxdist = new TH1F("Diffxdist", "Shower Start - MC Start (x Direction); Distance(cm); Number of Events", 300, -3, 3);
 	TH1F* Diffydist = new TH1F("Diffydist", "Shower Start - MC Start (y Direction); Distance(cm); Number of Events", 300, -3, 3);
 	TH1F* Diffzdist = new TH1F("Diffzdist", "Shower Start - MC Start (z Direction); Distance(cm); Number of Events", 300, -3, 3);
+
+	TH1F* Diffxdistmaggreaterthan60 = new TH1F("Diffxdistmaggreaterthan60", "Shower Start - MC Start (x Direction); Distance(cm); Number of Events", 300, -3, 3);
+	TH1F* Diffxdistmaglessthan60 = new TH1F("Diffxdistmaglessthan60", "Shower Start - MC Start (x Direction); Distance(cm); Number of Events", 300, -3, 3);
+
+	TH1F* Diffydistmaggreaterthan60 = new TH1F("Diffydistmaggreaterthan60", "Shower Start - MC Start (y Direction); Distance(cm); Number of Events", 300, -3, 3);
+	TH1F* Diffydistmaglessthan60 = new TH1F("Diffydistmaglessthan60", "Shower Start - MC Start (y Direction); Distance(cm); Number of Events", 300, -3, 3);
+
+	TH1F* Diffzdistmaggreaterthan60 = new TH1F("Diffzdistmaggreaterthan60", "Shower Start - MC Start (z Direction); Distance(cm); Number of Events", 300, -3, 3);
+	TH1F* Diffzdistmaglessthan60 = new TH1F("Diffzdistmaglessthan60", "Shower Start - MC Start (z Direction); Distance(cm); Number of Events", 300, -3, 3);
+
+
+	TH1F* Diffxdistgreaterthan60 = new TH1F("Diffxdistgreaterthan60", "Shower Start - MC Start (x Direction); Distance(cm); Number of Events", 300, -3, 3);
+	TH1F* Diffxdistlessthanminus60 = new TH1F("Diffxdistlessthanminus60", "Shower Start - MC Start (x Direction); Distance(cm); Number of Events", 300, -3, 3);
+
+	TH1F* Diffydistgreaterthan60 = new TH1F("Diffydistgreaterthan60", "Shower Start - MC Start (y Direction); Distance(cm); Number of Events", 300, -3, 3);
+	TH1F* Diffydistlessthanminus60 = new TH1F("Diffydistlessminusthan60", "Shower Start - MC Start (y Direction); Distance(cm); Number of Events", 300, -3, 3);
+
+	TH1F* Diffzdistgreaterthan60 = new TH1F("Diffzdistgreaterthan60", "Shower Start - MC Start (z Direction); Distance(cm); Number of Events", 300, -3, 3);
+	TH1F* Diffzdistlessthanminus60 = new TH1F("Diffzdistlessthanminus60", "Shower Start - MC Start (z Direction); Distance(cm); Number of Events", 300, -3, 3);
+
+	TH1F* Posmomentumxdist = new TH1F("Posmomentumxdist", "Shower Start - MC Start (x Direction); Distance(cm); Number of Events", 300, -3, 3);
+	TH1F* Negmomentumxdist = new TH1F("Negmomemtumxdist", "Shower Start - MC Start (x Direction); Distance(cm); Number of Events", 300, -3, 3);
+
+	TH1F* Posmomentumydist = new TH1F("Posmomentumydist", "Shower Start - MC Start (y Direction); Distance(cm); Number of Events", 300, -3, 3);
+	TH1F* Negmomentumydist = new TH1F("Negmomemtumydist", "Shower Start - MC Start (y Direction); Distance(cm); Number of Events", 300, -3, 3);
+
+	TH1F* Posmomentumzdist = new TH1F("Posmomentumzdist", "Shower Start - MC Start (z Direction); Distance(cm); Number of Events", 300, -3, 3);
+	TH1F* Negmomentumzdist = new TH1F("Negmomemtumzdist", "Shower Start - MC Start (z Direction); Distance(cm); Number of Events", 300, -3, 3);
+
+	TH1F* Startpointoffsetxzangledistlessthan = new TH1F("Startpointoffsetxzangledistlessthan", "Start offset MC xz Angle; Distance(cm); Number of Events", 250, 0, 10);
+	TH1F* EndStartpointoffsetxzangledist = new TH1F("EndStartpointoffsetxzangledist", "Start offset MC xz Angle; Distance(cm); Number of Events", 250, 0, 10);
+	TH1F* EndStartpointoffsetyzangledist = new TH1F("EndStartpointoffsetyzangledist", "Start offset MC xz Angle; Distance(cm); Number of Events", 250, 0, 10);
+	TH1F* NotEndStartpointoffsetxzangledist = new TH1F("NotEndStartpointoffsetxzangledist", "Start offset MC xz Angle; Distance(cm); Number of Events", 250, 0, 10);
+	TH1F* NotEndStartpointoffsetyzangledist = new TH1F("NotEndStartpointoffsetyzangledist", "Start offset MC xz Angle; Distance(cm); Number of Events", 250, 0, 10);
 
 	TH1F* DiffMCxdist = new TH1F("DiffMCxdist", "Shower Start - MC Shower Start (x Direction); Distance(cm); Number of Events", 300, -3, 3);
 	TH1F* DiffMCydist = new TH1F("DiffMCydist", "Shower Start - MC Shower Start (y Direction); Distance(cm); Number of Events", 300, -3, 3);
@@ -99,6 +161,7 @@ void anatree::Loop(Long64_t max_entry)
 
 	THStack * ShowerEnergy = new THStack("Shower", "");
 	THStack * ShowerEnergy1 = new THStack("Shower1", "");
+	THStack * ycomponent = new THStack("ycomponent", "");
 
 	THStack * ShowerAngle = new THStack("ShowerAngle", "");
 
@@ -113,7 +176,8 @@ void anatree::Loop(Long64_t max_entry)
 	//TH1F* DiffChargedPartEng = new TH1F("DiffChargedPartEng ", "; Energy(MeV); Number of Events", 100, -1000, 1000);
 
 	TH1F* Nshowersratioeng = new TH1F("Nshowersratioeng ", "; Energy(MeV); Number of Events", 25, 100, 2000);
-
+	
+	
 	TH1F* xzdiffang = new TH1F("xzdiffang ", "; theta_xz (Degrees); Number of Events", 180, 0, 180);
 	TH1F* yzdiffang = new TH1F("yzdiffang ", "; theta_yz (Degrees); Number of Events", 180, 0, 180);
 	
@@ -130,8 +194,6 @@ void anatree::Loop(Long64_t max_entry)
 
 	TH1F* MCxzangle = new TH1F("MCxzangle ", "; Angle(Degrees); Number of Events", 36, -180, 180);
 	TH1F* MCyzangle = new TH1F("MCyzangle ", "; Angle(Degrees); Number of Events", 36, -180, 180);
-	
-	TH1F* RatioTotxzAng = new TH1F("RatioTotxzAng", "; Angle(Degrees); Number of Events", 36, -180, 180);
 
 	TH1F* DistTPC1 = new TH1F("DistTPC1", "; Distance; Number of Events", 50, -500, 500);
 	TH1F* Disttot1 = new TH1F("Disttot1", "; Distance; Number of Events", 50, -500, 500);
@@ -148,10 +210,70 @@ void anatree::Loop(Long64_t max_entry)
 	TH1F* FirstParticleEng = new TH1F(" ", "; Energy(MeV); Number of Events", 25, 100, 2000);
 	TH1F* EffEng = new TH1F("EffEng ", "; Energy(MeV); Number of Events", 25, 100, 2000);
 
+	TH1F* Negativededxdist = new TH1F("Negativededxdist", "Start Point Offset; Distance(cm); Number of Events", 1000, 0, 100);
+	TH1F* Negativededxxzang = new TH1F("Negativededxxzang ", "; theta_xz (Degrees); Number of Events", 180, 0, 180);
+	TH1F* Negativededxyzang = new TH1F("Negativededxyzang ", "; theta_yz (Degrees); Number of Events", 180, 0, 180);
+
 	TH1F* DiffParticleeng = new TH1F("DiffParticleeng", "; Energy(MeV); Number of Events", 2000, -2000, 2000);
 
+	TH1F* RatiolessTotDist = new TH1F("RatiolessTotDist", "Start Point Offset; Distance(cm); Number of Events", 600, 0, 150);
+	TH1F* RatiomoreTotDist = new TH1F("RatiomoreTotDist", "Start Point Offset; Distance(cm); Number of Events", 600, 0, 150);
 
+	TH1F* RatiolessTotxzAng = new TH1F("RatiolessTotxzAng", "; Angle(Degrees); Number of Events", 180, 0, 180);
+	TH1F* RatiomoreTotxzAng = new TH1F("RatiomoreTotxzAng", "; Angle(Degrees); Number of Events", 180, 0, 180);
 
+	TH1F* RatiolessTotyzAng = new TH1F("RatiolessTotyzAng", "; Angle(Degrees); Number of Events", 180, 0, 180);
+	TH1F* RatiomoreTotyzAng = new TH1F("RatiomoreTotyzAng", "; Angle(Degrees); Number of Events", 180, 0, 180);
+
+	TH1F* RatiolessTotdedx = new TH1F("RatiolessTotdedx", "; ; Number of Events", 60, -15, 15);
+	TH1F* Startoffsetdistdedx = new TH1F("Startoffsetdistdedx", "; ; Number of Events", 60, -15, 15);
+
+	TH1F* Startdir_MCshwrxzang = new TH1F("Startdir_MCshwrxzang ", "; theta (Degrees); Number of Events", 180, 0, 180);
+	TH1F* Startdir_MCshwryzang = new TH1F("Startdir_MCshwryzang ", "; theta (Degrees); Number of Events", 180, 0, 180);
+
+	TH1F* Startdir_shwrxzang = new TH1F("Startdir_shwrxzang ", "; theta (Degrees); Number of Events", 180, 0, 180);
+	TH1F* Startdir_shwryzang = new TH1F("Startdir_shwryzang ", "; theta (Degrees); Number of Events", 180, 0, 180);
+
+	TH1F* Startdir_firstpartxzang = new TH1F("Startdir_firstpartxzang ", "; theta (Degrees); Number of Events", 180, 0, 180);
+	TH1F* Startdir_firstpartyzang = new TH1F("Startdir_firstpartyzang ", "; theta (Degrees); Number of Events", 180, 0, 180);
+
+	TH1F* MCshwr_firstpartxzang = new TH1F("MCshwr_firstpartxzang ", "; theta (Degrees); Number of Events", 180, 0, 180);
+	TH1F* MCshwr_firstpartyzang = new TH1F("MCshwr_firstpartyzang ", "; theta (Degrees); Number of Events", 180, 0, 180);
+
+	TH1F* Shwr_firstpartxzang = new TH1F("Shwr_firstpartxzang ", "; theta (Degrees); Number of Events", 180, 0, 180);
+	TH1F* Shwr_firstpartyzang = new TH1F("Shwr_firstpartyzang ", "; theta (Degrees); Number of Events", 180, 0, 180);
+
+	TH1F* bestplanededx = new TH1F("bestplanededx ", "; MeV/cm; Number of Events", 50, -20, 20);
+	TH1F* diffshower_dedx = new TH1F("diffshower_dedx ", "; MeV/cm; Number of Events", 50, -20, 20);
+
+	TH1F* MCshower_dedx = new TH1F("MCshower_dedx ", "; ; Number of Events", 50, -50, 50);
+	TH1F* Recoshowerbest_dedx = new TH1F("Recoshowerbest_dedx ", "; ; Number of Events", 50, -50, 50);
+
+	TH1F* Recoshower1_dedx = new TH1F("Recoshower1_dedx ", "; ; Number of Events", 50, -50, 50);
+	TH1F* Recoshower2_dedx = new TH1F("Recoshower2_dedx ", "; ; Number of Events", 50, -50, 50);
+	TH1F* Recoshower3_dedx = new TH1F("Recoshower3_dedx ", "; ; Number of Events", 50, -50, 50);
+
+	THStack * Negativededx = new THStack("Negativededx", "");
+
+	TH1F* NotinTPCdedx = new TH1F("NotinTPCdedx", "; ; Number of Events", 25, -100, 0);
+	TH1F* PoorRecodedx = new TH1F("PoorRecodedx", "; ; Number of Events", 25, -100, 0);
+	TH1F* Negdedx = new TH1F("Negdedx", "; ; Number of Events", 25, -100, 0);
+
+	TH1F* NegativeEnergyFirstPartdedx = new TH1F("NegativeEnergyFirstPartdedx ", "; Energy(MeV); Number of Events", 25, 100, 2000);
+
+	TH1F* NegativededxShowerEnergy = new TH1F("NegativededxShowerEnergy ", "; Energy(MeV); Number of Events", 25, 100, 2000);
+	TH1F* NegativededxFirstPart_MCshwreng = new TH1F("NegativededxFirstPart_MCshwreng ", "; Energy(MeV); Number of Events", 40, -2000, 2000);
+
+	TH1F* NegativededxMCShowerEnergy = new TH1F("NegativededxMCShowerEnergy ", "; Energy(MeV); Number of Events", 25, 100, 2000);
+	TH1F* Negativededxfirstpart_Recoshowerenergy = new TH1F("Negativededxfirstpart_Recoshowerenergy ", "; Energy(MeV); Number of Events", 40, -2000, 2000);
+	TH1F* NegativededxMCshwr_Recoshowerenergy = new TH1F("NegativededxMCshwr_Recoshowerenergy ", "; Energy(MeV); Number of Events", 40, -2000, 2000);
+
+	TH2D* Positionxy = new TH2D("Positionxy", " ; x distance (cm); y distance (cm)", 256, -128.0, 128.0, 117, -116.5, 116.5);
+	TH2D* Positionyz = new TH2D("Positionyz", " ; y distance (cm); z distance (cm)", 117, -116.5, 116.5, 1036, 0, 1036);
+
+	TH2D* DistvsAngleyz = new TH2D("DistvsAngleyz", " ; 3D distance (cm); yz Angle (degrees)", 250, 0, 10, 36, -180, 180);
+	TH2D* DistvsAnglexz = new TH2D("DistvsAnglexz", " ; 3D distance (cm); xz Angle (degrees)", 250, 0, 10, 36, -180, 180);
+	TH2D* DistvsAnglexy = new TH2D("DistvsAnglexy", " ; 3D distance (cm); xy Angle (degrees)", 250, 0, 10, 36, -180, 180);
 
 	if (fChain == 0) return;
 
@@ -225,7 +347,7 @@ void anatree::Loop(Long64_t max_entry)
 		bool YZAngle = false;		// true if the yz angle is within th minangle
 
 		double dist = 0;					// starting position distance from MC start
-		double EngMeV = mcshwr_CombEngE[0];		// Energy of the first particle in MeV
+		double EngMeV = mcshwr_CombEngE[0];	// Energy of the first particle in MeV
 		
 		double mindistance = 2.5;			// min distance that shower start can be from MC start
 		double radtodegrees = 180 / 3.14;	// conversion factor
@@ -236,26 +358,58 @@ void anatree::Loop(Long64_t max_entry)
 		
 		double tempdist = 0;				// variable to help find the shortest distance of a shower to the MC start
 		int goodshowernumber = 0;			// variables that saves the "best" shower...the shower that is closest to the MC start
-		double xzdiff = 0;
-		double yzdiff = 0;
-		double MCxz_angle = 0;
-		double MCyz_angle = 0;
-		double MCmag = 0;
-		double xz_angle = 0;
-		double yz_angle = 0;
-		double mag = 0;
+		double xzdiff = 0;					// xz angle offset
+		double yzdiff = 0;					// yz angle offset
+		double MCxz_angle = 0;				// MC xz angle
+		double MCyz_angle = 0;				// MC yz angle
+		double MCxy_angle;					// MC xy angle
+		double MCmag = 0;					// magnitude of the direction of the MC shower (using comb eng)
+		double xz_angle = 0;				// reconstructed shower xz angle
+		double yz_angle = 0;				// reconstructed shower yz angle
+		double mag = 0;						// mag of direction of reconstructed showers
+		double firstpartxz_angle = 0;		// xz angle using momentum of first MC particle
+		double firstpartyz_angle = 0;		// yz angle using momentum of first MC particle
+		double startxzdir = 0;				// using startdir to find xz direction
+		double startyzdir = 0;				// using startdir to find yz direction
 
+		// angle differences
+		double startdir_MCshwrxzang = 0;	// Startdir - MC shower xz angle
+		double startdir_MCshwryzang = 0;	// Startdir - MC shower yz angle
+		double startdir_shwrxzang = 0;		// Startdir - reconstructed shower xz angle
+		double startdir_shwryzang = 0;		// Startdir - reconstructed shower yz angle
+		double startdir_firstpartxzang = 0;	// Startdir - first MC particle xz angle
+		double startdir_firstpartyzang = 0;	// Startdir - first MC particle yz angle
+		double mcshwr_firstpartxzang = 0;	// MC shower start - first MC particle xz angle
+		double mcshwr_firstpartyzang = 0;	// MC shower start - first MC particle yz angle
+		double shwr_firstpartxzang = 0;		// reconstructed shower - first MC particle xz angle
+		double shwr_firstpartyzang = 0;		// reconstructed shower - first MC particle yz angle
+		
+		double startdirmag = 0;				// magnitude of the start direction	of MC shower using variables Startdir
+
+		double smallestdiffdedx = 0;		// this is the smallest difference between the calculated dedx and the MC dedx	
+		double tempdedx = 0;				// stores a temporary dedx value
+		int bestdedx = 0;					// this is the plane that has the min dedx
+
+		// if the number of showers is greater than one then we want to look at the energy and the angle offsets
 		if (nshowers > 0)
 		{
+			MoreThanOneShowerEng->Fill(EngMeV);
+			MoreThanOneShowerxzAng->Fill(xzdiff);
+			MoreThanOneShoweryzAng->Fill(yzdiff);
+		}
 
-			// distance formula
+		// nshowers has to be greater than 0 because at nshower == 0 the variables (shower start, etc) are not empty
+		if (nshowers > 0)
+		{
+			// distance formula to find the 3D displacement of the shower start and the MC shower start
 			dist = sqrt(pow((shwr_startx[0] - mcshwr_CombEngX[0]), 2) + pow((shwr_starty[0] - mcshwr_CombEngY[0]), 2) + pow((shwr_startz[0] - mcshwr_CombEngZ[0]), 2));
-			
+
+			// if there is more than one shower we want the shower that is closest to the MC shower start
 			if (nshowers > 1)
 			{
 				for (int i = 1; i < nshowers; i++)
 				{
-						// distance formula
+					// distance formula
 					tempdist = sqrt(pow((shwr_startx[i] - mcshwr_CombEngX[0]), 2) + pow((shwr_starty[i] - mcshwr_CombEngY[0]), 2) + pow((shwr_startz[i] - mcshwr_CombEngZ[0]), 2));
 
 					// we want the shower that is closest to the start of the MC shower
@@ -267,90 +421,573 @@ void anatree::Loop(Long64_t max_entry)
 				}
 			}
 
+			// fills it in with the shower start offset
 			StartPointOffset->Fill(dist);
-		
-			if (pdg == 11 || pdg == -11)
-			{
-				MCmag = sqrt(pow(mcshwr_startX[0], 2) + pow(mcshwr_startY[0], 2) + pow(mcshwr_startZ[0], 2));
 
-				// xz and yz angles of the MC shower
-				MCxz_angle = TMath::ATan2(mcshwr_startX[0] / MCmag, mcshwr_startZ[0] / MCmag);
-				MCyz_angle = TMath::ATan2(mcshwr_startY[0] / MCmag, mcshwr_startZ[0] / MCmag);
+			// xz and yz angles of the first particle
+			firstpartxz_angle = TMath::ATan2(Px[0] / P[0], Pz[0] / P[0]);
+			firstpartyz_angle = TMath::ATan2(Py[0] / P[0], Pz[0] / P[0]);
 
-				// xz and yz angles of the reconstructed shower
-				mag = sqrt(pow(shwr_startdcosx[goodshowernumber], 2) + pow(shwr_startdcosy[goodshowernumber], 2) + pow(shwr_startdcosz[goodshowernumber], 2));
-				xz_angle = TMath::ATan2(shwr_startdcosx[goodshowernumber] / mag, shwr_startdcosz[goodshowernumber] / mag);
-				yz_angle = TMath::ATan2(shwr_startdcosy[goodshowernumber] / mag, shwr_startdcosz[goodshowernumber] / mag);
-			}
+			// xz and yz angles using MC start directions
+			startdirmag = sqrt(pow(mcshwr_StartDirX[0], 2) + pow(mcshwr_StartDirY[0], 2) + pow(mcshwr_StartDirZ[0], 2));
+			startxzdir = TMath::ATan2(mcshwr_StartDirX[0] / startdirmag, mcshwr_StartDirZ[0] / startdirmag);
+			startyzdir = TMath::ATan2(mcshwr_StartDirY[0] / startdirmag, mcshwr_StartDirZ[0] / startdirmag);
 
-			else if (pdg == 22)
-			{
-				MCmag = sqrt(pow(mcshwr_endX[0], 2) + pow(mcshwr_endY[0], 2) + pow(mcshwr_endZ[0], 2));
+			// xz and yz angles of the MC shower
+			MCmag = sqrt(pow(mcshwr_CombEngPx[0], 2) + pow(mcshwr_CombEngPy[0], 2) + pow(mcshwr_CombEngPz[0], 2));
+			MCxz_angle = TMath::ATan2(mcshwr_CombEngPx[0] / MCmag, mcshwr_CombEngPz[0] / MCmag);
+			MCyz_angle = TMath::ATan2(mcshwr_CombEngPy[0] / MCmag, mcshwr_CombEngPz[0] / MCmag);
+			MCxy_angle = TMath::ATan2(mcshwr_CombEngPx[0] / MCmag, mcshwr_CombEngPy[0] / MCmag);
 
-				// xz and yz angles of the MC shower
-				MCxz_angle = TMath::ATan2(mcshwr_endX[0] / MCmag, mcshwr_endZ[0] / MCmag);
-				MCyz_angle = TMath::ATan2(mcshwr_endY[0] / MCmag, mcshwr_endZ[0] / MCmag);
-
-				// xz and yz angles of the reconstructed shower
-				mag = sqrt(pow(shwr_startdcosx[goodshowernumber], 2) + pow(shwr_startdcosy[goodshowernumber], 2) + pow(shwr_startdcosz[goodshowernumber], 2));
-				xz_angle = TMath::ATan2(shwr_startdcosx[goodshowernumber] / mag, shwr_startdcosz[goodshowernumber] / mag);
-				yz_angle = TMath::ATan2(shwr_startdcosy[goodshowernumber] / mag, shwr_startdcosz[goodshowernumber] / mag);
-
-				xzdiff
-			}
+			// xz and yz angles of the reconstructed shower
+			mag = sqrt(pow(shwr_startdcosx[goodshowernumber], 2) + pow(shwr_startdcosy[goodshowernumber], 2) + pow(shwr_startdcosz[goodshowernumber], 2));
+			xz_angle = TMath::ATan2(shwr_startdcosx[goodshowernumber] / mag, shwr_startdcosz[goodshowernumber] / mag);
+			yz_angle = TMath::ATan2(shwr_startdcosy[goodshowernumber] / mag, shwr_startdcosz[goodshowernumber] / mag);
 
 			// xz and yz angle difference between the MC shower and the reconstructed shower
 			xzdiff = fabs((xz_angle - MCxz_angle) * radtodegrees);
 			yzdiff = fabs((yz_angle - MCyz_angle) * radtodegrees);
 
-			
+			// makes sure the angle magnitude is between 0 to 180
+			xzdiff = Find_Angle(xzdiff);
+			yzdiff = Find_Angle(yzdiff);
 
-			// this makes sure the angle is within 0 - 180 degrees
-			if (xzdiff >= 180)
-			{
-				xzdiff = 360 - xzdiff;
-			}
-
-			if (yzdiff >= 180)
-			{
-				yzdiff = 360 - yzdiff;
-			}
-
+			// filled with the angle offsets
 			xzdiffang->Fill(xzdiff);
 			yzdiffang->Fill(yzdiff);
 
+			// filled with the MC angles
+			MCxzangle->Fill(MCxz_angle * radtodegrees);
+			MCyzangle->Fill(MCyz_angle * radtodegrees);
+
+			//filled with the shower angle
+			YZ_angle->Fill(yz_angle * radtodegrees);
+			XZ_angle->Fill(xz_angle * radtodegrees);
+
+			// start direction - MC shower angle
+			startdir_MCshwrxzang = fabs(startxzdir - MCxz_angle)*radtodegrees;
+			startdir_MCshwryzang = fabs(startyzdir - MCyz_angle)*radtodegrees;
 			
-		}
 
-		// Histogram (TH1F)  -> Fill(var) [function, var] 
+
+			// MC yz angle is greater than or equal to 50.0 degrees then we want to see the start position offset
+			if (fabs(MCyz_angle * radtodegrees) >= 50.0)
+			{
+				Startpointoffsetgreaterthan50dist->Fill(dist);
+			}
+
+			// magnitude of MC yz angle is greater than or equal to 60.0 degrees then we want to see the start position offset
+			if (fabs(MCyz_angle * radtodegrees) >= 60.0)
+			{
+				GoodAngledist->Fill(dist);
+				Startpointoffsetgreaterthan60dist->Fill(dist);
+
+				// magnitude of MC yz angle is between 90.0 and 180.0
+				if ((fabs(MCyz_angle * radtodegrees) >= 90.0) && (fabs(MCyz_angle * radtodegrees) <= 180.0))
+				{
+					EndStartpointoffsetyzangledist->Fill(dist);
+				}
+				else
+				{
+					NotEndStartpointoffsetyzangledist->Fill(dist);
+				}
+
+				/*
+				if (dist >= 1.2 && dist <= 1.8)
+				{
+					std::cout << "run: " << run << std::endl;
+					std::cout << "subrun: " << subrun << std::endl;
+					std::cout << "event: " << event << std::endl << std::endl;
+				}
+				*/
+			}
+			else
+			{
+				Startpointoffsetlessthan60dist->Fill(dist);
+			}
+
+			if (fabs(MCyz_angle * radtodegrees) >= 70.0)
+			{
+				Startpointoffsetgreaterthan70dist->Fill(dist);
+			}
+
+			if (fabs(MCyz_angle * radtodegrees) >= 80.0)
+			{
+				Startpointoffsetgreaterthan80dist->Fill(dist);
+			}
+
+			// if either angle is at 90 degrees
+			if ((fabs(MCxz_angle * radtodegrees) >= 90.0) || (fabs(MCyz_angle * radtodegrees) >= 90.0))
+			{
+				Startpointoffsetgreaterthan90dist->Fill(dist);
+			}
+
+			if (fabs(MCyz_angle * radtodegrees) >= 100.0)
+			{
+				Startpointoffsetgreaterthan100dist->Fill(dist);
+			}
+
+			if (MCyz_angle * radtodegrees >= 60.0)
+			{
+				Anglegreaterthan60dist->Fill(dist);
+			}
 	
-		if (nshowers == 0)
-		{
+			else if (MCyz_angle * radtodegrees <= -60.0)
+			{
+				Anglelessthanminus60dist->Fill(dist);
+			}
+			
+			// 2D of distance offset vs angle
 
-			//std::cout << "dist: " << dist << std::endl;
-			//std::cout << "shwr: " << shwr_startx[0] << std::endl;
-			//std::cout << "endp: " << StartPointx[0] << stdl::endl;
-			//std::cout << "show: " << nshowers << std::endl << std::endl;
+			//if ((dist >= 1.0) && (dist <= 2.0))
+			//{
+				DistvsAngleyz->Fill(dist, MCyz_angle * radtodegrees);
+				DistvsAnglexz->Fill(dist, MCxz_angle * radtodegrees);
+				DistvsAnglexy->Fill(dist, MCxy_angle * radtodegrees);
+				
+			//}
 
-			noshowerstartx->Fill(shwr_startx[0]);
-			//noshowshoweng->Fill(shwr_totEng)
-			//std::cout << "shower number: " << nshowers << std::endl;
-			//std::cout << "shower energy: " << shwr_totEng[0][0] << std::endl;
-			noshowerenergy->Fill(shwr_totEng[0][0]);
+			//magnitude of the MC xz angle is greater than or equal to 60.0 degrees
+			if ((fabs(MCxz_angle * radtodegrees) >= 60.0))
+			{
+				Startpointoffsetxzangledistlessthan->Fill(dist);
+
+				// magnitude of the MC xz angle is between 90.0 and 180.0 degrees
+				if ((fabs(MCxz_angle * radtodegrees) >= 90.0) && (fabs(MCxz_angle * radtodegrees) <= 180.0))
+				{
+					EndStartpointoffsetxzangledist->Fill(dist);
+				}
+				// or not
+				else
+				{
+					NotEndStartpointoffsetxzangledist->Fill(dist);
+				}
+			}
+
+			// parallel to either of the three wire planes
+			if ((MCyz_angle * radtodegrees <= 35.0) && (MCyz_angle * radtodegrees >= 25.0) || (MCyz_angle * radtodegrees <= -145.0) && (MCyz_angle * radtodegrees >= -155.0)
+				|| (MCyz_angle * radtodegrees >= -35.0) && (MCyz_angle * radtodegrees <= -25.0) || (MCyz_angle * radtodegrees >= 145.0) && (MCyz_angle * radtodegrees <= 155.0)
+			 || (MCyz_angle * radtodegrees >= 85.0) && (MCyz_angle * radtodegrees <= 95.0) || (MCyz_angle * radtodegrees >= -95.0) && (MCyz_angle * radtodegrees <= -85.0))
+			{
+				ParallelAngledist->Fill(dist);
+			}
+			else
+			{
+				NotParallelAngledist->Fill(dist);
+			}
+			// this checks if the MC yz angle is approximately parallel to the U wire plane
+			// not actually sure if this corresponds to the U plane or the V plane
+			if ((MCyz_angle * radtodegrees <= 35.0) && (MCyz_angle * radtodegrees >= 25.0) || (MCyz_angle * radtodegrees <= -145.0) && (MCyz_angle * radtodegrees >= -155.0))
+			{
+				Uplanedist->Fill(dist);
+
+				//std::cout << "run: " << run << std::endl;
+				//std::cout << "subrun: " << subrun << std::endl;
+				//std::cout << "event: " << event << std::endl << std::endl;
+			}
+
+			// if the angle is not parallel to the U/V plane then is the start position offset
+			else
+			{
+				Unotplanedist->Fill(dist);
+			}
+
+			// this checks if the MC yz angle is approximately parallel to the V wire plane
+			// not actually sure if this corresponds to the U plane or the V plane
+			if ((MCyz_angle * radtodegrees >= -35.0) && (MCyz_angle * radtodegrees <= -25.0) || (MCyz_angle * radtodegrees >= 145.0) && (MCyz_angle * radtodegrees <= 155.0))
+			{
+				Vplanedist->Fill(dist);
+			}
+			// if the angle is not parallel to the U/V plane then is the start position offset
+			else
+			{
+				Vnotplanedist->Fill(dist);
+			}
+
+			// this checks if the MC yz angle is approximately parallel to the Y wire plane
+			if ((MCyz_angle * radtodegrees >= 85.0) && (MCyz_angle * radtodegrees <= 95.0) || (MCyz_angle * radtodegrees >= -95.0) && (MCyz_angle * radtodegrees <= -85.0))
+			{
+				Yplanedist->Fill(dist);
+			}
+			// if the angle is not parallel to the Y plane then what is the start position offset
+			else
+			{
+				Ynotplanedist->Fill(dist);
+			}
+			
+			// checks what is 0 degrees and what is 90 degrees
+			/*if (fabs(MCxz_angle * radtodegrees) <= 2.0)
+			{
+				std::cout << "x: " << Px[0] << std::endl;
+				std::cout << "y: " << Py[0] << std::endl;
+				std::cout << "z: " << Pz[0] << std::endl;
+			}
+			*/
+
+			startdir_MCshwrxzang = Find_Angle(startdir_MCshwrxzang);
+			startdir_MCshwryzang = Find_Angle(startdir_MCshwryzang);
+
+			Startdir_MCshwrxzang->Fill(startdir_MCshwrxzang);
+			Startdir_MCshwryzang->Fill(startdir_MCshwryzang);
+
+			// start direction - shower angle
+			startdir_shwrxzang = fabs(startxzdir - xz_angle)*radtodegrees;
+			startdir_shwryzang = fabs(startyzdir - yz_angle)*radtodegrees;
+
+			startdir_shwrxzang = Find_Angle(startdir_shwrxzang);
+			startdir_shwryzang = Find_Angle(startdir_shwryzang);
+
+			Startdir_shwrxzang->Fill(startdir_shwrxzang);
+			Startdir_shwryzang->Fill(startdir_shwryzang);
+
+			// start direction - MC first particle
+			startdir_firstpartxzang = fabs(startxzdir - firstpartxz_angle)*radtodegrees;
+			startdir_firstpartyzang = fabs(startyzdir - firstpartyz_angle)*radtodegrees;
+
+			startdir_firstpartxzang = Find_Angle(startdir_firstpartxzang);
+			startdir_firstpartyzang = Find_Angle(startdir_firstpartyzang);
+
+			Startdir_firstpartxzang->Fill(startdir_firstpartxzang);
+			Startdir_firstpartyzang->Fill(startdir_firstpartyzang);
+
+			// MC shower - MC first particle
+			mcshwr_firstpartxzang = fabs(MCxz_angle - firstpartxz_angle)*radtodegrees;
+			mcshwr_firstpartyzang = fabs(MCyz_angle - firstpartyz_angle)*radtodegrees;
+
+			mcshwr_firstpartxzang = Find_Angle(mcshwr_firstpartxzang);
+			mcshwr_firstpartyzang = Find_Angle(mcshwr_firstpartyzang);
+
+			MCshwr_firstpartxzang->Fill(mcshwr_firstpartxzang);
+			MCshwr_firstpartyzang->Fill(mcshwr_firstpartyzang);
+
+			// shower start - first particle
+			shwr_firstpartxzang = fabs(xz_angle - firstpartxz_angle)*radtodegrees;
+			shwr_firstpartyzang = fabs(yz_angle - firstpartyz_angle)*radtodegrees;
+
+			shwr_firstpartxzang = Find_Angle(shwr_firstpartxzang);
+			shwr_firstpartyzang = Find_Angle(shwr_firstpartyzang);
+
+			Shwr_firstpartxzang->Fill(shwr_firstpartxzang);
+			Shwr_firstpartyzang->Fill(shwr_firstpartyzang);
+
+			// we also want to compare the starting position of the shower to the starting position of the first particle
+			// any shower number greater than 0
+			if (pdg[0] == 11 || pdg[0] == -11)
+			{
+					// difference in the reconstructed shower start position and the first particle in the MC truth
+					Diffxdist->Fill(shwr_startx[goodshowernumber] - StartPointx[0]);
+					Diffydist->Fill(shwr_starty[goodshowernumber] - StartPointy[0]);
+					Diffzdist->Fill(shwr_startz[goodshowernumber] - StartPointz[0]);
+
+					// difference in the reconstructed shower start position and the MC shower comb energy start
+					DiffMCCombxdist->Fill(shwr_startx[goodshowernumber] - mcshwr_CombEngX[0]);
+					DiffMCCombydist->Fill(shwr_starty[goodshowernumber] - mcshwr_CombEngY[0]);
+					DiffMCCombzdist->Fill(shwr_startz[goodshowernumber] - mcshwr_CombEngZ[0]);
+
+					// difference in the reconstructed shower start and the MC shower start
+					DiffMCxdist->Fill(shwr_startx[goodshowernumber] - mcshwr_startX[0]);
+					DiffMCydist->Fill(shwr_starty[goodshowernumber] - mcshwr_startY[0]);
+					DiffMCzdist->Fill(shwr_startz[goodshowernumber] - mcshwr_startZ[0]);
+
+					// difference in the MC shower comb energy start and the MC shower start
+					DiffMCCxdist->Fill(mcshwr_CombEngX[0] - mcshwr_startX[0]);
+					DiffMCCydist->Fill(mcshwr_CombEngY[0] - mcshwr_startY[0]);
+					DiffMCCzdist->Fill(mcshwr_CombEngZ[0] - mcshwr_startZ[0]);
+
+					// MC yz angle is greater than 60 degrees then fill with the shower start difference
+					if ((fabs(MCyz_angle * radtodegrees) >= 60.0))
+					{
+						Diffxdistmaggreaterthan60->Fill(shwr_startx[goodshowernumber] - StartPointx[0]);
+						Diffydistmaggreaterthan60->Fill(shwr_starty[goodshowernumber] - StartPointy[0]);
+						Diffzdistmaggreaterthan60->Fill(shwr_startz[goodshowernumber] - StartPointz[0]);
+					
+						//std::cout << "run: " << run << std::endl;
+						//std::cout << "subrun: " << subrun << std::endl;
+						//std::cout << "event: " << event << std::endl << std::endl;
+						
+					}
+
+					else
+					{
+						Diffxdistmaglessthan60->Fill(shwr_startx[goodshowernumber] - StartPointx[0]);
+						Diffydistmaglessthan60->Fill(shwr_starty[goodshowernumber] - StartPointy[0]);
+						Diffzdistmaglessthan60->Fill(shwr_startz[goodshowernumber] - StartPointz[0]);
+					}
+
+					if ((MCyz_angle * radtodegrees >= 60.0) && (MCyz_angle * radtodegrees <= 180.0))
+					{
+						Diffxdistgreaterthan60->Fill(shwr_startx[goodshowernumber] - StartPointx[0]);
+						Diffydistgreaterthan60->Fill(shwr_starty[goodshowernumber] - StartPointy[0]);
+						Diffzdistgreaterthan60->Fill(shwr_startz[goodshowernumber] - StartPointz[0]);
+					}
+
+					else if ((MCyz_angle * radtodegrees >= -180.0) && (MCyz_angle * radtodegrees <= -60.0))
+					{
+						Diffxdistlessthanminus60->Fill(shwr_startx[goodshowernumber] - StartPointx[0]);
+						Diffydistlessthanminus60->Fill(shwr_starty[goodshowernumber] - StartPointy[0]);
+						Diffzdistlessthanminus60->Fill(shwr_startz[goodshowernumber] - StartPointz[0]);
+					}
+
+					// we want to see how the start position is bias
+					// whether the shower start is before the actual shower start or if it is after the atual shower start
+					if (Px[0] > 0)
+					{
+						Posmomentumxdist->Fill(shwr_startx[goodshowernumber] - StartPointx[0]);
+					}
+
+					else
+					{
+						Negmomentumxdist->Fill(shwr_startx[goodshowernumber] - StartPointx[0]);
+					}
+
+					if (Py[0] > 0)
+					{
+						Posmomentumydist->Fill(shwr_starty[goodshowernumber] - StartPointy[0]);
+					}
+
+					else
+					{
+						Negmomentumydist->Fill(shwr_starty[goodshowernumber] - StartPointy[0]);
+					}
+
+					if (Pz[0] > 0)
+					{
+						Posmomentumzdist->Fill(shwr_startz[goodshowernumber] - StartPointz[0]);
+					}
+
+					else
+					{
+						Negmomentumzdist->Fill(shwr_startz[goodshowernumber] - StartPointz[0]);
+					}
+			
+			}
+
+			else if (pdg[0] == 22)
+			{
+				// calculate the start positon offset
+				// for first particle in MC truth
+				Diffxdist->Fill(shwr_startx[goodshowernumber] - EndPointx[0]);
+				Diffydist->Fill(shwr_starty[goodshowernumber] - EndPointy[0]);
+				Diffzdist->Fill(shwr_startz[goodshowernumber] - EndPointz[0]);
+
+				//for MC shower comb energy
+				DiffMCCombxdist->Fill(shwr_startx[goodshowernumber] - mcshwr_CombEngX[0]);
+				DiffMCCombydist->Fill(shwr_starty[goodshowernumber] - mcshwr_CombEngY[0]);
+				DiffMCCombzdist->Fill(shwr_startz[goodshowernumber] - mcshwr_CombEngZ[0]);
+
+				//  for MC shower end
+				DiffMCxdist->Fill(shwr_startx[goodshowernumber] - mcshwr_endX[0]);
+				DiffMCydist->Fill(shwr_starty[goodshowernumber] - mcshwr_endY[0]);
+				DiffMCzdist->Fill(shwr_startz[goodshowernumber] - mcshwr_endZ[0]);
+
+				DiffMCCxdist->Fill(mcshwr_CombEngX[0] - mcshwr_endX[0]);
+				DiffMCCydist->Fill(mcshwr_CombEngY[0] - mcshwr_endY[0]);
+				DiffMCCzdist->Fill(mcshwr_CombEngZ[0] - mcshwr_endZ[0]);
+				
+				if ((fabs(MCyz_angle * radtodegrees) >= 60.0))
+				{
+					Diffxdistmaggreaterthan60->Fill(shwr_startx[goodshowernumber] - EndPointx[0]);
+					Diffydistmaggreaterthan60->Fill(shwr_starty[goodshowernumber] - EndPointy[0]);
+					Diffzdistmaggreaterthan60->Fill(shwr_startz[goodshowernumber] - EndPointz[0]);
+				}
+
+				else
+				{
+					Diffxdistmaglessthan60->Fill(shwr_startx[goodshowernumber] - EndPointx[0]);
+					Diffydistmaglessthan60->Fill(shwr_starty[goodshowernumber] - EndPointy[0]);
+					Diffzdistmaglessthan60->Fill(shwr_startz[goodshowernumber] - EndPointz[0]);
+				}
+
+				if ((MCyz_angle * radtodegrees >= 60.0) && (MCyz_angle * radtodegrees <= 180.0))
+				{
+					Diffxdistgreaterthan60->Fill(shwr_startx[goodshowernumber] - EndPointx[0]);
+					Diffydistgreaterthan60->Fill(shwr_starty[goodshowernumber] - EndPointy[0]);
+					Diffzdistgreaterthan60->Fill(shwr_startz[goodshowernumber] - EndPointz[0]);
+				}
+
+				else if ((MCyz_angle * radtodegrees >= -180.0) && (MCyz_angle * radtodegrees <= -60.0))
+				{
+					Diffxdistlessthanminus60->Fill(shwr_startx[goodshowernumber] - EndPointx[0]);
+					Diffydistlessthanminus60->Fill(shwr_starty[goodshowernumber] - EndPointy[0]);
+					Diffzdistlessthanminus60->Fill(shwr_startz[goodshowernumber] - EndPointz[0]);
+				}
+
+				// we want to see how the start position is bias
+				// whether the shower start is before the actual shower start or if it is after the atual shower start
+				if (Px[0] > 0)
+				{
+					Posmomentumxdist->Fill(shwr_startx[goodshowernumber] - EndPointx[0]);
+				}
+				else
+				{
+					Negmomentumxdist->Fill(shwr_startx[goodshowernumber] - EndPointx[0]);
+				}
+				if (Py[0] > 0)
+				{
+					Posmomentumydist->Fill(shwr_starty[goodshowernumber] - EndPointy[0]);
+				}
+				else
+				{
+					Negmomentumydist->Fill(shwr_starty[goodshowernumber] - EndPointy[0]);
+				}
+				if (Pz[0] > 0)
+				{
+					Posmomentumzdist->Fill(shwr_startz[goodshowernumber] - EndPointz[0]);
+				}
+				else
+				{
+					Negmomentumzdist->Fill(shwr_startz[goodshowernumber] - EndPointz[0]);
+				}
+			}
+
+			// if the angles are within the cut then the boolean variable is true
+			if (xzdiff < minangle)
+			{
+				XZAngle = true;
+			}
+			if (yzdiff < minangle)
+			{
+				YZAngle = true;
+			}
+
+			// if both booleans are true then Angle is true
+			if (XZAngle && YZAngle)
+			{
+				Angle = true;
+			}
 		}
 
-		if (nshowers == 1)
+		// looking at events with only one shower
+		// we first find the plane that has the smallest dedx value
+		// compare that value with the value of the dedx of the best plane
+		if (nshowers > 0)
 		{
-			oneshowerstartx->Fill(shwr_startx[0]);
-		}
-		
-		Showerstartx->Fill(shwr_startx[0]);
-		Showerstarty->Fill(shwr_starty[0]);
-		Showerstartz->Fill(shwr_startz[0]);
+			smallestdiffdedx = 0;	// this is the smallest difference between the calculated dedx and the MC dedx
+			bestdedx = 0;			// this is the plane that has the smallest difference in dedx
+			tempdedx = 0;			// this is a variable holder
 
-		MCstartx->Fill(mcshwr_startX[0]);
-		MCstarty->Fill(mcshwr_startY[0]);
-		MCstartz->Fill(mcshwr_startZ[0]);
+			for (int i = 0; i < 3; i++)
+			{
+				smallestdiffdedx = fabs(mcshwr_dEdx[0] - shwr_dedx[0][0]);
+				tempdedx = fabs(mcshwr_dEdx[0] - shwr_dedx[0][i]);
+
+				if (smallestdiffdedx > tempdedx)
+				{
+					smallestdiffdedx = tempdedx;
+					bestdedx = i;
+				}
+			}
+
+			// checks to see if the best plane has the best dedx?
+			bestplanededx->Fill(shwr_dedx[0][bestdedx] - shwr_dedx[0][shwr_bestplane[0]]);
+
+			// this is the difference in dedx of the MC and of the Reconstructed Shower with the dedx of the min plane
+			diffshower_dedx->Fill(shwr_dedx[goodshowernumber][bestdedx] - mcshwr_dEdx[0]);
+
+			MCshower_dedx->Fill(mcshwr_dEdx[0]);
+			Recoshowerbest_dedx->Fill(shwr_dedx[goodshowernumber][bestdedx]);
+
+			Recoshower1_dedx->Fill(shwr_dedx[0][0]);
+			Recoshower2_dedx->Fill(shwr_dedx[0][1]);
+			Recoshower3_dedx->Fill(shwr_dedx[0][2]);
+		}
+
+		// negative dedx
+		// we first check if any of the planes have a negative dedx
+		if ((shwr_dedx[0][0] < 0) || (shwr_dedx[0][1] < 0) || (shwr_dedx[0][2]) < 0))
+		{
+			// fill with the position of the first MC particle
+			if (pdg[0] == 11 || pdg[0] == -11)
+			{
+				Positionxy->Fill(StartPointx[0], StartPointy[0]);
+				Positionyz->Fill(StartPointy[0], StartPointz[0]);
+			}
+			else
+			{
+				Positionxy->Fill(EndPointx[0], EndPointy[0]);
+				Positionyz->Fill(StartPointy[0], StartPointz[0]);
+			}
+			// values of the negative dedx in the first plane
+			if ((shwr_dedx[0][0] < 0))
+			{
+				Negdedx->Fill(shwr_dedx[0][0]);
+
+				// if dedx is negative is the shower in the tpc?
+				if (mcshwr_dEdx[0] == -99999)
+				{
+					NotinTPCdedx->Fill(shwr_dedx[0][0]);
+				}
+				else
+				{
+					// if it is in the TPC is it poorly reconstructed?
+					if ((dist > 2.5) || (xzdiff > 15) || (yzdiff > 15))
+					{
+						PoorRecodedx->Fill(shwr_dedx[0][0]);
+					}
+				}
+			}
+
+			// values of the negative dedx in the second plane
+			else if (shwr_dedx[0][1] < 0)
+			{
+				Negdedx->Fill(shwr_dedx[0][1]);
+
+				// if dedx is negative is the shower in the tpc?
+				if (mcshwr_dEdx[0] == -99999)
+				{
+					NotinTPCdedx->Fill(shwr_dedx[0][1]);
+				}
+
+				else
+				{
+					// if it is in the TPC is it poorly reconstructed?
+					if ((dist > 2.5) || (xzdiff > 15) || (yzdiff > 15))
+					{
+						PoorRecodedx->Fill(shwr_dedx[0][0]);
+					}
+				}
+			}
+
+			// values of the negative dedx in the third plane
+			else if (shwr_dedx[0][2]) < 0)
+			{
+				Negdedx->Fill(shwr_dedx[0][2]);
+
+				// if dedx is negative is the shower in the tpc?
+				if (mcshwr_dEdx[0] == -99999)
+				{
+					NotinTPCdedx->Fill(shwr_dedx[0][2]);
+				}
+
+				else
+				{
+					// if it is in the TPC is it poorly reconstructed?
+					if ((dist > 2.5) || (xzdiff > 15) || (yzdiff > 15))
+					{
+						PoorRecodedx->Fill(shwr_dedx[0][0]);
+					}
+				}
+			}
+		}
+
+		// looking at showers with negative dedx
+		if (nshowers > 0)
+		{
+			if ((shwr_dedx[0][0] < 0) || (shwr_dedx[0][1] < 0) || (shwr_dedx[0][2]) < 0))
+			{
+				Negativededxdist->Fill(dist);
+				Negativededxxzang->Fill(xzdiff);
+				Negativededxyzang->Fill(yzdiff);
+				
+				NegativeEnergyFirstPartdedx->Fill(Eng[0] * 1000);
+				NegativededxMCShowerEnergy->Fill(mcshwr_CombEngE[0]);
+				NegativededxFirstPart_MCshwreng->Fill(Eng[0] * 1000 - mcshwr_CombEngE[0]);
+
+				NegativededxShowerEnergy->Fill(shwr_totEng[goodshowernumber][bestdedx]);
+				Negativededxfirstpart_Recoshowerenergy->Fill(Eng[0] * 1000 - shwr_totEng[goodshowernumber][bestdedx]);
+				NegativededxMCshwr_Recoshowerenergy->Fill(mcshwr_CombEngE[0] - shwr_totEng[goodshowernumber][bestdedx]);
+			}	
+		}
 
 		// Number of Showers
 		NumShowers->Fill(nshowers);
@@ -385,6 +1022,9 @@ void anatree::Loop(Long64_t max_entry)
 			NumShowersGoodRecoEng->Fill(EngMeV);	// if there is only one shower then plot the energy of that shower
 			OneShowerxzAng->Fill(xzdiff);			// if there is only one shower then plot the xz diff angle
 			OneShoweryzAng->Fill(yzdiff);			// if there is only one shower then plot the yz diff angle
+		
+			oneshowerstartx->Fill(shwr_startx[0]);
+		
 		}
 
 		if (dist <= mindistance)
@@ -406,31 +1046,36 @@ void anatree::Loop(Long64_t max_entry)
 			}
 		}
 
-		if (xzdiff < minangle)
-		{
-			std::cout << xzdiff << std::endl;
-		}
-
-		if (yzdiff < minangle)
-		{
-			YZAngle = true;
-		}
-
-		if (XZAngle && YZAngle)
-		{
-			Angle = true;
-		}
-
 		if (nshowers == 0)
 		{
 			NoShowerEng->Fill(EngMeV);
 			//NoShowerAng->Fill(xdiff);
+
+			//std::cout << "dist: " << dist << std::endl;
+			//std::cout << "shwr: " << shwr_startx[0] << std::endl;
+			//std::cout << "endp: " << StartPointx[0] << stdl::endl;
+			//std::cout << "show: " << nshowers << std::endl << std::endl;
+
+			noshowerstartx->Fill(shwr_startx[0]);
+			//noshowshoweng->Fill(shwr_totEng)
+			//std::cout << "shower number: " << nshowers << std::endl;
+			//std::cout << "shower energy: " << shwr_totEng[0][0] << std::endl;
+			noshowerenergy->Fill(shwr_totEng[0][0]);
+
+			double ratio = double(geant_list_size_in_tpcAV / (1.0 * geant_list_size));
+			//std::cout << ratio << std::endl;
+
+			// how much of the shower is contained and how does that affect the energy of the shower
+			if (ratio < 0.25)
+			{
+				Nshowersratioeng->Fill(EngMeV);
+			}
+
 		}
 
 		// comparing the shower energy and the energy of the first particle
 		// we want to make a stricter cut here
 		// so the distance should be within 1.0 cm and the angle difference is within 1.0 degrees
-
 		if (Nshowers && (dist <= 1.0) && xzdiff < 1.0 && yzdiff < 1.0)
 		{
 			GoodRecoTrueEng->Fill(shwr_totEng[0][shwr_bestplane[0]]);
@@ -440,193 +1085,30 @@ void anatree::Loop(Long64_t max_entry)
 		// we also want to compare the angle of the shower to the angle of the first particle
 		// using the same cuts which are the distance is within 1.0 cm and only one shower
 
-		
-		if (Nshowers && Dist && Angle)
+		// one shower within good start and angle offsets
+		if (Nshowers && dist <= 1.0 && Angle)
 		{
 			GoodRecoEng->Fill(EngMeV);
 			//Angle = false;
 		}
 
+		// showers with good start and angle offsets
 		if (nshowers > 0 && Dist && Angle)
 		{
 			ShowersGoodRecoEng->Fill(EngMeV);
 		}
 
+		// one shower with bad start and angle offsets
 		if (Nshowers && !Dist && !Angle)
 		{
 			NumShowersBadRecoEng->Fill(EngMeV);
-		}
-
-		if (nshowers > 1)
-		{
-			MoreThanOneShowerEng->Fill(EngMeV);
-			MoreThanOneShowerxzAng->Fill(xzdiff);
-			MoreThanOneShoweryzAng->Fill(yzdiff);
-		}
-		
-		// we also want to compare the starting position of the shower to the starting position of the first particle
-		// any shower number greater than 0
-		if (nshowers > 0)
-		{
-			if (pdg[0] == 11 || pdg[0] == -11)
-			{
-				Diffxdist->Fill(shwr_startx[goodshowernumber] - EndPointx[0]);
-				Diffydist->Fill(shwr_starty[goodshowernumber] - EndPointy[0]);
-				Diffzdist->Fill(shwr_startz[goodshowernumber] - EndPointz[0]);
-
-				DiffMCCombxdist->Fill(shwr_startx[goodshowernumber] - mcshwr_CombEngX[0]);
-				DiffMCCombydist->Fill(shwr_starty[goodshowernumber] - mcshwr_CombEngY[0]);
-				DiffMCCombzdist->Fill(shwr_startz[goodshowernumber] - mcshwr_CombEngZ[0]);
-
-				DiffMCxdist->Fill(shwr_startx[goodshowernumber] - mcshwr_startX[0]);
-				DiffMCydist->Fill(shwr_starty[goodshowernumber] - mcshwr_startY[0]);
-				DiffMCzdist->Fill(shwr_startz[goodshowernumber] - mcshwr_startZ[0]);
-
-				DiffMCCxdist->Fill(mcshwr_CombEngX[0] - mcshwr_startX[0]);
-				DiffMCCydist->Fill(mcshwr_CombEngY[0] - mcshwr_startY[0]);
-				DiffMCCzdist->Fill(mcshwr_CombEngZ[0] - mcshwr_startZ[0]);
-			}
-
-			else if (pdg[0] == 22)
-			{
-				Diffxdist->Fill(shwr_startx[goodshowernumber] - EndPointx[0]);
-				Diffydist->Fill(shwr_starty[goodshowernumber] - EndPointy[0]);
-				Diffzdist->Fill(shwr_startz[goodshowernumber] - EndPointz[0]);
-
-				DiffMCCombxdist->Fill(shwr_startx[goodshowernumber] - mcshwr_CombEngX[0]);
-				DiffMCCombydist->Fill(shwr_starty[goodshowernumber] - mcshwr_CombEngY[0]);
-				DiffMCCombzdist->Fill(shwr_startz[goodshowernumber] - mcshwr_CombEngZ[0]);
-
-				DiffMCxdist->Fill(shwr_startx[goodshowernumber] - mcshwr_endX[0]);
-				DiffMCydist->Fill(shwr_starty[goodshowernumber] - mcshwr_endY[0]);
-				DiffMCzdist->Fill(shwr_startz[goodshowernumber] - mcshwr_endZ[0]);
-
-				DiffMCCxdist->Fill(mcshwr_CombEngX[0] - mcshwr_endX[0]);
-				DiffMCCydist->Fill(mcshwr_CombEngY[0] - mcshwr_endY[0]);
-				DiffMCCzdist->Fill(mcshwr_CombEngZ[0] - mcshwr_endZ[0]);
-			}
 		}
 
 		//std::cout << "MC shower start x: " << mcshwr_startX[0] << std::endl;
 		//std::cout << "MC shower start Comb x: " << mcshwr_CombEngX[0] << std::endl;
 		//std::cout << "MC shower end:" << mcshwr_endX[0] << std::endl;
 		//std::cout << "EndPointx[0]: " << EndPointx[0] << std::endl;
-		//std::cout << "Reco Shower start x: " << shwr_startx[0] << std::endl << std::endl;;
-
-
-		//double toteng = 0;
-		//double chargedtoteng = 0;
-
-		double StartdistTPC = 0;
-		double EnddistTPC = 0;
-		double Startdisttot = 0;
-		double Enddisttot = 0;
-
-		double distTPC = 0;
-		double disttot = 0;
-
-		double actualenergy = 0;
-
-
-		//if (Nshowers && (dist <= 1.0) && xdiff < 1.0 && ydiff < 1.0 && zdiff < 1.0)
-		//{
-			//toteng = 0;
-			//chargedtoteng = 0;
-
-		for (int i = 0; i < geant_list_size; i++)
-		{
-			//if (EndPointx_tpcAV[i] != -99999)
-			//{
-			StartdistTPC = sqrt(pow(StartPointx_tpcAV[i], 2) + pow(StartPointy_tpcAV[i], 2) + pow(StartPointz_tpcAV[i], 2));
-			EnddistTPC = sqrt(pow(EndPointx_tpcAV[i], 2) + pow(EndPointy_tpcAV[i], 2) + pow(EndPointz_tpcAV[i], 2));
-
-			Startdisttot = sqrt(pow(StartPointx[i], 2) + pow(StartPointy[i], 2) + pow(StartPointz[i], 2));
-			Enddisttot = sqrt(pow(EndPointx[i], 2) + pow(EndPointy[i], 2) + pow(EndPointz[i], 2));
-
-			distTPC = StartdistTPC - EnddistTPC;
-			disttot = Startdisttot - Enddisttot;
-
-			actualenergy += Eng[i] * distTPC / disttot;
-
-			if (inTPCActive[i] == 1)
-			{
-				DistTPC1->Fill(distTPC);
-				Disttot1->Fill(disttot);
-
-				//std::cout << "1" << std::endl;
-			}
-
-			if (inTPCActive[i] == 0)
-			{
-				DistTPC0->Fill(distTPC);
-				Disttot0->Fill(disttot);
-
-				//std::cout << distTPC << std::endl;
-				//std::cout << "0" << std::endl;
-			}
-			//}
-		}
-		/*
-		for (int i = 0; i < geant_list_size; i++)
-		{
-			if (inTPCActive == 0 && EndPointx_tpcAV[i] != -99999)
-			{
-				std::cout << "inTPCActive: " << inTPCActive[i] << std::endl;
-				std::cout << "start point x: " << EndPointx_tpcAV[i] << std::endl;
-				std::cout << "start point y: " << EndPointy_tpcAV[i] << std::endl;
-				std::cout << "start point z: " << EndPointz_tpcAV[i] << std::endl << std::endl;
-			}
-		}
-		*/
-			//ChargedPartEng += actualenergy;
-
-			// energy deposited from the particle minus the rest energy
-			// kinetic energy of the particle
-			//chargedtoteng += Eng[i] - EndE[i];
-		
-		ActualEng->Fill(actualenergy);
-
-		// particles that cross the boundary
-		// what is their distance
-
-					//if (!(EndPointx_tpcAV[i] == -99999))
-					//{
-						//toteng = toteng + Eng[i] - EndE[i];
-						//std::cout << toteng << std::endl << std::endl;
-					//}
-				//}
-			//}
-			
-			//std:cout << "initial energy: " << Eng[i] << std::endl;
-			//std::cout << "final energy: " << EndE[i] * 1000 << std::endl << std::endl;
-			//std::cout << "particle " << i << ": " << chargedtoteng << std::endl;
-
-
-			//std::cout << "Shower Total Energy: " << jentry << " : " << shwr_totEng[0][shwr_bestplane[0]] << std::endl;
-			//std::cout << "Charged Total Energy: " << jentry << " : " << chargedtoteng * 1000 << std::endl;
-			//std::cout << "Total Energy within Detector: " << jentry << " : " << toteng * 1000 << std::endl << std::endl;
-
-			//ChargedPartEng->Fill(chargedtoteng * 1000);
-			//TotalEng->Fill(toteng * 1000);
-
-			//DiffChargedPartEng->Fill(shwr_totEng[0][shwr_bestplane[0]] - chargedtoteng * 1000);
-			//DiffTotalEng->Fill(shwr_totEng[0][shwr_bestplane[0]] - toteng * 1000);
-		//}
-
-		//std::cout << "x: " << EndPointx_tpcAV[i] << std::endl;
-		//std::cout << "y: " << EndPointy_tpcAV[i] << std::endl;
-		//std::cout << "z: " << EndPointz_tpcAV[i] << std::endl;
-	
-			if (nshowers == 0)
-			{
-				double ratio = double(geant_list_size_in_tpcAV / (1.0 * geant_list_size));
-				//std::cout << ratio << std::endl;
-
-				if (ratio < 0.25)
-				{
-					Nshowersratioeng->Fill(EngMeV);
-				}
-			}
+		//std::cout << "Reco Shower start x: " << shwr_startx[0] << std::endl << std::endl;
 
 		Energy->Fill(EngMeV);
 
@@ -637,25 +1119,44 @@ void anatree::Loop(Long64_t max_entry)
 		
 		if (nshowers > 0)
 		{
-			for (int i = 0; i < nshowers; i++)
-			{
-				toteng += shwr_totEng[i][shwr_bestplane[i]];
-			}
+			//for (int i = 0; i < nshowers; i++)
+			//{
+				// this is the total energy of all the showers
+			//	toteng += shwr_totEng[i][shwr_bestplane[i]];
+			//}
 
-			Showereng->Fill(toteng);
+			Showereng->Fill(shwr_totEng[goodshowernumber][shwr_bestplane[goodshowernumber]]);
 
 			FirstParticleEng->Fill(Eng[0] * 1000);
 
-			DiffParticleeng->Fill(toteng - EngMeV);
+			// we want to compare the total energy of all the showers to the MC truth shower energy
+			DiffParticleeng->Fill(shwr_totEng[goodshowernumber][shwr_bestplane[goodshowernumber]] - EngMeV);
 
-			if (toteng / EngMeV < 1.0)
+			// if its under a certain ratio what are the characteristics of the shower
+			if (shwr_totEng[goodshowernumber][shwr_bestplane[goodshowernumber]] / EngMeV <= 0.50)
 			{
-				RatioTotDist->Fill(dist);
-				RatioTotxzAng->Fill(xzdiff);
+				//RatiolessTotDist->Fill(dist);
+				//RatiolessTotxzAng->Fill(xzdiff);
+				//RatiolessTotyzAng->Fill(yzdiff);
+				RatiolessTotdedx->Fill(shwr_dedx[goodshowernumber][bestdedx] - mcshwr_dEdx[0]);
 			}
 
-		}
+			// if the start point offset in within the bump what is the dedx
+			if (dist >= 1.0 && dist <= 2.0)
+			{
+				Startoffsetdistdedx->Fill(mcshwr_dEdx[0]);
+			}
 
+			//else if ()
+			//{
+			//	RatiomoreTotDist->Fill(dist);
+			//	RatiomoreTotxzAng->Fill(xzdiff);
+			//	RatiomoreTotyzAng->Fill(yzdiff);
+			//}
+		
+		}
+		
+		// reset the boolean variables
 		Angle = false;
 		Nshowers = false;
 		Dist = false;
@@ -691,7 +1192,7 @@ void anatree::Loop(Long64_t max_entry)
 
 	//comment out gStyle and do hist->SetStats(true);
 	
-
+	
 	TCanvas* c1 = new TCanvas("c1", "", 700, 700);
 	c1->SetLeftMargin(.1);
 	c1->SetBottomMargin(.1);
@@ -712,7 +1213,7 @@ void anatree::Loop(Long64_t max_entry)
 	//leg->SetTextSize(0.03);
 	//leg->AddEntry(NumShowers, "Number of Showers", "l");
 	//leg->Draw();
-	
+
 	TCanvas* c4 = new TCanvas("c4", "", 700, 700);
 	c4->SetLeftMargin(.1);
 	c4->SetBottomMargin(.1);
@@ -793,7 +1294,7 @@ void anatree::Loop(Long64_t max_entry)
 	EffNumShowers->SetLineWidth(3);
 	EffNumShowers->SetStats(false);
 	EffNumShowers->Draw();
-
+	
 	TCanvas* c10 = new TCanvas("c10", "", 700, 700);
 	c10->SetLeftMargin(.1);
 	c10->SetBottomMargin(.1);
@@ -826,7 +1327,7 @@ void anatree::Loop(Long64_t max_entry)
 	GoodRecoEng->SetLineColor(kRed);
 	GoodRecoEng->SetLineWidth(3);
 	GoodRecoEng->Draw();
-
+	
 	TCanvas* c12 = new TCanvas("c12", "", 700, 700);
 	c12->SetLeftMargin(.1);
 	c12->SetBottomMargin(.1);
@@ -841,13 +1342,13 @@ void anatree::Loop(Long64_t max_entry)
 	EffGoodRecoEng->SetStats(false);
 	EffGoodRecoEng->Draw();
 
-	EffShowersGoodRecoEng->Divide(ShowersGoodRecoEng, Energy);
+	//EffShowersGoodRecoEng->Divide(ShowersGoodRecoEng, Energy);
 
-	EffShowersGoodRecoEng->SetLineColor(kGreen);
-	EffShowersGoodRecoEng->SetLineWidth(3);
-	EffShowersGoodRecoEng->SetStats(false);
-	EffShowersGoodRecoEng->Draw("same");
-
+	//EffShowersGoodRecoEng->SetLineColor(kGreen);
+	//EffShowersGoodRecoEng->SetLineWidth(3);
+	//EffShowersGoodRecoEng->SetStats(false);
+	//EffShowersGoodRecoEng->Draw("same");
+	
 	/*
 	TCanvas* c13 = new TCanvas("c13", "", 700, 700);
 	c13->SetLeftMargin(.1);
@@ -1016,7 +1517,7 @@ void anatree::Loop(Long64_t max_entry)
 	ActualEng->SetStats(true);
 	ActualEng->Draw();
 	
-	
+
 	TCanvas* c22 = new TCanvas("c22", "", 700, 700);
 	c22->SetLeftMargin(.1);
 	c22->SetBottomMargin(.1);
@@ -1052,7 +1553,7 @@ void anatree::Loop(Long64_t max_entry)
 	Diffzdist->SetLineWidth(3);
 	Diffzdist->SetStats(true);
 	Diffzdist->Draw();
-	
+
 	TCanvas* c25 = new TCanvas("c25", "", 700, 700);
 	c25->SetLeftMargin(.1);
 	c25->SetBottomMargin(.1);
@@ -1080,15 +1581,6 @@ void anatree::Loop(Long64_t max_entry)
 	MoreThanOneShowerEng->SetLineColor(kGreen);
 	MoreThanOneShowerEng->SetStats(false);
 	ShowerEnergy->Add(MoreThanOneShowerEng);
-
-	
-	//NumShowersGoodRecoEng->SetFillColor(kGray);
-	//NumShowersBadRecoEng->SetFillColor(kCyan + 2);
-	//ShowerEnergy->Add(NumShowersBadRecoEng);
-
-	//GoodRecoEng->SetFillColor(kRed);
-	//GoodRecoEng->SetLineColor(kRed);
-	//ShowerEnergy->Add(GoodRecoEng);
 
 	ShowerEnergy->Draw();
 
@@ -1129,23 +1621,6 @@ void anatree::Loop(Long64_t max_entry)
 	NoShowerAng->SetStats(false);
 	ShowerAngle->Add(NoShowerAng);
 
-	//NumShowersBadRecoEng->SetLineColor(kCyan + 2);
-	//NumShowersBadRecoEng->SetFillColor(kCyan + 2);
-	//NumShowersBadRecoEng->SetStats(false);
-	//ShowerEnergy1->Add(NumShowersBadRecoEng);
-
-	//GoodRecoEng->SetFillColor(kPink);
-	//GoodRecoEng->SetLineColor(kRed);
-	//GoodRecoEng->SetStats(false);
-	//ShowerEnergy1->Add(GoodRecoEng);
-
-	//AngleGoodRecoEng->SetFillColor(kRed);
-	//AngleGoodRecoEng->SetLineColor(kRed);
-	//AngleGoodRecoEng->SetStats(false);
-	//ShowerEnergy1->Add(AngleGoodRecoEng);
-
-
-
 	ShowerAngle->Draw("same");
 
 	//TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
@@ -1158,7 +1633,7 @@ void anatree::Loop(Long64_t max_entry)
 	//leg->AddEntry(NumShowersGoodRecoEng, "All Events with One Shower", "l");
 	//leg->AddEntry(AngleGoodRecoEng, "Good Angle Reco", "l");
 	//leg->Draw();
-
+	
 	TCanvas* c27 = new TCanvas("c27", "", 700, 700);
 	c27->SetLeftMargin(.1);
 	c27->SetBottomMargin(.1);
@@ -1168,7 +1643,7 @@ void anatree::Loop(Long64_t max_entry)
 
 	MCyzangle->SetLineColor(kRed);
 	MCyzangle->Draw();
-
+/*
 	TCanvas* c28 = new TCanvas("c28", "", 700, 700);
 	c28->SetLeftMargin(.1);
 	c28->SetBottomMargin(.1);
@@ -1186,7 +1661,6 @@ void anatree::Loop(Long64_t max_entry)
 	c29->SetRightMargin(.15);
 	c29->cd();
 
-	//XZ_angle->SetFillColor(kRed);
 	XZ_angle->SetLineColor(kRed);
 	XZ_angle->Draw();
 
@@ -1197,7 +1671,6 @@ void anatree::Loop(Long64_t max_entry)
 	c30->SetRightMargin(.15);
 	c30->cd();
 
-	//YZ_angle->SetFillColor(kRed);
 	YZ_angle->SetLineColor(kRed);
 	YZ_angle->Draw();
 	
@@ -1454,7 +1927,7 @@ TCanvas* c43 = new TCanvas("c43", "", 700, 700);
 	EffEng->SetStats(true);
 	EffEng->Draw();
 
-
+*/
 	TCanvas* c51 = new TCanvas("c51", "", 700, 700);
 	c51->SetLeftMargin(.1);
 	c51->SetBottomMargin(.1);
@@ -1510,10 +1983,10 @@ TCanvas* c43 = new TCanvas("c43", "", 700, 700);
 	c55->SetRightMargin(.15);
 	c55->cd();
 
-	RatioTotDist->SetLineColor(kBlue);
-	RatioTotDist->SetLineWidth(3);
-	RatioTotDist->SetStats(true);
-	RatioTotDist->Draw();
+	RatiolessTotDist->SetLineColor(kBlue);
+	RatiolessTotDist->SetLineWidth(3);
+	RatiolessTotDist->SetStats(true);
+	RatiolessTotDist->Draw();
 
 	TCanvas* c56 = new TCanvas("c56", "", 700, 700);
 	c56->SetLeftMargin(.1);
@@ -1522,12 +1995,965 @@ TCanvas* c43 = new TCanvas("c43", "", 700, 700);
 	c56->SetRightMargin(.15);
 	c56->cd();
 
-	RatioTotxzAng->SetLineColor(kBlue);
-	RatioTotxzAng->SetLineWidth(3);
-	RatioTotxzAng->SetStats(true);
-	RatioTotxzAng->Draw();
+	RatiomoreTotDist->SetLineColor(kBlue);
+	RatiomoreTotDist->SetLineWidth(3);
+	RatiomoreTotDist->SetStats(true);
+	RatiomoreTotDist->Draw();
+
+	TCanvas* c58 = new TCanvas("c58", "", 700, 700);
+	c58->SetLeftMargin(.1);
+	c58->SetBottomMargin(.1);
+	c58->SetTopMargin(.075);
+	c58->SetRightMargin(.15);
+	c58->cd();
+
+	RatiolessTotxzAng->SetLineColor(kBlue);
+	RatiolessTotxzAng->SetLineWidth(3);
+	RatiolessTotxzAng->SetStats(true);
+	RatiolessTotxzAng->Draw();
+
+	TCanvas* c59 = new TCanvas("c59", "", 700, 700);
+	c59->SetLeftMargin(.1);
+	c59->SetBottomMargin(.1);
+	c59->SetTopMargin(.075);
+	c59->SetRightMargin(.15);
+	c59->cd();
+
+	RatiolessTotyzAng->SetLineColor(kBlue);
+	RatiolessTotyzAng->SetLineWidth(3);
+	RatiolessTotyzAng->SetStats(true);
+	RatiolessTotyzAng->Draw();
+
+	TCanvas* c62 = new TCanvas("c62", "", 700, 700);
+	c62->SetLeftMargin(.1);
+	c62->SetBottomMargin(.1);
+	c62->SetTopMargin(.075);
+	c62->SetRightMargin(.15);
+	c62->cd();
+
+	RatiomoreTotxzAng->SetLineColor(kBlue);
+	RatiomoreTotxzAng->SetLineWidth(3);
+	RatiomoreTotxzAng->SetStats(true);
+	RatiomoreTotxzAng->Draw();
+
+	TCanvas* c63 = new TCanvas("c63", "", 700, 700);
+	c63->SetLeftMargin(.1);
+	c63->SetBottomMargin(.1);
+	c63->SetTopMargin(.075);
+	c63->SetRightMargin(.15);
+	c63->cd();
+
+	RatiomoreTotyzAng->SetLineColor(kBlue);
+	RatiomoreTotyzAng->SetLineWidth(3);
+	RatiomoreTotyzAng->SetStats(true);
+	RatiomoreTotyzAng->Draw();
+
+	TCanvas* c64 = new TCanvas("c64", "", 700, 700);
+	c64->SetLeftMargin(.1);
+	c64->SetBottomMargin(.1);
+	c64->SetTopMargin(.075);
+	c64->SetRightMargin(.15);
+	c64->cd();
+
+	Startdir_MCshwrxzang->SetLineColor(kBlue);
+	Startdir_MCshwrxzang->SetLineWidth(3);
+	Startdir_MCshwrxzang->SetStats(true);
+	Startdir_MCshwrxzang->Draw();
+
+
+	TCanvas* c65 = new TCanvas("c65", "", 700, 700);
+	c65->SetLeftMargin(.1);
+	c65->SetBottomMargin(.1);
+	c65->SetTopMargin(.075);
+	c65->SetRightMargin(.15);
+	c65->cd();
+
+	Startdir_MCshwryzang->SetLineColor(kBlue);
+	Startdir_MCshwryzang->SetLineWidth(3);
+	Startdir_MCshwryzang->SetStats(true);
+	Startdir_MCshwryzang->Draw();
+
+	TCanvas* c66 = new TCanvas("c66", "", 700, 700);
+	c66->SetLeftMargin(.1);
+	c66->SetBottomMargin(.1);
+	c66->SetTopMargin(.075);
+	c66->SetRightMargin(.15);
+	c66->cd();
+
+	Startdir_shwrxzang->SetLineColor(kBlue);
+	Startdir_shwrxzang->SetLineWidth(3);
+	Startdir_shwrxzang->SetStats(true);
+	Startdir_shwrxzang->Draw();
+
+	TCanvas* c67 = new TCanvas("c67", "", 700, 700);
+	c67->SetLeftMargin(.1);
+	c67->SetBottomMargin(.1);
+	c67->SetTopMargin(.075);
+	c67->SetRightMargin(.15);
+	c67->cd();
+
+	Startdir_shwryzang->SetLineColor(kBlue);
+	Startdir_shwryzang->SetLineWidth(3);
+	Startdir_shwryzang->SetStats(true);
+	Startdir_shwryzang->Draw();
+
+	
+	TCanvas* c68 = new TCanvas("c68", "", 700, 700);
+	c68->SetLeftMargin(.1);
+	c68->SetBottomMargin(.1);
+	c68->SetTopMargin(.075);
+	c68->SetRightMargin(.15);
+	c68->cd();
+
+	Startdir_firstpartxzang->SetLineColor(kBlue);
+	Startdir_firstpartxzang->SetLineWidth(3);
+	Startdir_firstpartxzang->SetStats(true);
+	Startdir_firstpartxzang->Draw();
+
+	TCanvas* c69 = new TCanvas("c69", "", 700, 700);
+	c69->SetLeftMargin(.1);
+	c69->SetBottomMargin(.1);
+	c69->SetTopMargin(.075);
+	c69->SetRightMargin(.15);
+	c69->cd();
+
+	Startdir_firstpartyzang->SetLineColor(kBlue);
+	Startdir_firstpartyzang->SetLineWidth(3);
+	Startdir_firstpartyzang->SetStats(true);
+	Startdir_firstpartyzang->Draw();
+
+
+	TCanvas* c70 = new TCanvas("c70", "", 700, 700);
+	c70->SetLeftMargin(.1);
+	c70->SetBottomMargin(.1);
+	c70->SetTopMargin(.075);
+	c70->SetRightMargin(.15);
+	c70->cd();
+
+	MCshwr_firstpartxzang->SetLineColor(kBlue);
+	MCshwr_firstpartxzang->SetLineWidth(3);
+	MCshwr_firstpartxzang->SetStats(true);
+	MCshwr_firstpartxzang->Draw();
+
+	TCanvas* c71 = new TCanvas("c71", "", 700, 700);
+	c71->SetLeftMargin(.1);
+	c71->SetBottomMargin(.1);
+	c71->SetTopMargin(.075);
+	c71->SetRightMargin(.15);
+	c71->cd();
+
+	MCshwr_firstpartyzang->SetLineColor(kBlue);
+	MCshwr_firstpartyzang->SetLineWidth(3);
+	MCshwr_firstpartyzang->SetStats(true);
+	MCshwr_firstpartyzang->Draw();
+
+	TCanvas* c72 = new TCanvas("c72", "", 700, 700);
+	c72->SetLeftMargin(.1);
+	c72->SetBottomMargin(.1);
+	c72->SetTopMargin(.075);
+	c72->SetRightMargin(.15);
+	c72->cd();
+
+	Shwr_firstpartxzang->SetLineColor(kBlue);
+	Shwr_firstpartxzang->SetLineWidth(3);
+	Shwr_firstpartxzang->SetStats(true);
+	Shwr_firstpartxzang->Draw();
+
+
+	TCanvas* c73 = new TCanvas("c73", "", 700, 700);
+	c73->SetLeftMargin(.1);
+	c73->SetBottomMargin(.1);
+	c73->SetTopMargin(.075);
+	c73->SetRightMargin(.15);
+	c73->cd();
+
+	Shwr_firstpartyzang->SetLineColor(kBlue);
+	Shwr_firstpartyzang->SetLineWidth(3);
+	Shwr_firstpartyzang->SetStats(true);
+	Shwr_firstpartyzang->Draw();
+
+
+	TCanvas* c74 = new TCanvas("c74", "", 700, 700);
+	c74->SetLeftMargin(.1);
+	c74->SetBottomMargin(.1);
+	c74->SetTopMargin(.075);
+	c74->SetRightMargin(.15);
+	c74->cd();
+
+	bestplanededx->SetLineColor(kBlue);
+	bestplanededx->SetLineWidth(3);
+	bestplanededx->SetStats(true);
+	bestplanededx->Draw();
+
+	TCanvas* c75 = new TCanvas("c75", "", 700, 700);
+	c75->SetLeftMargin(.1);
+	c75->SetBottomMargin(.1);
+	c75->SetTopMargin(.075);
+	c75->SetRightMargin(.15);
+	c75->cd();
+
+	diffshower_dedx->SetLineColor(kBlue);
+	diffshower_dedx->SetLineWidth(3);
+	diffshower_dedx->SetStats(true);
+	diffshower_dedx->Draw();
+
+	TCanvas* c76 = new TCanvas("c76", "", 700, 700);
+	c76->SetLeftMargin(.1);
+	c76->SetBottomMargin(.1);
+	c76->SetTopMargin(.075);
+	c76->SetRightMargin(.15);
+	c76->cd();
+
+	MCshower_dedx->SetLineColor(kGreen);
+	MCshower_dedx->SetLineWidth(3);
+	MCshower_dedx->SetStats(true);
+	MCshower_dedx->Draw();
+
+
+	Recoshowerbest_dedx->SetLineColor(kBlue);
+	Recoshowerbest_dedx->SetLineWidth(3);
+	Recoshowerbest_dedx->SetStats(true);
+	Recoshowerbest_dedx->Draw("same");
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.03);
+	leg->AddEntry(MCshower_dedx, "dE/dx of MC Shower", "l");
+	leg->AddEntry(Recoshowerbest_dedx, "dE/dx of Reco Shower", "l");
+	leg->Draw();
+
+	
+	TCanvas* c78 = new TCanvas("c78", "", 700, 700);
+	c78->SetLeftMargin(.1);
+	c78->SetBottomMargin(.1);
+	c78->SetTopMargin(.075);
+	c78->SetRightMargin(.15);
+	c78->cd();
+
+	Negativededxdist->SetLineColor(kBlue);
+	Negativededxdist->SetLineWidth(3);
+	Negativededxdist->SetStats(true);
+	Negativededxdist->Draw();
+
+	TCanvas* c79 = new TCanvas("c79", "", 700, 700);
+	c79->SetLeftMargin(.1);
+	c79->SetBottomMargin(.1);
+	c79->SetTopMargin(.075);
+	c79->SetRightMargin(.15);
+	c79->cd();
+
+	Negativededxxzang->SetLineColor(kBlue);
+	Negativededxxzang->SetLineWidth(3);
+	Negativededxxzang->SetStats(true);
+	Negativededxxzang->Draw();
+
+
+	TCanvas* c80 = new TCanvas("c80", "", 700, 700);
+	c80->SetLeftMargin(.1);
+	c80->SetBottomMargin(.1);
+	c80->SetTopMargin(.075);
+	c80->SetRightMargin(.15);
+	c80->cd();
+
+	Negativededxyzang->SetLineColor(kBlue);
+	Negativededxyzang->SetLineWidth(3);
+	Negativededxyzang->SetStats(true);
+	Negativededxyzang->Draw();
+
+
+	TCanvas* c82 = new TCanvas("c82", "", 700, 700);
+	c82->SetLeftMargin(.1);
+	c82->SetBottomMargin(.1);
+	c82->SetTopMargin(.075);
+	c82->SetRightMargin(.15);
+	c82->cd();
+
+	Recoshower1_dedx->SetLineColor(kBlue);
+	Recoshower1_dedx->SetLineWidth(3);
+	//Recoshower1_dedx->SetStats(true);
+	Recoshower1_dedx->Draw();
+
+	Recoshower2_dedx->SetLineColor(kRed);
+	Recoshower2_dedx->SetLineWidth(3);
+	//Recoshower2_dedx->SetStats(true);
+	Recoshower2_dedx->Draw("same");
+
+	Recoshower3_dedx->SetLineColor(kGreen);
+	Recoshower3_dedx->SetLineWidth(3);
+	//Recoshower3_dedx->SetStats(true);
+	Recoshower3_dedx->Draw("same");
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.03);
+	leg->AddEntry(Recoshower1_dedx, "dE/dx of Plane 0", "l");
+	leg->AddEntry(Recoshower2_dedx, "dE/dx of Plane 1", "l");
+	leg->AddEntry(Recoshower3_dedx, "dE/dx of Plane 2", "l");
+	leg->Draw();
+
+	TCanvas* c83 = new TCanvas("c83", "", 700, 700);
+	c83->SetLeftMargin(.1);
+	c83->SetBottomMargin(.1);
+	c83->SetTopMargin(.075);
+	c83->SetRightMargin(.15);
+	c83->cd();
+
+	Negdedx->SetLineColor(kGreen);
+	Negdedx->SetFillColor(kGreen);
+	Negdedx->SetLineWidth(3);
+	Negativededx->Add(Negdedx);
+
+	NotinTPCdedx->SetLineColor(kBlue);
+	NotinTPCdedx->SetFillColor(kBlue);
+	NotinTPCdedx->SetLineWidth(3);
+	Negativededx->Add(NotinTPCdedx);
+
+	PoorRecodedx->SetLineColor(kRed);
+	PoorRecodedx->SetFillColor(kRed);
+	PoorRecodedx->SetLineWidth(3);
+	Negativededx->Add(PoorRecodedx);
+
+	Negativededx->Draw();
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.03);
+	leg->AddEntry(Negdedx, "Events with Negative dE/dx", "l");
+	leg->AddEntry(NotinTPCdedx, "Events not in TPC", "l");
+	leg->AddEntry(PoorRecodedx, "Events with Poor Reconstruction", "l");
+	leg->Draw();
+
+	TCanvas* c84 = new TCanvas("c84", "", 700, 700);
+	c84->SetLeftMargin(.1);
+	c84->SetBottomMargin(.1);
+	c84->SetTopMargin(.075);
+	c84->SetRightMargin(.15);
+	c84->cd();
+
+	RatiolessTotdedx->SetLineColor(kBlue);
+	RatiolessTotdedx->SetLineWidth(3);
+	RatiolessTotdedx->SetStats(true);
+	RatiolessTotdedx->Draw();
+
+	TCanvas* c85 = new TCanvas("c85", "", 700, 700);
+	c85->SetLeftMargin(.1);
+	c85->SetBottomMargin(.1);
+	c85->SetTopMargin(.075);
+	c85->SetRightMargin(.15);
+	c85->cd();
+
+	Startoffsetdistdedx->SetLineColor(kBlue);
+	Startoffsetdistdedx->SetLineWidth(3);
+	Startoffsetdistdedx->SetStats(true);
+	Startoffsetdistdedx->Draw();
+
+	TCanvas* c86 = new TCanvas("c86", "", 700, 700);
+	c86->SetLeftMargin(.1);
+	c86->SetBottomMargin(.1);
+	c86->SetTopMargin(.075);
+	c86->SetRightMargin(.15);
+	c86->cd();
+
+	NegativeEnergyFirstPartdedx->SetLineColor(kBlue);
+	NegativeEnergyFirstPartdedx->SetLineWidth(3);
+	NegativeEnergyFirstPartdedx->SetStats(true);
+	NegativeEnergyFirstPartdedx->Draw();
+
+
+	TCanvas* c87 = new TCanvas("c87", "", 700, 700);
+	c87->SetLeftMargin(.1);
+	c87->SetBottomMargin(.1);
+	c87->SetTopMargin(.075);
+	c87->SetRightMargin(.15);
+	c87->cd();
+
+	NegativededxShowerEnergy->SetLineColor(kBlue);
+	NegativededxShowerEnergy->SetLineWidth(3);
+	NegativededxShowerEnergy->SetStats(true);
+	NegativededxShowerEnergy->Draw();
+
+
+	TCanvas* c88 = new TCanvas("c88", "", 700, 700);
+	c88->SetLeftMargin(.1);
+	c88->SetBottomMargin(.1);
+	c88->SetTopMargin(.075);
+	c88->SetRightMargin(.15);
+	c88->cd();
+
+	NegativededxFirstPart_MCshwreng->SetLineColor(kBlue);
+	NegativededxFirstPart_MCshwreng->SetLineWidth(3);
+	NegativededxFirstPart_MCshwreng->SetStats(true);
+	NegativededxFirstPart_MCshwreng->Draw();
+
+	TCanvas* c89 = new TCanvas("c89", "", 700, 700);
+	c89->SetLeftMargin(.1);
+	c89->SetBottomMargin(.1);
+	c89->SetTopMargin(.075);
+	c89->SetRightMargin(.15);
+	c89->cd();
+
+	NegativededxMCShowerEnergy->SetLineColor(kBlue);
+	NegativededxMCShowerEnergy->SetLineWidth(3);
+	NegativededxMCShowerEnergy->SetStats(true);
+	NegativededxMCShowerEnergy->Draw();
+
+	TCanvas* c90 = new TCanvas("c90", "", 700, 700);
+	c90->SetLeftMargin(.1);
+	c90->SetBottomMargin(.1);
+	c90->SetTopMargin(.075);
+	c90->SetRightMargin(.15);
+	c90->cd();
+
+	Negativededxfirstpart_Recoshowerenergy->SetLineColor(kBlue);
+	Negativededxfirstpart_Recoshowerenergy->SetLineWidth(3);
+	Negativededxfirstpart_Recoshowerenergy->SetStats(true);
+	Negativededxfirstpart_Recoshowerenergy->Draw();
+
+
+	TCanvas* c91 = new TCanvas("c91", "", 700, 700);
+	c91->SetLeftMargin(.1);
+	c91->SetBottomMargin(.1);
+	c91->SetTopMargin(.075);
+	c91->SetRightMargin(.15);
+	c91->cd();
+
+	NegativededxMCshwr_Recoshowerenergy->SetLineColor(kBlue);
+	NegativededxMCshwr_Recoshowerenergy->SetLineWidth(3);
+	NegativededxMCshwr_Recoshowerenergy->SetStats(true);
+	NegativededxMCshwr_Recoshowerenergy->Draw();
+
+
+	TCanvas* c92 = new TCanvas("c92", "", 700, 700);
+	c92->SetLeftMargin(.1);
+	c92->SetBottomMargin(.1);
+	c92->SetTopMargin(.075);
+	c92->SetRightMargin(.15);
+	c92->cd();
+
+	Positionxy->SetLineColor(kBlue);
+	Positionxy->SetLineWidth(3);
+	Positionxy->SetStats(true);
+	Positionxy->Draw("colz");
+
+	TCanvas* c93 = new TCanvas("c93", "", 700, 700);
+	c93->SetLeftMargin(.1);
+	c93->SetBottomMargin(.1);
+	c93->SetTopMargin(.075);
+	c93->SetRightMargin(.15);
+	c93->cd();
+
+	Positionyz->SetLineColor(kBlue);
+	Positionyz->SetLineWidth(3);
+	Positionyz->SetStats(true);
+	Positionyz->Draw("colz");
+
+	TCanvas* c94 = new TCanvas("c94", "", 700, 700);
+	c94->SetLeftMargin(.1);
+	c94->SetBottomMargin(.1);
+	c94->SetTopMargin(.075);
+	c94->SetRightMargin(.15);
+	c94->cd();
+
+	GoodAngledist->SetLineColor(kBlue);
+	GoodAngledist->SetLineWidth(3);
+	GoodAngledist->SetStats(true);
+	GoodAngledist->Draw();
+
+	TCanvas* c95 = new TCanvas("c95", "", 700, 700);
+	c95->SetLeftMargin(.1);
+	c95->SetBottomMargin(.1);
+	c95->SetTopMargin(.075);
+	c95->SetRightMargin(.15);
+	c95->cd();
+
+	Diffzdist->SetLineColor(kBlue);
+	Diffzdist->SetLineWidth(3);
+	Diffzdist->SetStats(true);
+	Diffzdist->Draw();
+
+	Diffzdistmaggreaterthan60->SetLineColor(kRed);
+	Diffzdistmaggreaterthan60->SetLineWidth(3);
+	Diffzdistmaggreaterthan60->SetStats(true);
+	Diffzdistmaggreaterthan60->Draw("same");
+
+	Diffzdistmaglessthan60->SetLineColor(kGreen);
+	Diffzdistmaglessthan60->SetLineWidth(3);
+	Diffzdistmaglessthan60->SetStats(true);
+	Diffzdistmaglessthan60->Draw("same");
+
+	Diffzdistgreaterthan60->SetLineColor(kViolet);
+	Diffzdistgreaterthan60->SetLineWidth(3);
+	Diffzdistgreaterthan60->SetStats(true);
+	Diffzdistgreaterthan60->Draw("same");
+
+	Diffzdistlessthanminus60->SetLineColor(kBlack);
+	Diffzdistlessthanminus60->SetLineWidth(3);
+	Diffzdistlessthanminus60->SetStats(true);
+	Diffzdistlessthanminus60->Draw("same");
+
+	
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.02);
+	leg->AddEntry(Diffzdist, "Shower Start - MC Start (z direction) All Angles", "l");
+	leg->AddEntry(Diffzdistmaggreaterthan60, "Shower Start - MC Start (z direction) Mag Greater than or Equal to 60", "l");
+	leg->AddEntry(Diffzdistmaglessthan60, "Shower Start - MC Start (z direction) Mag Less than 60", "l");
+	leg->AddEntry(Diffzdistgreaterthan60, "Shower Start - MC Start (z direction) Greater than or Equal to 60", "l");
+	leg->AddEntry(Diffzdistlessthanminus60, "Shower Start - MC Start (z direction) Less than -60", "l");
+	leg->Draw();
+
+
+	TCanvas* c96 = new TCanvas("c96", "", 700, 700);
+	c96->SetLeftMargin(.1);
+	c96->SetBottomMargin(.1);
+	c96->SetTopMargin(.075);
+	c96->SetRightMargin(.15);
+	c96->cd();
+
+	Diffxdist->SetLineColor(kBlue);
+	Diffxdist->SetLineWidth(3);
+	Diffxdist->SetStats(true);
+	Diffxdist->Draw();
+
+	Diffxdistmaggreaterthan60->SetLineColor(kRed);
+	Diffxdistmaggreaterthan60->SetLineWidth(3);
+	Diffxdistmaggreaterthan60->SetStats(true);
+	Diffxdistmaggreaterthan60->Draw("same");
+
+	Diffxdistmaglessthan60->SetLineColor(kGreen);
+	Diffxdistmaglessthan60->SetLineWidth(3);
+	Diffxdistmaglessthan60->SetStats(true);
+	Diffxdistmaglessthan60->Draw("same");
+
+	Diffxdistgreaterthan60->SetLineColor(kViolet);
+	Diffxdistgreaterthan60->SetLineWidth(3);
+	Diffxdistgreaterthan60->SetStats(true);
+	Diffxdistgreaterthan60->Draw("same");
+
+	Diffxdistlessthanminus60->SetLineColor(kBlack);
+	Diffxdistlessthanminus60->SetLineWidth(3);
+	Diffxdistlessthanminus60->SetStats(true);
+	Diffxdistlessthanminus60->Draw("same");
+
+
+
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.02);
+	leg->AddEntry(Diffxdist, "Shower Start - MC Start (x direction) All Angles", "l");
+	leg->AddEntry(Diffxdistmaggreaterthan60, "Shower Start - MC Start (x direction) Mag Greater than or Equal to 60", "l");
+	leg->AddEntry(Diffxdistmaglessthan60, "Shower Start - MC Start (x direction) Mag Less than 60", "l");
+	leg->AddEntry(Diffxdistgreaterthan60, "Shower Start - MC Start (x direction) Greater than or Equal to 60", "l");
+	leg->AddEntry(Diffxdistlessthanminus60, "Shower Start - MC Start (x direction) Less than -60", "l");
+	leg->Draw();
+
+
+	TCanvas* c97 = new TCanvas("c97", "", 700, 700);
+	c97->SetLeftMargin(.1);
+	c97->SetBottomMargin(.1);
+	c97->SetTopMargin(.075);
+	c97->SetRightMargin(.15);
+	c97->cd();
+
+	Diffydistgreaterthan60->SetLineColor(kViolet);
+	Diffydistgreaterthan60->SetLineWidth(3);
+	Diffydistgreaterthan60->SetStats(true);
+	Diffydistgreaterthan60->SetFillColor(kViolet);
+	ycomponent->Add(Diffydistgreaterthan60);
+
+	Diffydistlessthanminus60->SetLineColor(kBlack);
+	Diffydistlessthanminus60->SetLineWidth(3);
+	Diffydistlessthanminus60->SetStats(true);
+	Diffydistlessthanminus60->SetFillColor(kBlack);
+	ycomponent->Add(Diffydistlessthanminus60);
+
+	Diffydistmaggreaterthan60->SetLineColor(kRed);
+	Diffydistmaggreaterthan60->SetLineWidth(3);
+	Diffydistmaggreaterthan60->SetStats(true);
+	Diffydistmaggreaterthan60->SetFillColor(kRed);
+	ycomponent->Add(Diffydistmaggreaterthan60);
+
+	Diffydistmaglessthan60->SetLineColor(kGreen);
+	Diffydistmaglessthan60->SetLineWidth(3);
+	Diffydistmaglessthan60->SetStats(true);
+	Diffydistmaglessthan60->SetFillColor(kGreen);
+	ycomponent->Add(Diffydistmaglessthan60);
+
+	Diffydist->SetLineColor(kBlue);
+	Diffydist->SetLineWidth(3);
+	Diffydist->SetStats(true);
+	Diffydist->SetFillColor(kBlue);
+	ycomponent->Add(Diffydist);
+
+	ycomponent->Draw();
+	
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.02);
+	leg->AddEntry(Diffydist, "Shower Start - MC Start (y direction) All Angles", "l");
+	leg->AddEntry(Diffydistmaggreaterthan60, "Shower Start - MC Start (y direction) Mag Greater than or Equal to 60", "l");
+	leg->AddEntry(Diffydistmaglessthan60, "Shower Start - MC Start (y direction) Mag Less than 60", "l");
+	leg->AddEntry(Diffydistgreaterthan60, "Shower Start - MC Start (y direction) Greater than or Equal to 60", "l");
+	leg->AddEntry(Diffydistlessthanminus60, "Shower Start - MC Start (y direction) Less than -60", "l");
+	leg->Draw();
+
+
+	TCanvas* c98 = new TCanvas("c98", "", 700, 700);
+	c98->SetLeftMargin(.1);
+	c98->SetBottomMargin(.1);
+	c98->SetTopMargin(.075);
+	c98->SetRightMargin(.15);
+	c98->cd();
+
+	GoodAngledist->SetLineColor(kRed);
+	GoodAngledist->SetLineWidth(3);
+	GoodAngledist->SetStats(true);
+	GoodAngledist->Draw();
+
+	Anglegreaterthan60dist->SetLineColor(kBlue);
+	Anglegreaterthan60dist->SetLineWidth(3);
+	Anglegreaterthan60dist->SetStats(true);
+	Anglegreaterthan60dist->Draw("same");
+
+	Anglelessthanminus60dist->SetLineColor(kGreen);
+	Anglelessthanminus60dist->SetLineWidth(3);
+	Anglelessthanminus60dist->SetStats(true);
+	Anglelessthanminus60dist->Draw("same");
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.02);
+	leg->AddEntry(GoodAngledist, "Events with MC yz Angle magnitude greater than or equal to 60", "l");
+	leg->AddEntry(Anglegreaterthan60dist, "Events with MC yz Angle greater than or equal to 60 degrees", "l");
+	leg->AddEntry(Anglelessthanminus60dist, "Events with MC yz Angle less than or equal to -60 degrees", "l");
+	leg->Draw();
+
+	TCanvas* c99 = new TCanvas("c99", "", 700, 700);
+	c99->SetLeftMargin(.1);
+	c99->SetBottomMargin(.1);
+	c99->SetTopMargin(.075);
+	c99->SetRightMargin(.15);
+	c99->cd();
+
+	StartPointOffset->SetLineColor(kViolet);
+	StartPointOffset->SetLineWidth(3);
+	StartPointOffset->SetStats(true);
+	StartPointOffset->SetFillColor(false);
+	StartPointOffset->Draw();
+
+	//Startpointoffsetlessthan60dist->SetLineColor(kBlack);
+	//Startpointoffsetlessthan60dist->SetLineWidth(3);
+	//Startpointoffsetlessthan60dist->SetStats(true);
+	//Startpointoffsetlessthan60dist->SetFillColor(false);
+	//Startpointoffsetlessthan60dist->Draw("same");
+
+	//Startpointoffsetgreaterthan60dist->SetLineColor(kGreen);
+	//Startpointoffsetgreaterthan60dist->SetLineWidth(3);
+	//Startpointoffsetgreaterthan60dist->SetStats(true);
+	//Startpointoffsetgreaterthan60dist->SetFillColor(false);
+	//Startpointoffsetgreaterthan60dist->Draw("same");
+
+	EndStartpointoffsetyzangledist->SetLineColor(kBlue);
+	EndStartpointoffsetyzangledist->SetLineWidth(3);
+	EndStartpointoffsetyzangledist->SetStats(true);
+	EndStartpointoffsetyzangledist->SetFillColor(false);
+	EndStartpointoffsetyzangledist->Draw("same");
+
+	NotEndStartpointoffsetyzangledist->SetLineColor(kGreen);
+	NotEndStartpointoffsetyzangledist->SetLineWidth(3);
+	NotEndStartpointoffsetyzangledist->SetStats(true);
+	NotEndStartpointoffsetyzangledist->SetFillColor(false);
+	NotEndStartpointoffsetyzangledist->Draw("same");
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.02);
+	leg->AddEntry(StartPointOffset, "Start Point Offset (all events)", "l");
+	//leg->AddEntry(Startpointoffsetlessthan60dist, "Start Point Offset (events with MC yz angle less than 60 degrees)", "l");
+	//leg->AddEntry(Startpointoffsetgreaterthan60dist, "Start Point Offset (events with MC yz angle greater than or equal to 60 degrees)", "l");
+	leg->AddEntry(NotEndStartpointoffsetyzangledist, "Start Point Offset (events with MC yz angle not between 90.0 - 180.0)", "l");
+	leg->AddEntry(EndStartpointoffsetyzangledist, "Start Point Offset (events with MC yz angle between 90.0 - 180.0)", "l");
+	leg->Draw();
+
+	TCanvas* c100 = new TCanvas("c100", "", 700, 700);
+	c100->SetLeftMargin(.1);
+	c100->SetBottomMargin(.1);
+	c100->SetTopMargin(.075);
+	c100->SetRightMargin(.15);
+	c100->cd();
+
+	/*Uplanedist->SetLineColor(kRed);
+	Uplanedist->SetLineWidth(3);
+	Uplanedist->SetStats(false);
+	Uplanedist->Draw();
+
+	Unotplanedist->SetLineColor(kGreen);
+	Unotplanedist->SetLineWidth(3);
+	Unotplanedist->SetStats(false);
+	Unotplanedist->Draw("same");
+	
+	Vplanedist->SetLineColor(kBlue);
+	Vplanedist->SetLineWidth(3);
+	Vplanedist->SetStats(false);
+	Vplanedist->Draw();
+
+	Vnotplanedist->SetLineColor(kRed);
+	Vnotplanedist->SetLineWidth(3);
+	Vnotplanedist->SetStats(false);
+	Vnotplanedist->Draw("same");
+	
+	
+	Yplanedist->SetLineColor(kGreen);
+	Yplanedist->SetLineWidth(3);
+	Yplanedist->SetStats(false);
+	Yplanedist->Draw();
+
+	Ynotplanedist->SetLineColor(kBlue);
+	Ynotplanedist->SetLineWidth(3);
+	Ynotplanedist->SetStats(false);
+	Ynotplanedist->Draw("same");
+	*/
+
+	ParallelAngledist->SetLineColor(kGreen);
+	ParallelAngledist->SetLineWidth(3);
+	ParallelAngledist->SetStats(false);
+	ParallelAngledist->Draw();
+
+	NotParallelAngledist->SetLineColor(kBlue);
+	NotParallelAngledist->SetLineWidth(3);
+	NotParallelAngledist->SetStats(false);
+	NotParallelAngledist->Draw("same");
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.02);
+	leg->AddEntry(ParallelAngledist, "Parallel to U, V or Y Wire Planes", "l");
+	leg->AddEntry(NotParallelAngledist, "Not Parallel to U, V, or Y Wire Planes", "l");
+	//leg->AddEntry(Vplanedist, "Vplanedist", "l");
+	//leg->AddEntry(Yplanedist, "Yplanedist", "l");
+	leg->Draw();
+
+	TCanvas* c101 = new TCanvas("c101", "", 700, 700);
+	c101->SetLeftMargin(.1);
+	c101->SetBottomMargin(.1);
+	c101->SetTopMargin(.075);
+	c101->SetRightMargin(.15);
+	c101->cd();
+
+	StartPointOffset->SetLineColor(kCyan+3);
+	StartPointOffset->SetLineWidth(3);
+	StartPointOffset->SetStats(true);
+	StartPointOffset->Draw();
+
+	//Startpointoffsetgreaterthan50dist->SetLineColor(kGreen);
+	//Startpointoffsetgreaterthan50dist->SetLineWidth(3);
+	//Startpointoffsetgreaterthan50dist->SetStats(true);
+	//Startpointoffsetgreaterthan50dist->Draw("same");
+
+	//Startpointoffsetgreaterthan60dist->SetLineColor(kBlue);
+	//Startpointoffsetgreaterthan60dist->SetLineWidth(3);
+	//Startpointoffsetgreaterthan60dist->SetStats(true);
+	//Startpointoffsetgreaterthan60dist->Draw("same");
+
+	//Startpointoffsetgreaterthan70dist->SetLineColor(kBlack);
+	//Startpointoffsetgreaterthan70dist->SetLineWidth(3);
+	//Startpointoffsetgreaterthan70dist->SetStats(true);
+	//Startpointoffsetgreaterthan70dist->Draw("same");
+
+	//Startpointoffsetgreaterthan80dist->SetLineColor(kRed);
+	//Startpointoffsetgreaterthan80dist->SetLineWidth(3);
+	//Startpointoffsetgreaterthan80dist->SetStats(true);
+	//Startpointoffsetgreaterthan80dist->Draw("same");
+
+	Startpointoffsetgreaterthan90dist->SetLineColor(kViolet);
+	Startpointoffsetgreaterthan90dist->SetLineWidth(3);
+	Startpointoffsetgreaterthan90dist->SetStats(true);
+	Startpointoffsetgreaterthan90dist->Draw("same");
+
+	//Startpointoffsetgreaterthan100dist->SetLineColor(kRed+4);
+	//Startpointoffsetgreaterthan100dist->SetLineWidth(3);
+	//Startpointoffsetgreaterthan100dist->SetStats(true);
+	//Startpointoffsetgreaterthan100dist->Draw("same");
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.02);
+	leg->AddEntry(StartPointOffset, "Start Point Offset (events with any MC xz or yz angle)", "l");
+	//leg->AddEntry(Startpointoffsetgreaterthan50dist, "Start Point Offset (events with MC yz angle greater than or equal to 50 degrees)", "l");
+	//leg->AddEntry(Startpointoffsetgreaterthan60dist, "Start Point Offset (events with MC yz angle greater than or equal to 60 degrees)", "l");
+	//leg->AddEntry(Startpointoffsetgreaterthan70dist, "Start Point Offset (events with MC yz angle greater than or equal to 70 degrees)", "l");
+	//leg->AddEntry(Startpointoffsetgreaterthan80dist, "Start Point Offset (events with MC yz angle greater than or equal to 80 degrees)", "l");
+	leg->AddEntry(Startpointoffsetgreaterthan90dist, "Start Point Offset (events with MC xz or yz angle >= 90 degrees)", "l");
+	//leg->AddEntry(Startpointoffsetgreaterthan100dist, "Start Point Offset (events with MC yz angle greater than or equal to 100 degrees)", "l");
+	leg->Draw();
+
+	TCanvas* c102 = new TCanvas("c102", "", 700, 700);
+	c102->SetLeftMargin(.1);
+	c102->SetBottomMargin(.1);
+	c102->SetTopMargin(.075);
+	c102->SetRightMargin(.15);
+	c102->cd();
+
+	Diffzdist->SetLineColor(kBlue);
+	Diffzdist->SetLineWidth(3);
+	Diffzdist->SetStats(true);
+	Diffzdist->Draw();
+
+	Posmomentumzdist->SetLineColor(kGreen);
+	Posmomentumzdist->SetLineWidth(3);
+	Posmomentumzdist->SetStats(true);
+	Posmomentumzdist->Draw("same");
+
+	Negmomentumzdist->SetLineColor(kRed);
+	Negmomentumzdist->SetLineWidth(3);
+	Negmomentumzdist->SetStats(true);
+	Negmomentumzdist->Draw("same");
+
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.02);
+	leg->AddEntry(Diffzdist, "Shower Start - MC Start (z direction)", "l");
+	leg->AddEntry(Posmomentumzdist, "Shower Start - MC Start (positive z direction)", "l");
+	leg->AddEntry(Negmomentumzdist, "Shower Start - MC Start (negative z direction)", "l");
+	leg->Draw();
+
+
+	TCanvas* c103 = new TCanvas("c103", "", 700, 700);
+	c103->SetLeftMargin(.1);
+	c103->SetBottomMargin(.1);
+	c103->SetTopMargin(.075);
+	c103->SetRightMargin(.15);
+	c103->cd();
+
+	Diffydist->SetLineColor(kBlue);
+	Diffydist->SetLineWidth(3);
+	Diffydist->SetStats(true);
+	Diffydist->SetFillColor(false);
+	Diffydist->Draw();
+
+	Posmomentumydist->SetLineColor(kGreen);
+	Posmomentumydist->SetLineWidth(3);
+	Posmomentumydist->SetStats(true);
+	Posmomentumydist->SetFillColor(false);
+	Posmomentumydist->Draw("same");
+
+	Negmomentumydist->SetLineColor(kRed);
+	Negmomentumydist->SetLineWidth(3);
+	Negmomentumydist->SetStats(true);
+	Negmomentumydist->SetFillColor(false);
+	Negmomentumydist->Draw("same");
+
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.02);
+	leg->AddEntry(Diffydist, "Shower Start - MC Start (y direction)", "l");
+	leg->AddEntry(Posmomentumydist, "Shower Start - MC Start (positive y direction)", "l");
+	leg->AddEntry(Negmomentumydist, "Shower Start - MC Start (negative y direction)", "l");
+	leg->Draw();
+
+
+	TCanvas* c104 = new TCanvas("c104", "", 700, 700);
+	c104->SetLeftMargin(.1);
+	c104->SetBottomMargin(.1);
+	c104->SetTopMargin(.075);
+	c104->SetRightMargin(.15);
+	c104->cd();
+
+	Diffxdist->SetLineColor(kBlue);
+	Diffxdist->SetLineWidth(3);
+	Diffxdist->SetStats(true);
+	Diffxdist->Draw();
+
+	Posmomentumxdist->SetLineColor(kGreen);
+	Posmomentumxdist->SetLineWidth(3);
+	Posmomentumxdist->SetStats(true);
+	Posmomentumxdist->Draw("same");
+
+	Negmomentumxdist->SetLineColor(kRed);
+	Negmomentumxdist->SetLineWidth(3);
+	Negmomentumxdist->SetStats(true);
+	Negmomentumxdist->Draw("same");
+
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.02);
+	leg->AddEntry(Diffzdist, "Shower Start - MC Start (x direction)", "l");
+	leg->AddEntry(Posmomentumzdist, "Shower Start - MC Start (positive x direction)", "l");
+	leg->AddEntry(Negmomentumzdist, "Shower Start - MC Start (negative x direction)", "l");
+	leg->Draw();
+
+	TCanvas* c105 = new TCanvas("c105", "", 700, 700);
+	c105->SetLeftMargin(.1);
+	c105->SetBottomMargin(.1);
+	c105->SetTopMargin(.075);
+	c105->SetRightMargin(.15);
+	c105->cd();
+
+	Startpointoffsetxzangledistlessthan->SetLineColor(kRed);
+	Startpointoffsetxzangledistlessthan->SetLineWidth(3);
+	Startpointoffsetxzangledistlessthan->SetStats(true);
+	Startpointoffsetxzangledistlessthan->Draw();
+
+	EndStartpointoffsetxzangledist->SetLineColor(kGreen);
+	EndStartpointoffsetxzangledist->SetLineWidth(3);
+	EndStartpointoffsetxzangledist->SetStats(true);
+	EndStartpointoffsetxzangledist->Draw("same");
+
+	NotEndStartpointoffsetxzangledist->SetLineColor(kBlue);
+	NotEndStartpointoffsetxzangledist->SetLineWidth(3);
+	NotEndStartpointoffsetxzangledist->SetStats(true);
+	NotEndStartpointoffsetxzangledist->Draw("same");
+
+	TLegend* leg = new TLegend(0.5, 0.82, 0.92, 0.98);
+	leg->SetFillColor(kWhite);
+	leg->SetTextSize(0.02);
+	leg->AddEntry(Startpointoffsetxzangledistlessthan, "MC xz angle greater than or equal to 60 degrees", "l");
+	leg->AddEntry(EndStartpointoffsetxzangledist, "MC xz angle between 90 - 180 degrees", "l");
+	leg->AddEntry(NotEndStartpointoffsetxzangledist, "MC xz angle not between 90 - 180 degrees", "l");
+	leg->Draw();
+
+	TCanvas* c106 = new TCanvas("c106", "", 700, 700);
+	c106->SetLeftMargin(.1);
+	c106->SetBottomMargin(.1);
+	c106->SetTopMargin(.075);
+	c106->SetRightMargin(.15);
+	c106->cd();
+
+	DistvsAngleyz->SetLineColor(kBlue);
+	DistvsAngleyz->SetLineWidth(3);
+	DistvsAngleyz->SetStats(true);
+	DistvsAngleyz->Draw("colz");
+
+	TCanvas* c107 = new TCanvas("c107", "", 700, 700);
+	c107->SetLeftMargin(.1);
+	c107->SetBottomMargin(.1);
+	c107->SetTopMargin(.075);
+	c107->SetRightMargin(.15);
+	c107->cd();
+
+	DistvsAnglexy->SetLineColor(kBlue);
+	DistvsAnglexy->SetLineWidth(3);
+	DistvsAnglexy->SetStats(true);
+	DistvsAnglexy->Draw("colz");
+
+
 }
 
+
+// this makes sure the angle is within 0 - 180 degrees
+double Find_Angle(double angle)
+{
+	if (angle >= 180)
+	{
+		angle = 360 - angle;
+	}
+
+	return (angle);
+}
 /*
 
 // This is to find showers that are not fully reconstructed
@@ -1743,20 +3169,120 @@ if (tempyz_angle < yz_angle)
 yz_angle = tempyz_angle;
 }
 }
+
+//double toteng = 0;
+//double chargedtoteng = 0;
+
+double StartdistTPC = 0;
+double EnddistTPC = 0;
+double Startdisttot = 0;
+double Enddisttot = 0;
+
+double distTPC = 0;
+double disttot = 0;
+
+double actualenergy = 0;
+
+
+//if (Nshowers && (dist <= 1.0) && xdiff < 1.0 && ydiff < 1.0 && zdiff < 1.0)
+//{
+//toteng = 0;
+//chargedtoteng = 0;
+
+for (int i = 0; i < geant_list_size; i++)
+{
+//if (EndPointx_tpcAV[i] != -99999)
+//{
+StartdistTPC = sqrt(pow(StartPointx_tpcAV[i], 2) + pow(StartPointy_tpcAV[i], 2) + pow(StartPointz_tpcAV[i], 2));
+EnddistTPC = sqrt(pow(EndPointx_tpcAV[i], 2) + pow(EndPointy_tpcAV[i], 2) + pow(EndPointz_tpcAV[i], 2));
+
+Startdisttot = sqrt(pow(StartPointx[i], 2) + pow(StartPointy[i], 2) + pow(StartPointz[i], 2));
+Enddisttot = sqrt(pow(EndPointx[i], 2) + pow(EndPointy[i], 2) + pow(EndPointz[i], 2));
+
+distTPC = StartdistTPC - EnddistTPC;
+disttot = Startdisttot - Enddisttot;
+
+actualenergy += Eng[i] * distTPC / disttot;
+
+if (inTPCActive[i] == 1)
+{
+DistTPC1->Fill(distTPC);
+Disttot1->Fill(disttot);
+
+//std::cout << "1" << std::endl;
+}
+
+if (inTPCActive[i] == 0)
+{
+DistTPC0->Fill(distTPC);
+Disttot0->Fill(disttot);
+
+//std::cout << distTPC << std::endl;
+//std::cout << "0" << std::endl;
+}
+//}
+}
+/*
+for (int i = 0; i < geant_list_size; i++)
+{
+if (inTPCActive == 0 && EndPointx_tpcAV[i] != -99999)
+{
+std::cout << "inTPCActive: " << inTPCActive[i] << std::endl;
+std::cout << "start point x: " << EndPointx_tpcAV[i] << std::endl;
+std::cout << "start point y: " << EndPointy_tpcAV[i] << std::endl;
+std::cout << "start point z: " << EndPointz_tpcAV[i] << std::endl << std::endl;
+}
+}
 */
-//std::cout << theta_xz[0] << std::endl;
+//ChargedPartEng += actualenergy;
 
-//MCxzangle->Fill((MCxz_angle * radtodegrees));
-//MCyzangle->Fill((MCyz_angle * radtodegrees));
+// energy deposited from the particle minus the rest energy
+// kinetic energy of the particle
+//chargedtoteng += Eng[i] - EndE[i];
 
-//YZ_angle->Fill(yz_angle * radtodegrees);
-//XZ_angle->Fill(xz_angle * radtodegrees);
+//ActualEng->Fill(actualenergy);
 
-// calculate the shower angle offset in degrees
-//std::cout << yz_angle << std::endl;
-//std::cout << theta_xz[0] << std::endl;
+// particles that cross the boundary
+// what is their distance
+
+//if (!(EndPointx_tpcAV[i] == -99999))
+//{
+//toteng = toteng + Eng[i] - EndE[i];
+//std::cout << toteng << std::endl << std::endl;
+//}
+//}
+//}
+
+//std:cout << "initial energy: " << Eng[i] << std::endl;
+//std::cout << "final energy: " << EndE[i] * 1000 << std::endl << std::endl;
+//std::cout << "particle " << i << ": " << chargedtoteng << std::endl;
 
 
+//std::cout << "Shower Total Energy: " << jentry << " : " << shwr_totEng[0][shwr_bestplane[0]] << std::endl;
+//std::cout << "Charged Total Energy: " << jentry << " : " << chargedtoteng * 1000 << std::endl;
+//std::cout << "Total Energy within Detector: " << jentry << " : " << toteng * 1000 << std::endl << std::endl;
+
+//ChargedPartEng->Fill(chargedtoteng * 1000);
+//TotalEng->Fill(toteng * 1000);
+
+//DiffChargedPartEng->Fill(shwr_totEng[0][shwr_bestplane[0]] - chargedtoteng * 1000);
+//DiffTotalEng->Fill(shwr_totEng[0][shwr_bestplane[0]] - toteng * 1000);
+//}
+
+//std::cout << "x: " << EndPointx_tpcAV[i] << std::endl;
+//std::cout << "y: " << EndPointy_tpcAV[i] << std::endl;
+//std::cout << "z: " << EndPointz_tpcAV[i] << std::endl;
+
+//MCshower_dEdx->Fill(mcshwr_dEdx[0]);
+
+// Histogram (TH1F)  -> Fill(var) [function, var] 
+
+/*
+Showerstartx->Fill(shwr_startx[0]);
+Showerstarty->Fill(shwr_starty[0]);
+Showerstartz->Fill(shwr_startz[0]);
+
+MCstartx->Fill(mcshwr_startX[0]);
+MCstarty->Fill(mcshwr_startY[0]);
+MCstartz->Fill(mcshwr_startZ[0]);
 */
-
-
